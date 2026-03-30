@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2Z Collection - POS & Inventory</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* A2Z Collection Design System - Theme Engine */
+        
+        /* 1. Default Corporate Blue Theme */
+        :root, [data-theme="default"] {
+            --primary: #001451;
+            --primary-container: #002581;
+            --on-primary: #ffffff;
+            --on-primary-container: #dbe1ff;
+            
+            --secondary: #5c5d72;
+            --secondary-container: #e0e0ff;
+            --secondary-fixed: #e0e0ff;
+            --on-secondary: #ffffff;
+            --on-secondary-container: #181a2c;
+            --on-secondary-fixed: #181a2c;
+            
+            --tertiary: #380b00;
+            --tertiary-container: #5c1800;
+            --on-tertiary: #ffffff;
+            --on-tertiary-container: #ffdad1;
+            
+            --surface: #f4faff;
+            --surface-container-low: #e9f6fd;
+            --surface-container-lowest: #ffffff;
+            --surface-container-high: #ddeaf2;
+            --surface-container-highest: #d7e4ec;
+            --surface-variant: #dbe1ff;
+            --surface-tint: #5c5d72;
+            
+            --on-surface: #111d23;
+            --on-surface-variant: #454652;
+            --outline-variant: #c6c5d4;
+            
+            --success: #146c2e;
+            --success-container: #a6f5b3;
+            --error: #ba1a1a;
+            --error-container: #ffdad6;
+            --warning: #5c1800;
+            
+            /* Universal Base Spacing & Typography */
+            --spacing-4: 0.25rem;
+            --spacing-8: 0.5rem;
+            --spacing-12: 0.75rem;
+            --spacing-16: 1rem;
+            --spacing-20: 1.25rem;
+            --spacing-24: 1.5rem;
+            --spacing-32: 2rem;
+            --spacing-40: 2.5rem;
+            
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-full: 9999px;
+            
+            --font-display: 'Manrope', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(17, 29, 35, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(17, 29, 35, 0.06), 0 2px 4px -1px rgba(17, 29, 35, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(17, 29, 35, 0.06), 0 4px 6px -2px rgba(17, 29, 35, 0.03);
+            --shadow-xl: 0 20px 25px -5px rgba(17, 29, 35, 0.06), 0 10px 10px -5px rgba(17, 29, 35, 0.03);
+        }
+
+        /* 2. Peacock & Gold Theme */
+        [data-theme="peacock"] {
+            --primary: #006064;
+            --primary-container: #00838f;
+            --on-primary: #ffffff;
+            --on-primary-container: #e0f7fa;
+            
+            --secondary: #f9a825;
+            --secondary-container: #fff9c4;
+            --secondary-fixed: #ffecb3;
+            --on-secondary: #000000;
+            --on-secondary-container: #3e2723;
+            --on-secondary-fixed: #3e2723;
+            
+            --surface: #fffdf8;
+            --surface-container-low: #fcf4e8;
+            --surface-container-lowest: #ffffff;
+            --surface-container-high: #f7ead4;
+            --surface-container-highest: #f0debe;
+            --surface-variant: #e0f7fa;
+            
+            --on-surface: #263238;
+            --on-surface-variant: #546e7a;
+            --outline-variant: #b0bec5;
+        }
+
+        /* 3. Dark Mode */
+        [data-theme="dark"] {
+            --primary: #90caf9;
+            --primary-container: #004c8c;
+            --on-primary: #000000;
+            --on-primary-container: #c3e8ff;
+            
+            --secondary: #b0bec5;
+            --secondary-container: #455a64;
+            --secondary-fixed: #455a64;
+            --on-secondary: #000000;
+            --on-secondary-container: #eceff1;
+            --on-secondary-fixed: #eceff1;
+            
+            --surface: #121212;
+            --surface-container-low: #1e1e1e;
+            --surface-container-lowest: #000000;
+            --surface-container-high: #2c2c2c;
+            --surface-container-highest: #383838;
+            --surface-variant: #424242;
+            
+            --on-surface: #e3e3e3;
+            --on-surface-variant: #aaaaaa;
+            --outline-variant: #5c5c5c;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0,0,0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0, 0.5);
+        }
+
+        /* 4. Earthy Terracotta */
+        [data-theme="terracotta"] {
+            --primary: #bf360c;
+            --primary-container: #d84315;
+            --on-primary: #ffffff;
+            --on-primary-container: #fbe9e7;
+            
+            --secondary: #8d6e63;
+            --secondary-container: #d7ccc8;
+            --secondary-fixed: #d7ccc8;
+            --on-secondary: #ffffff;
+            --on-secondary-container: #3e2723;
+            --on-secondary-fixed: #3e2723;
+            
+            --surface: #fdfaf8;
+            --surface-container-low: #f9ebe8;
+            --surface-container-lowest: #ffffff;
+            --surface-container-high: #f4dbd4;
+            --surface-container-highest: #ecd1c8;
+            --surface-variant: #ffccbc;
+            
+            --on-surface: #3e2723;
+            --on-surface-variant: #5d4037;
+            --outline-variant: #bcaaa4;
+        }
+
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: var(--spacing-20);
+            line-height: 1.5;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Typography Hierarchy */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            margin: 0 0 var(--spacing-16) 0;
+            color: var(--on-surface);
+            transition: color 0.3s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--spacing-32);
+            color: var(--primary);
+        }
+
+        h2 { font-size: 2rem; margin-bottom: var(--spacing-24); }
+        h3 { font-size: 1.5rem; margin-bottom: var(--spacing-20); }
+        h4 { font-size: 1.25rem; margin-bottom: var(--spacing-16); }
+
+        p {
+            margin: 0 0 var(--spacing-16) 0;
+            color: var(--on-surface-variant);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-16);
+            margin-bottom: var(--spacing-32);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--surface-container-low);
+            color: var(--on-surface);
+            border: none;
+            padding: var(--spacing-12) var(--spacing-20);
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: var(--surface-container-high);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
+            color: var(--on-primary);
+            font-weight: 600;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--surface-container-lowest);
+            padding: var(--spacing-24);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-24);
+            box-shadow: var(--shadow-md);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--spacing-20);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row-group {
+            display: flex;
+            gap: var(--spacing-16);
+        }
+
+        .row-group > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: var(--spacing-8);
+            font-weight: 500;
+            color: var(--on-surface);
+            font-size: 0.875rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: var(--spacing-12);
+            color: var(--on-surface-variant);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .input-wrapper input {
+            padding-left: calc(var(--spacing-12) + var(--spacing-20));
+            width: calc(100% - var(--spacing-32));
+        }
+
+        input, select, textarea {
+            padding: var(--spacing-12);
+            background-color: var(--surface-container-highest);
+            border: 1px solid var(--outline-variant);
+            border-bottom: 2px solid transparent;
+            color: var(--on-surface);
+            border-radius: var(--radius-md);
+            width: 100%;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+            background-color: var(--surface-container-lowest);
+            box-shadow: 0 0 0 2px rgba(0, 20, 81, 0.1);
+        }
+
+        /* Buttons */
+        button.action-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
+            color: var(--on-primary);
+            border: none;
+            padding: var(--spacing-12) var(--spacing-16);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-xl);
+            margin-top: var(--spacing-12);
+            width: 100%;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        button.action-btn:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
+        }
+
+        .btn-sm {
+            padding: var(--spacing-8) var(--spacing-12);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: var(--spacing-8);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit { background-color: var(--success-container); color: var(--success); }
+        .btn-edit:hover { background-color: var(--success); color: white; }
+        .btn-delete { background-color: var(--error-container); color: var(--error); }
+        .btn-delete:hover { background-color: var(--error); color: white; }
+
+        /* Special Elements */
+        .barcode-container {
+            background-color: #ffffff; /* Barcodes must remain white BG for scanners */
+            padding: var(--spacing-12);
+            border-radius: var(--radius-md);
+            display: inline-block;
+            margin-top: var(--spacing-12);
+        }
+
+        .color-box {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: var(--spacing-12);
+            border-radius: var(--radius-md);
+        }
+
+        .img-preview {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+        }
+
+        .size-badge {
+            display: inline-block;
+            background: var(--secondary-container);
+            color: var(--on-secondary-container);
+            padding: var(--spacing-4) var(--spacing-8);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-top: var(--spacing-8);
+        }
+
+        /* Grid View Styles */
+        .search-bar {
+            width: 100%;
+            padding: var(--spacing-16);
+            font-size: 1rem;
+            margin-bottom: var(--spacing-24);
+            background: var(--surface-container-highest);
+            border: none;
+            border-bottom: 2px solid var(--primary);
+            color: var(--on-surface);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            font-family: var(--font-body);
+        }
+
+        .category-section { margin-bottom: var(--spacing-40); }
+
+        .category-title {
+            color: var(--on-surface);
+            padding-bottom: var(--spacing-8);
+            margin-bottom: var(--spacing-16);
+            font-family: var(--font-display);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .category-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--surface-tint) 100%);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: var(--spacing-20);
+        }
+
+        .product-card {
+            background: var(--surface-container-lowest);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-16);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-12);
+        }
+
+        .product-card h4 {
+            margin: var(--spacing-4) 0;
+            color: var(--primary);
+            font-size: 1.125rem;
+        }
+
+        .product-card .prices {
+            background: var(--surface-container-high);
+            padding: var(--spacing-8);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-12) 0;
+            font-size: 0.875rem;
+        }
+
+        /* POS Styles */
+        .pos-layout { display: flex; gap: var(--spacing-24); }
+        .pos-main { flex: 2; }
+        .pos-sidebar {
+            flex: 1;
+            background: var(--surface-container-low);
+            padding: var(--spacing-20);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+        }
+
+        .scanner-input {
+            font-size: 1.5rem;
+            padding: var(--spacing-16);
+            text-align: center;
+            letter-spacing: 2px;
+            border: 2px solid var(--success);
+            background: var(--surface-container-highest);
+            color: var(--on-surface);
+            border-radius: var(--radius-lg);
+            font-family: 'Courier New', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 var(--spacing-4);
+            margin-top: var(--spacing-20);
+        }
+
+        .data-table th, .data-table td {
+            padding: var(--spacing-12);
+            text-align: left;
+            background: var(--surface-container-lowest);
+            color: var(--on-surface);
+        }
+
+        .data-table th {
+            color: var(--primary);
+            font-weight: 600;
+            background: var(--surface-container-high);
+            font-size: 0.875rem;
+        }
+
+        .data-table tbody tr:nth-child(even) td {
+            background: var(--surface-container-high);
+        }
+
+        .qty-controls { display: flex; align-items: center; gap: var(--spacing-8); }
+
+        .qty-btn {
+            background: var(--surface-container-high);
+            color: var(--on-surface);
+            border: none;
+            padding: var(--spacing-8) var(--spacing-12);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover { background: var(--primary); color: var(--on-primary); }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-12);
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--on-surface);
+        }
+
+        .grand-total {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            font-family: var(--font-display);
+            border-top: 2px solid var(--primary);
+            padding-top: var(--spacing-12);
+            margin-top: var(--spacing-12);
+        }
+
+        /* Ledger Styles */
+        .ledger-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-24); }
+
+        .ledger-stat {
+            background: var(--surface-container-low);
+            padding: var(--spacing-16) var(--spacing-24);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ledger-stat h2 { margin: 0; color: var(--on-surface); font-size: 1.75rem; font-family: var(--font-display); font-weight: 700; }
+        .ledger-stat span { color: var(--on-surface-variant); font-size: 0.875rem; }
+
+        .view-toggle { display: flex; gap: var(--spacing-8); }
+
+        .view-btn {
+            padding: var(--spacing-8) var(--spacing-16);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn.active { background: var(--primary); color: var(--on-primary); }
+        .view-btn:hover { background: var(--primary-container); color: var(--on-primary-container); }
+
+        /* Header Icons & Themes */
+        .material-icons { font-size: 1.125rem; vertical-align: middle; margin-right: var(--spacing-8); }
+        
+        .profile-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .profile-icon:hover { color: var(--primary-container); transform: scale(1.1); }
+
+        .power-icon {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--error);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .power-icon:hover { transform: scale(1.1); filter: brightness(1.2); }
+
+        /* Login Screen */
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--surface-container-highest) 100%);
+            padding: var(--spacing-20);
+        }
+        
+        .login-card {
+            background: var(--surface-container-lowest);
+            padding: var(--spacing-40);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 460px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body { padding: var(--spacing-12); }
+            .nav-tabs { gap: var(--spacing-8); }
+            .tab-btn { padding: var(--spacing-8) var(--spacing-12); font-size: 0.875rem; }
+            .pos-layout { flex-direction: column; gap: var(--spacing-16); }
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--spacing-16); }
+            .row-group { flex-direction: column; gap: var(--spacing-12); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        class ErrorBoundary extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { hasError: false, error: null };
+            }
+            static getDerivedStateFromError(error) { return { hasError: true, error }; }
+            componentDidCatch(error, errorInfo) { console.error('Error caught:', error, errorInfo); }
+            render() {
+                if (this.state.hasError) {
+                    return React.createElement('div', { style: { padding: '20px', backgroundColor: '#1e293b', color: '#ef4444', borderRadius: '8px', textAlign: 'center', margin: '20px' } }, 
+                        React.createElement('h2', null, 'Something went wrong'),
+                        React.createElement('p', null, 'Please refresh the page to try again.'),
+                        React.createElement('details', { style: { textAlign: 'left', marginTop: '20px' } },
+                            React.createElement('summary', null, 'Error Details'),
+                            React.createElement('pre', { style: { color: '#94a3b8', fontSize: '12px' } }, this.state.error?.toString())
+                        )
+                    );
+                }
+                return this.props.children;
+            }
+        }
+
+        const App = () => {
+            // --- USER PROFILE & THEME STATE --- //
+            const [userProfile, setUserProfile] = useState(() => {
+                const saved = localStorage.getItem('A2Z_UserProfile');
+                return saved ? JSON.parse(saved) : { userId: 'admin', password: 'admin', name: 'Administrator', email: '', phone: '', address: '' };
+            });
+
+            const [currentTheme, setCurrentTheme] = useState(() => {
+                return localStorage.getItem('A2Z_Theme') || 'default';
+            });
+
+            useEffect(() => {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                localStorage.setItem('A2Z_Theme', currentTheme);
+            }, [currentTheme]);
+
+            // --- AUTHENTICATION STATE --- //
+            const [isAuthenticated, setIsAuthenticated] = useState(() => {
+                return localStorage.getItem('A2Z_Auth') === 'true';
+            });
+            const [loginInput, setLoginInput] = useState({ userId: 'admin', password: 'admin' });
+            
+            // Temporary files selected on the login screen
+            const [pendingFiles, setPendingFiles] = useState({ products: null, sales: null });
+
+            // --- STANDARD APP STATE --- //
+            const generateNewId = () => `A2Z-${Date.now().toString().slice(-6)}`;
+            const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', 'XXXXXXL', 'XXXXXXXL'];
+            
+            const [currentTab, setCurrentTab] = useState('grid');
+            const [isEditing, setIsEditing] = useState(false);
+
+            // --- AUTO-SAVE FOLDER STATE --- //
+            const [dirHandle, setDirHandle] = useState(null);
+
+            const linkLocalFolder = async () => {
+                try {
+                    // Requests permission to access a local folder
+                    const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+                    setDirHandle(handle);
+                    alert("Folder linked successfully! The app will now auto-save your JSON files here.");
+                } catch (error) {
+                    console.warn("Folder selection cancelled or failed:", error);
+                }
+            };
+
+            // Trigger auto-save whenever catalog or sales change
+            useEffect(() => {
+                if (dirHandle) {
+                    const saveFiles = async () => {
+                        try {
+                            // Auto-save Products
+                            const prodFileHandle = await dirHandle.getFileHandle('a2z_products.json', { create: true });
+                            const prodWritable = await prodFileHandle.createWritable();
+                            await prodWritable.write(JSON.stringify(catalog, null, 2));
+                            await prodWritable.close();
+
+                            // Auto-save Sales
+                            const salesFileHandle = await dirHandle.getFileHandle('a2z_sales.json', { create: true });
+                            const salesWritable = await salesFileHandle.createWritable();
+                            await salesWritable.write(JSON.stringify(salesLedger, null, 2));
+                            await salesWritable.close();
+                        } catch (e) {
+                            console.error("Auto-save failed. Permission might have been revoked.", e);
+                        }
+                    };
+                    saveFiles();
+                }
+            }, [catalog, salesLedger, dirHandle]);
+            
+            // --- DATABASES --- //
+            const [catalog, setCatalog] = useState(() => {
+                const saved = localStorage.getItem('A2Z_Database');
+                let parsed = saved ? JSON.parse(saved) : [];
+                parsed = parsed.map(item => ({ ...item, stockQty: Number(item.stockQty) || 0, costPrice: Number(item.costPrice) || 0, sellPrice: Number(item.sellPrice) || 0 }));
+                return parsed;
+            });
+
+            const [salesLedger, setSalesLedger] = useState(() => {
+                const saved = localStorage.getItem('A2Z_Sales');
+                let parsed = saved ? JSON.parse(saved) : [];
+                parsed = parsed.map(sale => ({
+                    ...sale, subtotal: Number(sale.subtotal) || 0, discountPercentage: Number(sale.discountPercentage) || 0, discountAmount: Number(sale.discountAmount) || 0, grandTotal: Number(sale.grandTotal) || 0,
+                    items: sale.items.map(item => ({ ...item, qty: Number(item.qty) || 0, sellPrice: Number(item.sellPrice) || 0 }))
+                }));
+                return parsed;
+            });
+
+            // --- REFS & MORE STATE --- //
+            const [colorNamesList, setColorNamesList] = useState([]);
+            const barcodeRef = useRef(null);
+            const scannerInputRef = useRef(null);
+            
+            const [searchQuery, setSearchQuery] = useState('');
+            const [ledgerView, setLedgerView] = useState('table'); 
+            const [selectedPeriod, setSelectedPeriod] = useState('daily');
+            const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
+            const [tableFilters, setTableFilters] = useState({ dateFrom: '', dateTo: '', invoiceSearch: '', minAmount: '', maxAmount: '' });
+            const chartCanvasRef = useRef(null);
+            const chartInstanceRef = useRef(null);
+
+            const [invoiceItems, setInvoiceItems] = useState([]);
+            const [scanInput, setScanInput] = useState('');
+            const [discountPercentage, setDiscountPercentage] = useState(0);
+            const [selectedReferrer, setSelectedReferrer] = useState('');
+
+            const [referrers, setReferrers] = useState(() => {
+                const saved = localStorage.getItem('A2Z_Referrers');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [newReferrer, setNewReferrer] = useState({ name: '', phone: '', email: '', address: '', notes: '' });
+            const [editingReferrer, setEditingReferrer] = useState(null);
+
+            const emptyProduct = { id: generateNewId(), name: '', category: '', gender: 'Unisex', size: 'M', stockQty: '', costPrice: '', sellPrice: '', images: [], dominantColor: '', colorName: '', entryDate: '' };
+            const [product, setProduct] = useState(emptyProduct);
+
+            const uniqueCategories = useMemo(() => Array.from(new Set(catalog.map(item => item.category).filter(Boolean))).sort(), [catalog]);
+
+            // --- JSON IMPORT/EXPORT HELPERS --- //
+            const readFileAsText = (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = (e) => reject(e);
+                    reader.readAsText(file);
+                });
+            };
+
+            const exportToJson = (data, filename) => {
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            const handleFileUpload = (e, type) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const parsed = JSON.parse(event.target.result);
+                        if (type === 'products') setCatalog(parsed);
+                        if (type === 'sales') setSalesLedger(parsed);
+                        alert(`${type.charAt(0).toUpperCase() + type.slice(1)} JSON loaded successfully!`);
+                    } catch (error) {
+                        alert(`Error parsing ${type} JSON. Please ensure it is a valid file.`);
+                    }
+                };
+                reader.readAsText(file);
+            };
+
+
+            // --- LOGIN LOGIC --- //
+            const handleLoginSubmit = async (e) => {
+                e.preventDefault();
+                
+                if (loginInput.userId === userProfile.userId && loginInput.password === userProfile.password) {
+                    
+                    try {
+                        if (pendingFiles.products) {
+                            const text = await readFileAsText(pendingFiles.products);
+                            setCatalog(JSON.parse(text));
+                        }
+                        if (pendingFiles.sales) {
+                            const text = await readFileAsText(pendingFiles.sales);
+                            setSalesLedger(JSON.parse(text));
+                        }
+                    } catch (error) {
+                        alert("Error loading JSON files. Proceeding with existing local data.");
+                    }
+
+                    setIsAuthenticated(true);
+                    localStorage.setItem('A2Z_Auth', 'true');
+                } else {
+                    alert("Invalid User ID or Password");
+                }
+            };
+
+            const handleLogout = () => {
+                setIsAuthenticated(false);
+                localStorage.removeItem('A2Z_Auth');
+                setLoginInput({ userId: 'admin', password: 'admin' });
+            };
+
+            const confirmLogout = () => {
+                if (window.confirm("Are you sure you want to log out?")) {
+                    handleLogout();
+                }
+            };
+
+            // --- HELPERS --- //
+            const hexToRgb = (hex) => { const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? [ parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16) ] : [0,0,0]; };
+            const getNearestColorName = (targetRgb) => {
+                if (colorNamesList.length === 0) return "Loading...";
+                let minDistance = Infinity; let closestName = "Unknown";
+                for (let i = 0; i < colorNamesList.length; i++) {
+                    const c = colorNamesList[i];
+                    const dist = Math.sqrt( Math.pow(targetRgb[0] - c.rgb[0], 2) + Math.pow(targetRgb[1] - c.rgb[1], 2) + Math.pow(targetRgb[2] - c.rgb[2], 2) );
+                    if (dist < minDistance) { minDistance = dist; closestName = c.name; }
+                }
+                return closestName;
+            };
+            const getWeekNumber = (date) => {
+                const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                const dayNum = d.getUTCDay() || 7;
+                d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+                return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            };
+            const getPeriodKey = (date, period) => {
+                const dateObj = new Date(date);
+                switch (period) {
+                    case 'daily': return `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+                    case 'weekly': return `${dateObj.getFullYear()}-W${getWeekNumber(dateObj)}`;
+                    case 'monthly': return `${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+                    case 'yearly': return `${dateObj.getFullYear()}`;
+                    default: return `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+                }
+            };
+            const getSortValue = (key, period) => {
+                switch (period) {
+                    case 'daily': const [d, m, y] = key.split('/'); return new Date(y, m - 1, d).getTime();
+                    case 'weekly': const [year, week] = key.split('-W'); return new Date(year, 0, 1 + (week - 1) * 7).getTime();
+                    case 'monthly': const [month, yearM] = key.split('/'); return new Date(yearM, month - 1, 1).getTime();
+                    case 'yearly': return new Date(key, 0, 1).getTime();
+                    default: return 0;
+                }
+            };
+            const getCalendarData = (date) => {
+                const year = date.getFullYear(); const month = date.getMonth();
+                const firstDay = new Date(year, month, 1);
+                const startDate = new Date(firstDay); startDate.setDate(firstDay.getDate() - firstDay.getDay());
+                
+                const calendarDays = []; const currentDate = new Date(startDate);
+                const dailySales = {};
+                salesLedger.forEach(sale => {
+                    const saleDate = new Date(sale.date);
+                    if (saleDate.getFullYear() === year && saleDate.getMonth() === month) {
+                        const dayKey = saleDate.getDate();
+                        dailySales[dayKey] = (dailySales[dayKey] || 0) + sale.grandTotal;
+                    }
+                });
+                
+                for (let i = 0; i < 42; i++) {
+                    const day = currentDate.getDate(); const isCurrentMonth = currentDate.getMonth() === month;
+                    const sales = isCurrentMonth ? dailySales[day] || 0 : 0;
+                    calendarDays.push({ date: new Date(currentDate), day, isCurrentMonth, sales, hasSales: sales > 0 });
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                return calendarDays;
+            };
+            const navigateMonth = (direction) => { setCurrentCalendarDate(prev => { const newDate = new Date(prev); newDate.setMonth(newDate.getMonth() + direction); return newDate; }); };
+            
+            const filterSalesLedger = (sales) => {
+                return sales.filter(sale => {
+                    const saleDate = new Date(sale.date);
+                    if (tableFilters.dateFrom && saleDate < new Date(tableFilters.dateFrom)) return false;
+                    if (tableFilters.dateTo) { const toDate = new Date(tableFilters.dateTo); toDate.setHours(23, 59, 59, 999); if (saleDate > toDate) return false; }
+                    if (tableFilters.invoiceSearch && !sale.invoiceNo.toLowerCase().includes(tableFilters.invoiceSearch.toLowerCase())) return false;
+                    if (tableFilters.minAmount && sale.grandTotal < Number(tableFilters.minAmount)) return false;
+                    if (tableFilters.maxAmount && sale.grandTotal > Number(tableFilters.maxAmount)) return false;
+                    return true;
+                });
+            };
+            const handleInputChange = (e) => setProduct(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+            // --- INITIALIZATION --- //
+            useEffect(() => {
+                fetch('https://cdn.jsdelivr.net/gh/meodai/color-names/dist/colornames.json')
+                    .then(res => { if (!res.ok) throw new Error('Failed to load'); return res.json(); })
+                    .then(data => setColorNamesList(Object.keys(data).map(hex => ({ hex: hex, name: data[hex], rgb: hexToRgb(hex) }))))
+                    .catch(err => { console.warn('Color names not loaded:', err); setColorNamesList([]); });
+            }, []);
+
+            useEffect(() => { if (currentTab === 'pos' && scannerInputRef.current) scannerInputRef.current.focus(); }, [currentTab, invoiceItems]);
+            useEffect(() => { if (barcodeRef.current && currentTab === 'admin') { JsBarcode(barcodeRef.current, product.id, { width: 1.5, height: 40, displayValue: true }); } }, [product.id, currentTab]);
+
+            // Safely save to Local Storage
+            useEffect(() => {
+                try { 
+                    localStorage.setItem('A2Z_Database', JSON.stringify(catalog)); 
+                    localStorage.setItem('A2Z_Sales', JSON.stringify(salesLedger));
+                    localStorage.setItem('A2Z_UserProfile', JSON.stringify(userProfile));
+                    localStorage.setItem('A2Z_Referrers', JSON.stringify(referrers));
+                } catch (e) { if (e.name === 'QuotaExceededError') alert("ERROR: Local storage full!"); }
+            }, [catalog, salesLedger, userProfile, referrers]);
+
+            // --- CHART GENERATION LOGIC --- //
+            useEffect(() => {
+                if (currentTab === 'ledger' && ledgerView === 'chart' && chartCanvasRef.current) {
+                    if (chartInstanceRef.current) { chartInstanceRef.current.destroy(); }
+                    const periodTotals = {};
+                    salesLedger.forEach(sale => {
+                        const key = getPeriodKey(sale.date, selectedPeriod);
+                        periodTotals[key] = (periodTotals[key] || 0) + sale.grandTotal;
+                    });
+                    const sortedEntries = Object.entries(periodTotals).sort((a, b) => getSortValue(a[0], selectedPeriod) - getSortValue(b[0], selectedPeriod));
+                    const ctx = chartCanvasRef.current.getContext('2d');
+                    
+                    const computedStyle = getComputedStyle(document.documentElement);
+                    const barColor = computedStyle.getPropertyValue('--primary').trim() || '#001451';
+                    
+                    chartInstanceRef.current = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedEntries.map(([key]) => key),
+                            datasets: [{ label: `Total Sales (${selectedPeriod.charAt(0).toUpperCase() + selectedPeriod.slice(1)}) (₹)`, data: sortedEntries.map(([, total]) => total), backgroundColor: barColor, borderRadius: 4 }]
+                        },
+                        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+                    });
+                }
+            }, [currentTab, ledgerView, salesLedger, selectedPeriod]);
+
+            // --- PRINT LABEL LOGIC --- //
+            const printLabel = (item) => {
+                const canvas = document.createElement('canvas');
+                JsBarcode(canvas, item.id, { width: 1.5, height: 40, displayValue: false });
+                const barcodeDataUrl = canvas.toDataURL('image/png');
+                const printWindow = window.open('', '_blank', 'width=400,height=400');
+                printWindow.document.write(`
+                    <html>
+                        <head><title>Print Label - ${item.id}</title>
+                        <style>@page { margin: 0; } body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; margin: 0; padding: 10px; width: 2.5in; } h2 { margin: 0; font-size: 18px; font-family: serif; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 5px;} .product-name { font-size: 14px; margin: 4px 0; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} .size { font-size: 16px; font-weight: bold; border: 1px solid #000; display: inline-block; padding: 2px 6px; margin: 5px 0;} .price { font-size: 18px; font-weight: bold; margin-bottom: 5px; } .barcode-img { max-width: 100%; height: 50px; margin-top: 5px; } .id-text { font-size: 12px; font-family: monospace; letter-spacing: 2px; }</style></head>
+                        <body><h2>A2Z COLLECTION</h2><div class="product-name">${item.name}</div><div class="size">SIZE: ${item.size}</div><div class="price">MRP: ₹${item.sellPrice}</div><img class="barcode-img" src="${barcodeDataUrl}" /><div class="id-text">${item.id}</div><script>window.onload = function() { window.print(); }<\/script></body>
+                    </html>
+                `);
+                printWindow.document.close();
+            };
+
+            // --- POS LOGIC --- //
+            const handleScanSubmit = (e) => {
+                e.preventDefault();
+                const scannedId = scanInput.trim().toUpperCase();
+                if (!scannedId) return;
+                const foundProduct = catalog.find(p => p.id.toUpperCase() === scannedId);
+                
+                if (foundProduct) {
+                    const existingInCart = invoiceItems.find(item => item.id === foundProduct.id);
+                    const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
+                    if (currentQtyInCart + 1 > foundProduct.stockQty) { alert(`Cannot add! Only ${foundProduct.stockQty} pieces left.`); } 
+                    else { setInvoiceItems(prev => { if (existingInCart) return prev.map(item => item.id === foundProduct.id ? { ...item, qty: item.qty + 1 } : item); return [...prev, { ...foundProduct, qty: 1 }]; }); }
+                } else { alert(`Product ID ${scannedId} not found in catalog.`); }
+                setScanInput(''); 
+            };
+
+            const updateQty = (id, delta) => {
+                const catalogItem = catalog.find(p => p.id === id);
+                setInvoiceItems(prev => prev.map(item => {
+                    if (item.id === id) {
+                        const newQty = item.qty + delta;
+                        if (newQty > catalogItem.stockQty) { alert(`Not enough stock! Only ${catalogItem.stockQty} pieces available.`); return item; }
+                        return newQty > 0 ? { ...item, qty: newQty } : item;
+                    }
+                    return item;
+                }));
+            };
+
+            const removeFromInvoice = (id) => setInvoiceItems(prev => prev.filter(item => item.id !== id));
+            const subtotal = invoiceItems.reduce((sum, item) => sum + (Number(item.sellPrice) * item.qty), 0);
+            const discountAmount = subtotal * (Number(discountPercentage) / 100);
+            const grandTotal = subtotal - discountAmount;
+
+            const completeSaleAndPrint = () => {
+                if (invoiceItems.length === 0) { alert("Add items to the invoice first."); return; }
+                const invoiceDate = new Date().toISOString();
+                const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
+                setSalesLedger([...salesLedger, { invoiceNo: invoiceNumber, date: invoiceDate, items: invoiceItems, subtotal, discountPercentage, discountAmount, grandTotal, referrer: selectedReferrer }]);
+                
+                const updatedCatalog = catalog.map(catItem => {
+                    const purchasedItem = invoiceItems.find(i => i.id === catItem.id);
+                    return purchasedItem ? { ...catItem, stockQty: Number(catItem.stockQty) - purchasedItem.qty } : catItem;
+                });
+                setCatalog(updatedCatalog);
+
+                const printWindow = window.open('', '_blank', 'width=400,height=600');
+                let itemsHTML = '';
+                invoiceItems.forEach(item => { itemsHTML += `<div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px;"><div style="width: 50%;">${item.name} (${item.size})</div><div style="width: 15%; text-align: center;">${item.qty}</div><div style="width: 35%; text-align: right;">₹${(item.sellPrice * item.qty).toFixed(2)}</div></div>`; });
+                printWindow.document.write(`
+                    <html><head><title>Invoice ${invoiceNumber}</title><style>@page { margin: 0; } body { font-family: 'Courier New', Courier, monospace; margin: 0; padding: 15px; width: 300px; color: #000; } h2 { text-align: center; margin: 0 0 5px 0; font-family: serif; font-size: 24px;} .divider { border-bottom: 1px dashed #000; margin: 10px 0; } .header-text { text-align: center; font-size: 12px; margin-bottom: 10px; } .totals { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-top: 5px;}</style></head><body><h2>A2Z COLLECTION</h2><div class="header-text">Date: ${new Date().toLocaleString()}<br/>Bill No: ${invoiceNumber}${selectedReferrer ? `<br/>Referred by: ${selectedReferrer}` : ''}</div><div class="divider"></div><div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; font-size: 14px;"><div style="width: 50%;">Item</div><div style="width: 15%; text-align: center;">Qty</div><div style="width: 35%; text-align: right;">Total</div></div>${itemsHTML}<div class="divider"></div><div style="display: flex; justify-content: space-between; font-size: 14px;"><span>Subtotal:</span><span>₹${subtotal.toFixed(2)}</span></div>${discountPercentage > 0 ? `<div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 5px;"><span>Discount (${discountPercentage}%):</span><span>-₹${discountAmount.toFixed(2)}</span></div>` : ''}<div class="divider"></div><div class="totals"><span>GRAND TOTAL:</span><span>₹${grandTotal.toFixed(2)}</span></div><div class="divider"></div><div style="text-align: center; font-size: 12px; margin-top: 20px;">Thank you for shopping!<br/>No Exchange, No Refund.</div><script>window.onload = function() { window.print(); }<\/script></body></html>
+                `);
+                printWindow.document.close();
+                setInvoiceItems([]); setDiscountPercentage(0); setSelectedReferrer('');
+            };
+
+            // --- ADMIN LOGIC --- //
+            const compressImage = (file) => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader(); reader.readAsDataURL(file);
+                    reader.onload = event => {
+                        const img = new Image(); img.src = event.target.result;
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas'); const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
+                            canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                            const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+                        };
+                    };
+                });
+            };
+
+            const handleImageUpload = (e) => {
+                const files = Array.from(e.target.files);
+                if (files.length > 5) { alert("Max 5 images."); e.target.value = ""; return; }
+                Promise.all(files.map(compressImage)).then(compressed => {
+                    setProduct(prev => ({ ...prev, images: compressed }));
+                    if (compressed.length > 0) {
+                        const imgElement = new Image(); imgElement.src = compressed[0];
+                        imgElement.onload = () => {
+                            const colorThief = new ColorThief(); const colorArr = colorThief.getColor(imgElement); 
+                            setProduct(prev => ({ ...prev, dominantColor: `rgb(${colorArr[0]}, ${colorArr[1]}, ${colorArr[2]})`, colorName: getNearestColorName(colorArr) }));
+                        };
+                    }
+                });
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const productToSave = { ...product, stockQty: Number(product.stockQty) || 0, costPrice: Number(product.costPrice) || 0, sellPrice: Number(product.sellPrice) || 0 };
+                if (isEditing) { setCatalog(catalog.map(item => item.id === product.id ? productToSave : item)); setIsEditing(false); } 
+                else { setCatalog([...catalog, { ...productToSave, entryDate: new Date().toLocaleString() }]); }
+                setProduct({ ...emptyProduct, id: generateNewId() });
+                const imgInput = document.getElementById("imageInput"); if(imgInput) imgInput.value = "";
+            };
+
+            const handleEdit = (itemToEdit) => { setProduct(itemToEdit); setIsEditing(true); setCurrentTab('admin'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+            const handleDelete = (idToDelete) => {
+                if(window.confirm(`Delete product ${idToDelete}?`)) {
+                    setCatalog(catalog.filter(item => item.id !== idToDelete));
+                    if(isEditing && product.id === idToDelete) { setProduct({ ...emptyProduct, id: generateNewId() }); setIsEditing(false); }
+                }
+            };
+
+            // --- TABS RENDERING --- //
+            
+            // 1. Grid Tab
+            const renderGridTab = () => {
+                const filteredCatalog = catalog.filter(p => {
+                    if (!searchQuery) return true;
+                    const query = searchQuery.toLowerCase();
+                    return p.id.toLowerCase().includes(query) || p.name.toLowerCase().includes(query) || (p.colorName && p.colorName.toLowerCase().includes(query));
+                });
+
+                const groupedCatalog = {};
+                filteredCatalog.forEach(p => { if (!groupedCatalog[p.category]) groupedCatalog[p.category] = []; groupedCatalog[p.category].push(p); });
+
+                return (
+                    <div>
+                        <input type="text" className="search-bar" placeholder="Search by Product Name, ID, or Color..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        {Object.keys(groupedCatalog).length === 0 ? ( <p style={{textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32) 0'}}>No products found in catalog.</p> ) : (
+                            Object.keys(groupedCatalog).sort().map(category => (
+                                <div key={category} className="category-section">
+                                    <h2 className="category-title">{category}</h2>
+                                    <div className="grid-container">
+                                        {groupedCatalog[category].map(item => (
+                                            <div key={item.id} className="product-card">
+                                                <div>
+                                                    {item.images.length > 0 ? ( <img src={item.images[0]} alt={item.name} /> ) : (
+                                                        <div style={{ height: '160px', display: 'flex', alignItems:'center', justifyContent:'center', background:'var(--surface-container-high)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface-variant)'}}>No Image</div>
+                                                    )}
+                                                    <h4>{item.name}</h4>
+                                                    <div style={{fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-8)'}}>{item.id}</div>
+                                                    <div><span className="size-badge">{item.size}</span></div>
+                                                    <div style={{fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginTop: 'var(--spacing-8)'}}>Color: {item.colorName || 'N/A'}</div>
+                                                    <div style={{ fontSize: '0.875rem', color: item.stockQty <= 2 ? 'var(--error)' : 'var(--success)', fontWeight: '600', marginTop: 'var(--spacing-8)', display: 'inline-block', backgroundColor: item.stockQty <= 2 ? 'var(--error-container)' : 'var(--success-container)', padding: 'var(--spacing-4) var(--spacing-8)', borderRadius: 'var(--radius-full)' }}>Stock: {item.stockQty}</div>
+                                                </div>
+                                                <div>
+                                                    <div className="prices">
+                                                        <span style={{color: 'var(--on-surface-variant)', textDecoration: 'line-through', marginRight: 'var(--spacing-8)'}}>Cost: ₹{item.costPrice}</span>
+                                                        <strong style={{color: 'var(--primary)'}}>MRP: ₹{item.sellPrice}</strong>
+                                                    </div>
+                                                    <button onClick={() => printLabel(item)} className="action-btn" style={{backgroundColor: 'var(--success)', color: 'var(--on-success)'}}><span className="material-icons">print</span> Print Label</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                );
+            };
+
+            // 2. POS Tab
+            const renderPOSTab = () => {
+                return (
+                    <div className="pos-layout">
+                        <div className="pos-main">
+                            <div className="card">
+                                <form onSubmit={handleScanSubmit}>
+                                    <label style={{fontSize: '1.125rem', color: 'var(--success)', fontWeight: '600'}}>Scanner Input</label>
+                                    <input ref={scannerInputRef} type="text" className="scanner-input" placeholder="Scan barcode here..." value={scanInput} onChange={(e) => setScanInput(e.target.value)} autoComplete="off" />
+                                </form>
+                            </div>
+                            <div className="card">
+                                <h3 style={{marginTop: 0, marginBottom: 'var(--spacing-16)'}}>Current Order</h3>
+                                <div style={{maxHeight: '400px', overflowY: 'auto'}}>
+                                    <table className="data-table">
+                                        <thead><tr><th>Product</th><th>Size</th><th>Stock</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead>
+                                        <tbody>
+                                            {invoiceItems.length === 0 ? ( <tr><td colSpan="7" style={{textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-20)'}}>No items scanned yet.</td></tr> ) : (
+                                                invoiceItems.map(item => {
+                                                    const dbItem = catalog.find(c => c.id === item.id);
+                                                    const stockLeft = dbItem ? dbItem.stockQty - item.qty : 0;
+                                                    return (
+                                                        <tr key={item.id}>
+                                                            <td style={{fontWeight: '600'}}>{item.name}<br/><small style={{color: 'var(--on-surface-variant)'}}>{item.id}</small></td>
+                                                            <td><span className="size-badge">{item.size}</span></td>
+                                                            <td style={{color: stockLeft <= 2 ? 'var(--error)' : 'var(--on-surface-variant)'}}>{stockLeft}</td>
+                                                            <td>₹{item.sellPrice}</td>
+                                                            <td><div className="qty-controls"><button className="qty-btn" onClick={() => updateQty(item.id, -1)}>-</button><span style={{fontWeight: 'bold', width: '20px', textAlign: 'center'}}>{item.qty}</span><button className="qty-btn" onClick={() => updateQty(item.id, 1)}>+</button></div></td>
+                                                            <td style={{fontWeight: 'bold'}}>₹{(item.sellPrice * item.qty).toFixed(2)}</td>
+                                                            <td><button className="btn-sm btn-delete" onClick={() => removeFromInvoice(item.id)}><span className="material-icons">delete</span></button></td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="pos-sidebar">
+                            <div>
+                                <h3 style={{marginTop: 0, marginBottom: 'var(--spacing-16)', color: 'var(--primary)'}}>Bill Summary</h3>
+                                <div className="totals-row"><span style={{color: 'var(--on-surface-variant)'}}>Subtotal:</span><span>₹{subtotal.toFixed(2)}</span></div>
+                                <div style={{marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)'}}>
+                                    <label style={{color: 'var(--on-surface-variant)', fontSize: '0.875rem'}}>Discount (%)</label>
+                                    <input type="number" min="0" max="100" value={discountPercentage} onChange={(e) => setDiscountPercentage(e.target.value)} style={{ fontSize: '1rem', textAlign: 'right', marginTop: 'var(--spacing-4)', width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', color: 'var(--on-surface)' }} />
+                                </div>
+                                {discountPercentage > 0 && ( <div className="totals-row" style={{color: 'var(--success)'}}><span>Discount Amount:</span><span>-₹{discountAmount.toFixed(2)}</span></div> )}
+                                <div style={{marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)'}}>
+                                    <label style={{color: 'var(--on-surface-variant)', fontSize: '0.875rem'}}>Refer by</label>
+                                    <select value={selectedReferrer} onChange={(e) => setSelectedReferrer(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', marginTop: 'var(--spacing-4)' }}>
+                                        <option value="">Select Referrer (Optional)</option>
+                                        {referrers.map((referrer, index) => ( <option key={index} value={referrer.name}>{referrer.name}</option> ))}
+                                    </select>
+                                </div>
+                                <div className="totals-row grand-total"><span>Total:</span><span>₹{grandTotal.toFixed(2)}</span></div>
+                            </div>
+                            <button className="action-btn" style={{backgroundColor: 'var(--success)', color: 'white', fontSize: '1.125rem', padding: 'var(--spacing-16)'}} onClick={completeSaleAndPrint}>
+                                <span className="material-icons">check_circle</span> Complete Sale & Print
+                            </button>
+                        </div>
+                    </div>
+                );
+            };
+
+            // 3. Ledger Tab
+            const renderLedgerTab = () => {
+                const totalRevenue = salesLedger.reduce((sum, sale) => sum + sale.grandTotal, 0);
+                const totalInvoices = salesLedger.length;
+                const calendarData = getCalendarData(currentCalendarDate);
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                
+                return (
+                    <div className="card">
+                        <div className="ledger-header">
+                            <div className="ledger-stat">
+                                <h2>₹{totalRevenue.toFixed(2)}</h2>
+                                <span>Total Lifetime Revenue</span>
+                            </div>
+                            <div className="ledger-stat">
+                                <h2>{totalInvoices}</h2>
+                                <span>Total Invoices Generated</span>
+                            </div>
+                            <div style={{ display: 'flex', gap: 'var(--spacing-8)', alignItems: 'center' }}>
+                                <button onClick={() => window.print()} style={{ backgroundColor: 'var(--success)', color: 'var(--on-success)', border: 'none', padding: 'var(--spacing-8) var(--spacing-16)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)', fontSize: '0.875rem' }} title="Print Sales Report">
+                                    <span className="material-icons">print</span> Print Report
+                                </button>
+                                <div className="view-toggle">
+                                    <button className={`view-btn ${ledgerView === 'table' ? 'active' : ''}`} onClick={() => setLedgerView('table')}><span className="material-icons">table_chart</span> Table View</button>
+                                    <button className={`view-btn ${ledgerView === 'chart' ? 'active' : ''}`} onClick={() => setLedgerView('chart')}><span className="material-icons">bar_chart</span> Chart View</button>
+                                    <button className={`view-btn ${ledgerView === 'calendar' ? 'active' : ''}`} onClick={() => setLedgerView('calendar')}><span className="material-icons">calendar_month</span> Calendar View</button>
+                                </div>
+                            </div>
+                        </div>
+                        {ledgerView === 'chart' && (
+                            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                                <label style={{ color: 'var(--primary)', marginRight: '10px' }}>Select Period:</label>
+                                <select value={selectedPeriod} onChange={(e) => setSelectedPeriod(e.target.value)} style={{ width: '200px', display: 'inline-block' }}>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                </select>
+                            </div>
+                        )}
+                        {ledgerView === 'calendar' && (
+                            <div style={{ marginBottom: 'var(--spacing-20)', textAlign: 'center' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-20)' }}>
+                                    <button onClick={() => navigateMonth(-1)} style={{ backgroundColor: 'var(--secondary)', color: 'var(--on-secondary)', border: 'none', padding: 'var(--spacing-8) var(--spacing-16)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600' }}>◀ Previous</button>
+                                    <h3 style={{ color: 'var(--secondary)', margin: 0, fontSize: '1.25rem' }}>{monthNames[currentCalendarDate.getMonth()]} {currentCalendarDate.getFullYear()}</h3>
+                                    <button onClick={() => navigateMonth(1)} style={{ backgroundColor: 'var(--secondary)', color: 'var(--on-secondary)', border: 'none', padding: 'var(--spacing-8) var(--spacing-16)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600' }}>Next ▶</button>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 'var(--spacing-4)', backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-20)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => ( <div key={day} style={{ textAlign: 'center', fontWeight: '600', color: 'var(--secondary)', padding: 'var(--spacing-12)', fontSize: '0.875rem' }}>{day}</div> ))}
+                                    {calendarData.map((dayData, index) => (
+                                        <div key={index} style={{ backgroundColor: dayData.isCurrentMonth ? (dayData.hasSales ? 'var(--secondary)' : 'var(--surface-container-lowest)') : 'var(--surface-variant)', color: dayData.isCurrentMonth ? (dayData.hasSales ? 'var(--on-secondary)' : 'var(--on-surface)') : 'var(--on-surface-variant)', padding: 'var(--spacing-12)', borderRadius: 'var(--radius-md)', textAlign: 'center', minHeight: '80px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', cursor: dayData.hasSales ? 'pointer' : 'default', border: dayData.hasSales ? '2px solid var(--on-secondary)' : '1px solid var(--outline-variant)', transition: 'all 0.3s ease' }}>
+                                            <div style={{ fontSize: '1.125rem', fontWeight: '600' }}>{dayData.day}</div>
+                                            {dayData.hasSales && ( <div style={{ fontSize: '0.75rem', fontWeight: '600' }}>₹{dayData.sales.toFixed(0)}</div> )}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div style={{ marginTop: 'var(--spacing-20)', textAlign: 'left', color: 'var(--on-surface-variant)' }}>
+                                    <p style={{ margin: 0, fontWeight: '600', marginBottom: 'var(--spacing-12)' }}>Legend:</p>
+                                    <div style={{ display: 'flex', gap: 'var(--spacing-20)', flexWrap: 'wrap' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}><div style={{ width: '20px', height: '20px', backgroundColor: 'var(--surface-container-lowest)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}></div><span>No Sales</span></div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}><div style={{ width: '20px', height: '20px', backgroundColor: 'var(--secondary)', border: '2px solid var(--on-secondary)', borderRadius: 'var(--radius-md)' }}></div><span>Has Sales (₹ amount shown)</span></div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}><div style={{ width: '20px', height: '20px', backgroundColor: 'var(--surface-variant)', borderRadius: 'var(--radius-md)' }}></div><span>Other Month</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {ledgerView === 'table' ? (
+                            <div>
+                                <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
+                                    <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-16)' }}><span className="material-icons" style={{ verticalAlign: 'middle', marginRight: 'var(--spacing-8)' }}>filter_list</span>Filter Sales</h4>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-16)' }}>
+                                        <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Date From:</label><input type="date" value={tableFilters.dateFrom} onChange={(e) => setTableFilters(prev => ({ ...prev, dateFrom: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} /></div>
+                                        <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Date To:</label><input type="date" value={tableFilters.dateTo} onChange={(e) => setTableFilters(prev => ({ ...prev, dateTo: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} /></div>
+                                        <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Invoice Search:</label><input type="text" placeholder="Search invoice number..." value={tableFilters.invoiceSearch} onChange={(e) => setTableFilters(prev => ({ ...prev, invoiceSearch: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} /></div>
+                                        <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Min Amount (₹):</label><input type="number" placeholder="0" value={tableFilters.minAmount} onChange={(e) => setTableFilters(prev => ({ ...prev, minAmount: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} /></div>
+                                        <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Max Amount (₹):</label><input type="number" placeholder="0" value={tableFilters.maxAmount} onChange={(e) => setTableFilters(prev => ({ ...prev, maxAmount: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} /></div>
+                                        <div style={{ display: 'flex', alignItems: 'end' }}><button onClick={() => setTableFilters({ dateFrom: '', dateTo: '', invoiceSearch: '', minAmount: '', maxAmount: '' })} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--error-container)', color: 'var(--error)', border: 'none', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600' }}>Clear Filters</button></div>
+                                    </div>
+                                </div>
+                                <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--surface-container-low)', color: 'var(--on-surface)' }}>
+                                        <thead style={{ backgroundColor: 'var(--primary-container)' }}>
+                                            <tr>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Date</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Invoice No.</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Items Sold</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Discount</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Grand Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {(() => {
+                                                const filteredSales = filterSalesLedger([...salesLedger].reverse());
+                                                return filteredSales.length === 0 ? ( <tr><td colSpan="5" style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-20)', fontStyle: 'italic' }}>No sales match the current filters.</td></tr> ) : 
+                                                filteredSales.map((sale, i) => (
+                                                    <tr key={i} style={{ borderBottom: '1px solid var(--outline-variant)', backgroundColor: i % 2 === 0 ? 'var(--surface-container-low)' : 'var(--surface-container-highest)' }}>
+                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{new Date(sale.date).toLocaleString()}</td>
+                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontFamily: 'var(--font-family-mono)' }}>{sale.invoiceNo}</td>
+                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{sale.items.reduce((sum, item) => sum + item.qty, 0)} items</td>
+                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{sale.discountPercentage}%</td>
+                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontWeight: '600', color: 'var(--primary)' }}>₹{sale.grandTotal.toFixed(2)}</td>
+                                                    </tr>
+                                                ));
+                                            })()}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        ) : ledgerView === 'chart' ? (
+                            <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-20)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                                <canvas ref={chartCanvasRef}></canvas>
+                            </div>
+                        ) : null}
+                    </div>
+                );
+            };
+
+            // 4. Admin Tab
+            const renderAdminTab = () => {
+                return (
+                    <div className="card">
+                        <h3>{isEditing ? `Edit Product: ${product.id}` : 'Add New Product'}</h3>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group"><label>Product ID</label><input type="text" value={product.id} readOnly style={{ color: '#aaa' }} /><div className="barcode-container"><svg ref={barcodeRef}></svg></div></div>
+                            <div className="form-group"><label>Product Name</label><input type="text" name="name" value={product.name} onChange={handleInputChange} required /></div>
+                            <div className="row-group">
+                                <div><label>Category</label><input type="text" name="category" list="categoryOptions" value={product.category} onChange={handleInputChange} placeholder="Select or type..." required /><datalist id="categoryOptions">{uniqueCategories.map((cat, i) => <option key={i} value={cat} />)}</datalist></div>
+                                <div><label>Gender</label><select name="gender" value={product.gender} onChange={handleInputChange}><option value="Male">Male</option><option value="Female">Female</option><option value="Unisex">Unisex</option></select></div>
+                                <div><label>Size</label><select name="size" value={product.size} onChange={handleInputChange}>{sizeOptions.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
+                            </div>
+                            <div className="row-group" style={{marginTop: '15px'}}>
+                                <div><label>Total Stock Quantity</label><input type="number" name="stockQty" value={product.stockQty} onChange={handleInputChange} min="0" required placeholder="Pieces in stock" /></div>
+                                <div><label>Cost Price</label><div className="input-wrapper"><span className="currency-symbol">₹</span><input type="number" name="costPrice" value={product.costPrice} onChange={handleInputChange} min="0" required /></div></div>
+                                <div><label>Sell Price (MRP)</label><div className="input-wrapper"><span className="currency-symbol">₹</span><input type="number" name="sellPrice" value={product.sellPrice} onChange={handleInputChange} min="0" required /></div></div>
+                            </div>
+                            <div className="form-group" style={{marginTop: '15px'}}>
+                                <label>Images (Max 5)</label><input id="imageInput" type="file" multiple accept="image/*" onChange={handleImageUpload} />
+                                {product.images.length > 0 && (<div style={{ marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>{product.images.map((imgSrc, index) => ( <img key={index} src={imgSrc} alt="Preview" className="img-preview" /> ))}</div>)}
+                                {product.dominantColor && (<div style={{ marginTop: '10px' }}>Color: <span className="color-box" style={{ backgroundColor: product.dominantColor }}></span><span style={{ marginLeft: '10px' }}>{product.colorName}</span></div>)}
+                            </div>
+                            <button type="submit" className="action-btn">{isEditing ? 'Update Product & Inventory' : 'Save Product to Inventory'}</button>
+                            {isEditing && (<button type="button" className="action-btn" style={{backgroundColor: 'var(--surface-variant)', color: 'var(--on-surface-variant)'}} onClick={() => { setIsEditing(false); setProduct({...emptyProduct, id: generateNewId()}); }}>Cancel Edit</button>)}
+                        </form>
+
+                        <div style={{ marginTop: '40px' }}>
+                            <h3 style={{borderBottom: '1px solid var(--outline-variant)', paddingBottom: '10px'}}>Current Inventory List</h3>
+                            {catalog.map((item, index) => (
+                                <div key={index} style={{ borderBottom: '1px solid var(--surface-container-high)', padding: '15px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div style={{ flex: 1 }}>
+                                        <strong>{item.name}</strong> <span className="size-badge">{item.size}</span>
+                                        <span style={{ marginLeft: '10px', color: item.stockQty <= 2 ? 'var(--error)' : 'var(--success)', fontWeight: 'bold'}}>Stock: {item.stockQty}</span><br/>
+                                        <small style={{ color: 'var(--on-surface-variant)' }}>{item.id} | MRP: ₹{item.sellPrice}</small>
+                                    </div>
+                                    <div>
+                                        <button onClick={() => handleEdit(item)} className="btn-sm btn-edit"><span className="material-icons">edit</span></button>
+                                        <button onClick={() => handleDelete(item.id)} className="btn-sm btn-delete"><span className="material-icons">delete</span></button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            // 5. User Profile Tab
+            const renderProfileTab = () => {
+                return (
+                    <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h3 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-20)', fontSize: '1.5rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}>
+                                <span className="material-icons">account_circle</span>User Profile
+                            </h3>
+                        </div>
+                        <form onSubmit={(e) => { e.preventDefault(); alert('Profile updated successfully!'); localStorage.setItem('A2Z_UserProfile', JSON.stringify(userProfile)); }}>
+                            <div style={{ display: 'grid', gap: 'var(--spacing-16)' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                                    <div>
+                                        <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>User ID</label>
+                                        <input type="text" value={userProfile.userId} onChange={(e) => setUserProfile(prev => ({ ...prev, userId: e.target.value }))} placeholder="Enter your user ID" required style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Password</label>
+                                        <input type="password" value={userProfile.password} onChange={(e) => setUserProfile(prev => ({ ...prev, password: e.target.value }))} placeholder="Enter your password" required style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                                    <div>
+                                        <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Full Name</label>
+                                        <input type="text" value={userProfile.name} onChange={(e) => setUserProfile(prev => ({ ...prev, name: e.target.value }))} placeholder="Enter your full name" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
+                                    </div>
+                                    <div>
+                                        <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Email Address</label>
+                                        <input type="email" value={userProfile.email} onChange={(e) => setUserProfile(prev => ({ ...prev, email: e.target.value }))} placeholder="Enter your email" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
+                                    </div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                                    <div>
+                                        <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Phone Number</label>
+                                        <input type="tel" value={userProfile.phone} onChange={(e) => setUserProfile(prev => ({ ...prev, phone: e.target.value }))} placeholder="Enter your phone number" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
+                                    </div>
+                                    <div></div>
+                                </div>
+                                <div>
+                                    <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Address</label>
+                                    <textarea value={userProfile.address} onChange={(e) => setUserProfile(prev => ({ ...prev, address: e.target.value }))} placeholder="Enter your address" rows="3" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem', resize: 'vertical', minHeight: '80px' }} />
+                                </div>
+                            </div>
+                            
+                            <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', marginTop: 'var(--spacing-20)' }}>
+                                <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)' }}>Data Management (JSON Backup)</h4>
+                                <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Export your current data to keep a secure backup, or import a JSON file to restore your database.</p>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                                    <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
+                                        <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Products Database</h5>
+                                        <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', marginTop: 'var(--spacing-20)' }}>
+                                <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)' }}>Data Management & Auto-Save</h4>
+                                <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Link a local folder on your PC. The app will automatically sync and overwrite JSON files in this folder as you work.</p>
+                                
+                                <div style={{ marginBottom: 'var(--spacing-24)', paddingBottom: 'var(--spacing-16)', borderBottom: '1px solid var(--outline-variant)' }}>
+                                    <button type="button" onClick={linkLocalFolder} style={{ backgroundColor: dirHandle ? 'var(--success)' : 'var(--primary)', color: 'white', border: 'none', padding: 'var(--spacing-12)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                                        <span className="material-icons">{dirHandle ? 'folder_special' : 'create_new_folder'}</span>
+                                        {dirHandle ? 'Folder Linked & Auto-Saving' : 'Link Local Auto-Save Folder'}
+                                    </button>
+                                </div>
+                                </div>
+                                        <button type="button" onClick={() => exportToJson(catalog, 'a2z_products.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>Download Products (JSON)</button>
+                                        <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Products JSON:</label>
+                                        <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'products')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
+                                    </div>
+                                    <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
+                                        <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Sales Database</h5>
+                                        <button type="button" onClick={() => exportToJson(salesLedger, 'a2z_sales.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>Download Sales (JSON)</button>
+                                        <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Sales JSON:</label>
+                                        <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'sales')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" style={{ backgroundColor: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: 'var(--spacing-12) var(--spacing-20)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)', marginTop: 'var(--spacing-20)' }}>
+                                <span className="material-icons">save</span> Save Profile
+                            </button>
+                        </form>
+                    </div>
+                );
+            };
+
+            const renderReferrersTab = () => {
+                return (
+                    <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
+                        <h3 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-8)', fontSize: '1.5rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}><span className="material-icons">people</span>Manage Referrers</h3>
+                        <p style={{ color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-20)', fontSize: '0.875rem' }}>Add and manage referrer contacts for billing purposes.</p>
+                        
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            if (!newReferrer.name.trim()) return;
+                            const referrer = { id: generateNewId(), name: newReferrer.name.trim(), phone: newReferrer.phone.trim(), email: newReferrer.email.trim(), address: newReferrer.address.trim(), notes: newReferrer.notes.trim(), createdDate: new Date().toISOString() };
+                            setReferrers(prev => [...prev, referrer]);
+                            setNewReferrer({ name: '', phone: '', email: '', address: '', notes: '' });
+                        }} style={{ marginBottom: 'var(--spacing-24)' }}>
+                            <h4 style={{ color: 'var(--secondary)', marginBottom: 'var(--spacing-16)', fontSize: '1.125rem', fontWeight: '600' }}>Add New Referrer</h4>
+                            <div style={{ display: 'grid', gap: 'var(--spacing-16)' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                                    <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Full Name *</label><input type="text" value={newReferrer.name} onChange={(e) => setNewReferrer(prev => ({ ...prev, name: e.target.value }))} placeholder="Enter referrer's full name" required style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                    <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Phone Number</label><input type="tel" value={newReferrer.phone} onChange={(e) => setNewReferrer(prev => ({ ...prev, phone: e.target.value }))} placeholder="Enter phone number" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                                    <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Email Address</label><input type="email" value={newReferrer.email} onChange={(e) => setNewReferrer(prev => ({ ...prev, email: e.target.value }))} placeholder="Enter email address" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                    <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Address</label><input type="text" value={newReferrer.address} onChange={(e) => setNewReferrer(prev => ({ ...prev, address: e.target.value }))} placeholder="Enter address" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                </div>
+                                <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Notes</label><textarea value={newReferrer.notes} onChange={(e) => setNewReferrer(prev => ({ ...prev, notes: e.target.value }))} placeholder="Additional notes about this referrer" rows="2" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem', resize: 'vertical', minHeight: '60px' }} /></div>
+                            </div>
+                            <button type="submit" style={{ backgroundColor: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: 'var(--spacing-12) var(--spacing-20)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)', marginTop: 'var(--spacing-16)' }}><span className="material-icons">person_add</span> Add Referrer</button>
+                        </form>
+                        
+                        <div>
+                            <h4 style={{ color: 'var(--secondary)', marginBottom: 'var(--spacing-16)', fontSize: '1.125rem', fontWeight: '600' }}>Referrer List ({referrers.length})</h4>
+                            {referrers.length === 0 ? ( <p style={{ color: 'var(--on-surface-variant)', textAlign: 'center', padding: 'var(--spacing-20)', fontStyle: 'italic' }}>No referrers added yet. Add your first referrer above.</p> ) : (
+                                <div style={{ display: 'grid', gap: 'var(--spacing-12)' }}>
+                                    {referrers.map(referrer => (
+                                        <div key={referrer.id} style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: 'var(--shadow-sm)' }}>
+                                            <div style={{ flex: 1 }}>
+                                                <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--primary)', fontSize: '1.125rem', fontWeight: '600' }}>{referrer.name}</h5>
+                                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-8)', fontSize: '0.875rem', color: 'var(--on-surface-variant)' }}>
+                                                    {referrer.phone && <div><strong style={{ color: 'var(--on-surface)' }}>Phone:</strong> {referrer.phone}</div>}
+                                                    {referrer.email && <div><strong style={{ color: 'var(--on-surface)' }}>Email:</strong> {referrer.email}</div>}
+                                                    {referrer.address && <div><strong style={{ color: 'var(--on-surface)' }}>Address:</strong> {referrer.address}</div>}
+                                                    <div><strong style={{ color: 'var(--on-surface)' }}>Added:</strong> {new Date(referrer.createdDate).toLocaleDateString()}</div>
+                                                </div>
+                                                {referrer.notes && ( <div style={{ marginTop: 'var(--spacing-12)', fontSize: '0.875rem', color: 'var(--on-surface-variant)' }}><strong style={{ color: 'var(--on-surface)' }}>Notes:</strong> {referrer.notes}</div> )}
+                                            </div>
+                                            <div style={{ display: 'flex', gap: 'var(--spacing-8)' }}>
+                                                <button style={{ backgroundColor: 'var(--secondary-container)', color: 'var(--on-secondary-container)', border: 'none', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { setEditingReferrer(referrer); setNewReferrer({ name: referrer.name, phone: referrer.phone || '', email: referrer.email || '', address: referrer.address || '', notes: referrer.notes || '' }); }} title="Edit referrer"><span className="material-icons" style={{ fontSize: '1.125rem' }}>edit</span></button>
+                                                <button style={{ backgroundColor: 'var(--error-container)', color: 'var(--error)', border: 'none', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { if (confirm(`Delete referrer "${referrer.name}"?`)) { setReferrers(prev => prev.filter(r => r.id !== referrer.id)); } }} title="Delete referrer"><span className="material-icons" style={{ fontSize: '1.125rem' }}>delete</span></button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        
+                        {editingReferrer && (
+                            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
+                                <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-24)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', maxWidth: '500px', width: '90%', boxShadow: 'var(--shadow-lg)' }}>
+                                    <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-20)', fontSize: '1.25rem', fontWeight: '600' }}>Edit Referrer</h4>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        if (!newReferrer.name.trim()) return;
+                                        setReferrers(prev => prev.map(r => r.id === editingReferrer.id ? { ...r, name: newReferrer.name.trim(), phone: newReferrer.phone.trim(), email: newReferrer.email.trim(), address: newReferrer.address.trim(), notes: newReferrer.notes.trim() } : r ));
+                                        setEditingReferrer(null);
+                                        setNewReferrer({ name: '', phone: '', email: '', address: '', notes: '' });
+                                    }}>
+                                        <div style={{ display: 'grid', gap: 'var(--spacing-16)' }}>
+                                            <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Full Name *</label><input type="text" value={newReferrer.name} onChange={(e) => setNewReferrer(prev => ({ ...prev, name: e.target.value }))} required style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                            <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Phone Number</label><input type="tel" value={newReferrer.phone} onChange={(e) => setNewReferrer(prev => ({ ...prev, phone: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                            <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Email Address</label><input type="email" value={newReferrer.email} onChange={(e) => setNewReferrer(prev => ({ ...prev, email: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                            <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Address</label><input type="text" value={newReferrer.address} onChange={(e) => setNewReferrer(prev => ({ ...prev, address: e.target.value }))} style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} /></div>
+                                            <div><label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Notes</label><textarea value={newReferrer.notes} onChange={(e) => setNewReferrer(prev => ({ ...prev, notes: e.target.value }))} rows="2" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem', resize: 'vertical', minHeight: '60px' }} /></div>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: 'var(--spacing-12)', justifyContent: 'flex-end', marginTop: 'var(--spacing-20)' }}>
+                                            <button type="button" onClick={() => { setEditingReferrer(null); setNewReferrer({ name: '', phone: '', email: '', address: '', notes: '' }); }} style={{ backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline)', padding: 'var(--spacing-10) var(--spacing-16)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '500' }}>Cancel</button>
+                                            <button type="submit" style={{ backgroundColor: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: 'var(--spacing-10) var(--spacing-16)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}><span className="material-icons" style={{ fontSize: '1.125rem' }}>save</span> Update Referrer</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            // --- MAIN RENDER LOGIC --- //
+
+            // if (!isAuthenticated) {
+            //     return (
+            //         <div className="login-wrapper">
+            //             <div className="login-card">
+            //                 <h1 style={{ marginBottom: 'var(--spacing-8)', color: 'var(--primary)' }}>A2Z Collection</h1>
+            //                 <p style={{ marginBottom: 'var(--spacing-32)' }}>Inventory & Point of Sale System</p>
+                            
+            //                 <form onSubmit={handleLoginSubmit}>
+            //                     <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-16)' }}>
+            //                         <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>User ID</label>
+            //                         <input 
+            //                             type="text" 
+            //                             value={loginInput.userId} 
+            //                             onChange={(e) => setLoginInput({...loginInput, userId: e.target.value})} 
+            //                             placeholder="Enter your User ID" 
+            //                             required 
+            //                             style={{ width: '100%' }}
+            //                         />
+            //                     </div>
+            //                     <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-24)' }}>
+            //                         <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>Password</label>
+            //                         <input 
+            //                             type="password" 
+            //                             value={loginInput.password} 
+            //                             onChange={(e) => setLoginInput({...loginInput, password: e.target.value})} 
+            //                             placeholder="Enter your Password" 
+            //                             required 
+            //                             style={{ width: '100%' }}
+            //                         />
+            //                     </div>
+                                
+            //                     <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-24)', backgroundColor: 'var(--surface)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', border: '1px dashed var(--outline-variant)' }}>
+            //                         <p style={{ fontSize: '0.875rem', fontWeight: '600', margin: '0 0 var(--spacing-8) 0', color: 'var(--primary)' }}>Local JSON Setup (Optional)</p>
+            //                         <p style={{ fontSize: '0.75rem', margin: '0 0 var(--spacing-12) 0', color: 'var(--on-surface-variant)' }}>Upload local files to restore your databases before logging in.</p>
+                                    
+            //                         <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '500', marginBottom: '4px' }}>Products JSON:</label>
+            //                         <input type="file" accept=".json" onChange={(e) => setPendingFiles(prev => ({...prev, products: e.target.files[0]}))} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', marginBottom: 'var(--spacing-8)', border: 'none', backgroundColor: 'transparent' }} />
+                                    
+            //                         <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '500', marginBottom: '4px' }}>Sales JSON:</label>
+            //                         <input type="file" accept=".json" onChange={(e) => setPendingFiles(prev => ({...prev, sales: e.target.files[0]}))} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', border: 'none', backgroundColor: 'transparent' }} />
+            //                     </div>
+
+            //                     <button type="submit" className="action-btn" style={{ padding: 'var(--spacing-16)', fontSize: '1.125rem' }}>
+            //                         Login to POS
+            //                     </button>
+            //                 </form>
+            //             </div>
+            //         </div>
+            //     );
+            // }
+
+            if (!isAuthenticated) {
+                return (
+                    <div className="login-wrapper">
+                        <div className="login-card">
+                            <h1 style={{ marginBottom: 'var(--spacing-8)', color: 'var(--primary)' }}>A2Z Collection</h1>
+                            <p style={{ marginBottom: 'var(--spacing-32)' }}>Inventory & Point of Sale System</p>
+                            
+                            <form onSubmit={handleLoginSubmit}>
+                                <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-16)' }}>
+                                    <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>User ID</label>
+                                    <input type="text" value={loginInput.userId} onChange={(e) => setLoginInput({...loginInput, userId: e.target.value})} placeholder="Default: admin" required style={{ width: '100%' }} />
+                                </div>
+                                <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-24)' }}>
+                                    <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>Password</label>
+                                    <input type="password" value={loginInput.password} onChange={(e) => setLoginInput({...loginInput, password: e.target.value})} placeholder="Default: admin" required style={{ width: '100%' }} />
+                                </div>
+                                
+                                <button type="submit" className="action-btn" style={{ padding: 'var(--spacing-16)', fontSize: '1.125rem' }}>Login to POS</button>
+                                
+                                <button type="button" onClick={() => {
+                                    localStorage.clear();
+                                    alert("App reset to factory defaults. Please login with 'admin' and 'admin'.");
+                                    window.location.reload();
+                                }} style={{ marginTop: 'var(--spacing-16)', background: 'transparent', border: '1px solid var(--error)', color: 'var(--error)', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-md)', width: '100%', cursor: 'pointer' }}>
+                                    Locked out? Factory Reset App
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="container">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
+                        <h1>A2Z Collection</h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-16)' }}>
+                            <select 
+                                value={currentTheme} 
+                                onChange={(e) => setCurrentTheme(e.target.value)}
+                                style={{
+                                    padding: 'var(--spacing-8)',
+                                    borderRadius: 'var(--radius-md)',
+                                    backgroundColor: 'var(--surface-container-high)',
+                                    color: 'var(--on-surface)',
+                                    border: '1px solid var(--outline-variant)',
+                                    cursor: 'pointer',
+                                    width: 'auto',
+                                    fontSize: '0.875rem',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                <option value="default">Corporate Blue</option>
+                                <option value="peacock">Peacock & Gold</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="terracotta">Earthy Terracotta</option>
+                            </select>
+                            
+                            <div className="profile-icon" onClick={() => setCurrentTab('profile')} title="User Profile">
+                                <span className="material-icons">account_circle</span>
+                            </div>
+                            
+                            <div className="power-icon" onClick={confirmLogout} title="Logout">
+                                <span className="material-icons">power_settings_new</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="nav-tabs">
+                        <button className={`tab-btn ${currentTab === 'grid' ? 'active' : ''}`} onClick={() => setCurrentTab('grid')}><span className="material-icons">grid_view</span> Product Catalog</button>
+                        <button className={`tab-btn ${currentTab === 'pos' ? 'active' : ''}`} onClick={() => setCurrentTab('pos')}><span className="material-icons">point_of_sale</span> POS / Billing</button>
+                        <button className={`tab-btn ${currentTab === 'admin' ? 'active' : ''}`} onClick={() => setCurrentTab('admin')}><span className="material-icons">settings</span> Manage Inventory</button>
+                        <button className={`tab-btn ${currentTab === 'referrers' ? 'active' : ''}`} onClick={() => setCurrentTab('referrers')}><span className="material-icons">people</span> Referrers</button>
+                        <button className={`tab-btn ${currentTab === 'ledger' ? 'active' : ''}`} onClick={() => setCurrentTab('ledger')}><span className="material-icons">analytics</span> Sales Ledger</button>
+                    </div>
+                    {currentTab === 'grid' && renderGridTab()}
+                    {currentTab === 'pos' && renderPOSTab()}
+                    {currentTab === 'admin' && renderAdminTab()}
+                    {currentTab === 'referrers' && renderReferrersTab()}
+                    {currentTab === 'ledger' && renderLedgerTab()}
+                    {currentTab === 'profile' && renderProfileTab()}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ErrorBoundary><App /></ErrorBoundary>);
+    </script>
+</body>
+</html>
