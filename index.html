@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A2Z Collection - POS & Inventory</title>
-    
+
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
+
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Inter:wght@100..900&display=swap"
+        rel="stylesheet">
+
     <style>
         /* A2Z Collection Design System - Theme Engine */
-        
+
         /* 1. Default Corporate Blue Theme */
-        :root, [data-theme="default"] {
+        :root,
+        [data-theme="default"] {
             --primary: #001451;
             --primary-container: #002581;
             --on-primary: #ffffff;
             --on-primary-container: #dbe1ff;
-            
+
             --secondary: #5c5d72;
             --secondary-container: #e0e0ff;
             --secondary-fixed: #e0e0ff;
             --on-secondary: #ffffff;
             --on-secondary-container: #181a2c;
             --on-secondary-fixed: #181a2c;
-            
+
             --tertiary: #380b00;
             --tertiary-container: #5c1800;
             --on-tertiary: #ffffff;
             --on-tertiary-container: #ffdad1;
-            
+
             --surface: #f4faff;
             --surface-container-low: #e9f6fd;
             --surface-container-lowest: #ffffff;
@@ -46,17 +52,17 @@
             --surface-container-highest: #d7e4ec;
             --surface-variant: #dbe1ff;
             --surface-tint: #5c5d72;
-            
+
             --on-surface: #111d23;
             --on-surface-variant: #454652;
             --outline-variant: #c6c5d4;
-            
+
             --success: #146c2e;
             --success-container: #a6f5b3;
             --error: #ba1a1a;
             --error-container: #ffdad6;
             --warning: #5c1800;
-            
+
             /* Universal Base Spacing & Typography */
             --spacing-4: 0.25rem;
             --spacing-8: 0.5rem;
@@ -66,16 +72,16 @@
             --spacing-24: 1.5rem;
             --spacing-32: 2rem;
             --spacing-40: 2.5rem;
-            
+
             --radius-sm: 0.25rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
             --radius-full: 9999px;
-            
+
             --font-display: 'Manrope', sans-serif;
             --font-body: 'Inter', sans-serif;
-            
+
             --shadow-sm: 0 1px 2px 0 rgba(17, 29, 35, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(17, 29, 35, 0.06), 0 2px 4px -1px rgba(17, 29, 35, 0.03);
             --shadow-lg: 0 10px 15px -3px rgba(17, 29, 35, 0.06), 0 4px 6px -2px rgba(17, 29, 35, 0.03);
@@ -88,21 +94,21 @@
             --primary-container: #00838f;
             --on-primary: #ffffff;
             --on-primary-container: #e0f7fa;
-            
+
             --secondary: #f9a825;
             --secondary-container: #fff9c4;
             --secondary-fixed: #ffecb3;
             --on-secondary: #000000;
             --on-secondary-container: #3e2723;
             --on-secondary-fixed: #3e2723;
-            
+
             --surface: #fffdf8;
             --surface-container-low: #fcf4e8;
             --surface-container-lowest: #ffffff;
             --surface-container-high: #f7ead4;
             --surface-container-highest: #f0debe;
             --surface-variant: #e0f7fa;
-            
+
             --on-surface: #263238;
             --on-surface-variant: #546e7a;
             --outline-variant: #b0bec5;
@@ -114,29 +120,29 @@
             --primary-container: #004c8c;
             --on-primary: #000000;
             --on-primary-container: #c3e8ff;
-            
+
             --secondary: #b0bec5;
             --secondary-container: #455a64;
             --secondary-fixed: #455a64;
             --on-secondary: #000000;
             --on-secondary-container: #eceff1;
             --on-secondary-fixed: #eceff1;
-            
+
             --surface: #121212;
             --surface-container-low: #1e1e1e;
             --surface-container-lowest: #000000;
             --surface-container-high: #2c2c2c;
             --surface-container-highest: #383838;
             --surface-variant: #424242;
-            
+
             --on-surface: #e3e3e3;
             --on-surface-variant: #aaaaaa;
             --outline-variant: #5c5c5c;
-            
-            --shadow-sm: 0 1px 2px 0 rgba(0,0,0, 0.5);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0, 0.5);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0, 0.5);
-            --shadow-xl: 0 20px 25px -5px rgba(0,0,0, 0.5);
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
         /* 4. Earthy Terracotta */
@@ -145,21 +151,21 @@
             --primary-container: #d84315;
             --on-primary: #ffffff;
             --on-primary-container: #fbe9e7;
-            
+
             --secondary: #8d6e63;
             --secondary-container: #d7ccc8;
             --secondary-fixed: #d7ccc8;
             --on-secondary: #ffffff;
             --on-secondary-container: #3e2723;
             --on-secondary-fixed: #3e2723;
-            
+
             --surface: #fdfaf8;
             --surface-container-low: #f9ebe8;
             --surface-container-lowest: #ffffff;
             --surface-container-high: #f4dbd4;
             --surface-container-highest: #ecd1c8;
             --surface-variant: #ffccbc;
-            
+
             --on-surface: #3e2723;
             --on-surface-variant: #5d4037;
             --outline-variant: #bcaaa4;
@@ -186,7 +192,12 @@
         }
 
         /* Typography Hierarchy */
-        h1, h2, h3, h4, h5, h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             font-family: var(--font-display);
             font-weight: 600;
             margin: 0 0 var(--spacing-16) 0;
@@ -202,9 +213,20 @@
             color: var(--primary);
         }
 
-        h2 { font-size: 2rem; margin-bottom: var(--spacing-24); }
-        h3 { font-size: 1.5rem; margin-bottom: var(--spacing-20); }
-        h4 { font-size: 1.25rem; margin-bottom: var(--spacing-16); }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-24);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-20);
+        }
+
+        h4 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-16);
+        }
 
         p {
             margin: 0 0 var(--spacing-16) 0;
@@ -268,7 +290,7 @@
             gap: var(--spacing-16);
         }
 
-        .row-group > div {
+        .row-group>div {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -300,7 +322,9 @@
             width: calc(100% - var(--spacing-32));
         }
 
-        input, select, textarea {
+        input,
+        select,
+        textarea {
             padding: var(--spacing-12);
             background-color: var(--surface-container-highest);
             border: 1px solid var(--outline-variant);
@@ -313,7 +337,9 @@
             transition: all 0.3s ease;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-bottom-color: var(--primary);
             background-color: var(--surface-container-lowest);
@@ -353,14 +379,30 @@
             transition: all 0.2s ease;
         }
 
-        .btn-edit { background-color: var(--success-container); color: var(--success); }
-        .btn-edit:hover { background-color: var(--success); color: white; }
-        .btn-delete { background-color: var(--error-container); color: var(--error); }
-        .btn-delete:hover { background-color: var(--error); color: white; }
+        .btn-edit {
+            background-color: var(--success-container);
+            color: var(--success);
+        }
+
+        .btn-edit:hover {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: var(--error-container);
+            color: var(--error);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--error);
+            color: white;
+        }
 
         /* Special Elements */
         .barcode-container {
-            background-color: #ffffff; /* Barcodes must remain white BG for scanners */
+            background-color: #ffffff;
+            /* Barcodes must remain white BG for scanners */
             padding: var(--spacing-12);
             border-radius: var(--radius-md);
             display: inline-block;
@@ -408,7 +450,9 @@
             font-family: var(--font-body);
         }
 
-        .category-section { margin-bottom: var(--spacing-40); }
+        .category-section {
+            margin-bottom: var(--spacing-40);
+        }
 
         .category-title {
             color: var(--on-surface);
@@ -475,8 +519,15 @@
         }
 
         /* POS Styles */
-        .pos-layout { display: flex; gap: var(--spacing-24); }
-        .pos-main { flex: 2; }
+        .pos-layout {
+            display: flex;
+            gap: var(--spacing-24);
+        }
+
+        .pos-main {
+            flex: 2;
+        }
+
         .pos-sidebar {
             flex: 1;
             background: var(--surface-container-low);
@@ -508,7 +559,8 @@
             margin-top: var(--spacing-20);
         }
 
-        .data-table th, .data-table td {
+        .data-table th,
+        .data-table td {
             padding: var(--spacing-12);
             text-align: left;
             background: var(--surface-container-lowest);
@@ -526,7 +578,11 @@
             background: var(--surface-container-high);
         }
 
-        .qty-controls { display: flex; align-items: center; gap: var(--spacing-8); }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-8);
+        }
 
         .qty-btn {
             background: var(--surface-container-high);
@@ -539,7 +595,10 @@
             transition: all 0.2s ease;
         }
 
-        .qty-btn:hover { background: var(--primary); color: var(--on-primary); }
+        .qty-btn:hover {
+            background: var(--primary);
+            color: var(--on-primary);
+        }
 
         .totals-row {
             display: flex;
@@ -561,7 +620,12 @@
         }
 
         /* Ledger Styles */
-        .ledger-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-24); }
+        .ledger-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-24);
+        }
 
         .ledger-stat {
             background: var(--surface-container-low);
@@ -571,10 +635,23 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .ledger-stat h2 { margin: 0; color: var(--on-surface); font-size: 1.75rem; font-family: var(--font-display); font-weight: 700; }
-        .ledger-stat span { color: var(--on-surface-variant); font-size: 0.875rem; }
+        .ledger-stat h2 {
+            margin: 0;
+            color: var(--on-surface);
+            font-size: 1.75rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+        }
 
-        .view-toggle { display: flex; gap: var(--spacing-8); }
+        .ledger-stat span {
+            color: var(--on-surface-variant);
+            font-size: 0.875rem;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: var(--spacing-8);
+        }
 
         .view-btn {
             padding: var(--spacing-8) var(--spacing-16);
@@ -588,12 +665,23 @@
             transition: all 0.3s ease;
         }
 
-        .view-btn.active { background: var(--primary); color: var(--on-primary); }
-        .view-btn:hover { background: var(--primary-container); color: var(--on-primary-container); }
+        .view-btn.active {
+            background: var(--primary);
+            color: var(--on-primary);
+        }
+
+        .view-btn:hover {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+        }
 
         /* Header Icons & Themes */
-        .material-icons { font-size: 1.125rem; vertical-align: middle; margin-right: var(--spacing-8); }
-        
+        .material-icons {
+            font-size: 1.125rem;
+            vertical-align: middle;
+            margin-right: var(--spacing-8);
+        }
+
         .profile-icon {
             font-size: 1.5rem;
             cursor: pointer;
@@ -602,7 +690,11 @@
             display: flex;
             align-items: center;
         }
-        .profile-icon:hover { color: var(--primary-container); transform: scale(1.1); }
+
+        .profile-icon:hover {
+            color: var(--primary-container);
+            transform: scale(1.1);
+        }
 
         .power-icon {
             font-size: 1.5rem;
@@ -612,7 +704,11 @@
             display: flex;
             align-items: center;
         }
-        .power-icon:hover { transform: scale(1.1); filter: brightness(1.2); }
+
+        .power-icon:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
 
         /* Login Screen */
         .login-wrapper {
@@ -623,7 +719,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--surface-container-highest) 100%);
             padding: var(--spacing-20);
         }
-        
+
         .login-card {
             background: var(--surface-container-lowest);
             padding: var(--spacing-40);
@@ -636,20 +732,63 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            body { padding: var(--spacing-12); }
-            .nav-tabs { gap: var(--spacing-8); }
-            .tab-btn { padding: var(--spacing-8) var(--spacing-12); font-size: 0.875rem; }
-            .pos-layout { flex-direction: column; gap: var(--spacing-16); }
-            .grid-container { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--spacing-16); }
-            .row-group { flex-direction: column; gap: var(--spacing-12); }
+            body {
+                padding: var(--spacing-12);
+            }
+
+            .nav-tabs {
+                gap: var(--spacing-8);
+            }
+
+            .tab-btn {
+                padding: var(--spacing-8) var(--spacing-12);
+                font-size: 0.875rem;
+            }
+
+            .pos-layout {
+                flex-direction: column;
+                gap: var(--spacing-16);
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: var(--spacing-16);
+            }
+
+            .row-group {
+                flex-direction: column;
+                gap: var(--spacing-12);
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
+        const { motion, AnimatePresence } = Motion;
+
+        // GPU-accelerated animation variants (opacity + transform only)
+        const tabVariants = {
+            initial: { opacity: 0, y: 10 },
+            animate: { opacity: 1, y: 0, transition: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } },
+            exit: { opacity: 0, y: -6, transition: { duration: 0.12 } }
+        };
+        const cardContainerVariants = {
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.05 } }
+        };
+        const cardVariants = {
+            hidden: { opacity: 0, y: 16, scale: 0.97 },
+            visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.22, ease: [0.23, 1, 0.32, 1] } }
+        };
+        const rowVariants = {
+            hidden: { opacity: 0, x: -12 },
+            visible: { opacity: 1, x: 0, transition: { duration: 0.18, ease: 'easeOut' } },
+            exit: { opacity: 0, x: 12, transition: { duration: 0.12 } }
+        };
 
         class ErrorBoundary extends React.Component {
             constructor(props) {
@@ -660,7 +799,7 @@
             componentDidCatch(error, errorInfo) { console.error('Error caught:', error, errorInfo); }
             render() {
                 if (this.state.hasError) {
-                    return React.createElement('div', { style: { padding: '20px', backgroundColor: '#1e293b', color: '#ef4444', borderRadius: '8px', textAlign: 'center', margin: '20px' } }, 
+                    return React.createElement('div', { style: { padding: '20px', backgroundColor: '#1e293b', color: '#ef4444', borderRadius: '8px', textAlign: 'center', margin: '20px' } },
                         React.createElement('h2', null, 'Something went wrong'),
                         React.createElement('p', null, 'Please refresh the page to try again.'),
                         React.createElement('details', { style: { textAlign: 'left', marginTop: '20px' } },
@@ -677,7 +816,7 @@
             // --- USER PROFILE & THEME STATE --- //
             const [userProfile, setUserProfile] = useState(() => {
                 const saved = localStorage.getItem('A2Z_UserProfile');
-                return saved ? JSON.parse(saved) : { userId: 'admin', password: 'admin', name: 'Administrator', email: '', phone: '', address: '' };
+                return saved ? JSON.parse(saved) : { userId: 'admin', password: 'admin', name: 'Administrator', email: '', phone: '+91-9644444661', address: '111, B.K Sindhi Colony, Main Square, Bhawarlia Main Road, Indore, Madhya Pradesh', gstNumber: '' };
             });
 
             const [currentTheme, setCurrentTheme] = useState(() => {
@@ -694,14 +833,14 @@
                 return localStorage.getItem('A2Z_Auth') === 'true';
             });
             const [loginInput, setLoginInput] = useState({ userId: 'admin', password: 'admin' });
-            
+
             // Temporary files selected on the login screen
             const [pendingFiles, setPendingFiles] = useState({ products: null, sales: null });
 
             // --- STANDARD APP STATE --- //
             const generateNewId = () => `A2Z-${Date.now().toString().slice(-6)}`;
             const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', 'XXXXXXL', 'XXXXXXXL'];
-            
+
             const [currentTab, setCurrentTab] = useState('grid');
             const [isEditing, setIsEditing] = useState(false);
 
@@ -742,7 +881,7 @@
                     saveFiles();
                 }
             }, [catalog, salesLedger, dirHandle]);
-            
+
             // --- DATABASES --- //
             const [catalog, setCatalog] = useState(() => {
                 const saved = localStorage.getItem('A2Z_Database');
@@ -754,6 +893,24 @@
             const [salesLedger, setSalesLedger] = useState(() => {
                 const saved = localStorage.getItem('A2Z_Sales');
                 let parsed = saved ? JSON.parse(saved) : [];
+                // Add dummy data if no sales exist
+                if (parsed.length === 0) {
+                    const dummySales = [
+                        { invoiceNo: 'INV-001', date: new Date(Date.now() - 0 * 86400000).toISOString(), items: [{ name: 'Shirt', qty: 2, sellPrice: 500 }], subtotal: 1000, discountPercentage: 10, discountAmount: 100, grandTotal: 900, referrer: 'Rahul' },
+                        { invoiceNo: 'INV-002', date: new Date(Date.now() - 1 * 86400000).toISOString(), items: [{ name: 'Pants', qty: 1, sellPrice: 800 }], subtotal: 800, discountPercentage: 0, discountAmount: 0, grandTotal: 800, referrer: 'Priya' },
+                        { invoiceNo: 'INV-003', date: new Date(Date.now() - 2 * 86400000).toISOString(), items: [{ name: 'T-Shirt', qty: 3, sellPrice: 300 }], subtotal: 900, discountPercentage: 5, discountAmount: 45, grandTotal: 855, referrer: 'Rahul' },
+                        { invoiceNo: 'INV-004', date: new Date(Date.now() - 3 * 86400000).toISOString(), items: [{ name: 'Jacket', qty: 1, sellPrice: 2000 }], subtotal: 2000, discountPercentage: 15, discountAmount: 300, grandTotal: 1700, referrer: 'Priya' },
+                        { invoiceNo: 'INV-005', date: new Date(Date.now() - 4 * 86400000).toISOString(), items: [{ name: 'Dress', qty: 2, sellPrice: 1200 }], subtotal: 2400, discountPercentage: 0, discountAmount: 0, grandTotal: 2400, referrer: 'Arjun' },
+                        { invoiceNo: 'INV-006', date: new Date(Date.now() - 5 * 86400000).toISOString(), items: [{ name: 'Shorts', qty: 4, sellPrice: 400 }], subtotal: 1600, discountPercentage: 8, discountAmount: 128, grandTotal: 1472, referrer: 'Rahul' },
+                        { invoiceNo: 'INV-007', date: new Date(Date.now() - 6 * 86400000).toISOString(), items: [{ name: 'Skirt', qty: 1, sellPrice: 1500 }], subtotal: 1500, discountPercentage: 10, discountAmount: 150, grandTotal: 1350, referrer: 'Priya' },
+                        { invoiceNo: 'INV-008', date: new Date(Date.now() - 7 * 86400000).toISOString(), items: [{ name: 'Jeans', qty: 2, sellPrice: 1000 }], subtotal: 2000, discountPercentage: 5, discountAmount: 100, grandTotal: 1900, referrer: 'Arjun' },
+                        { invoiceNo: 'INV-009', date: new Date(Date.now() - 8 * 86400000).toISOString(), items: [{ name: 'Blazer', qty: 1, sellPrice: 2500 }], subtotal: 2500, discountPercentage: 20, discountAmount: 500, grandTotal: 2000, referrer: 'Rahul' },
+                        { invoiceNo: 'INV-010', date: new Date(Date.now() - 9 * 86400000).toISOString(), items: [{ name: 'Coat', qty: 1, sellPrice: 3000 }], subtotal: 3000, discountPercentage: 0, discountAmount: 0, grandTotal: 3000, referrer: 'Priya' },
+                        { invoiceNo: 'INV-011', date: new Date(Date.now() - 10 * 86400000).toISOString(), items: [{ name: 'Sweater', qty: 2, sellPrice: 600 }], subtotal: 1200, discountPercentage: 12, discountAmount: 144, grandTotal: 1056, referrer: 'Arjun' },
+                        { invoiceNo: 'INV-012', date: new Date(Date.now() - 11 * 86400000).toISOString(), items: [{ name: 'Top', qty: 3, sellPrice: 500 }], subtotal: 1500, discountPercentage: 0, discountAmount: 0, grandTotal: 1500, referrer: 'Rahul' },
+                    ];
+                    parsed = dummySales;
+                }
                 parsed = parsed.map(sale => ({
                     ...sale, subtotal: Number(sale.subtotal) || 0, discountPercentage: Number(sale.discountPercentage) || 0, discountAmount: Number(sale.discountAmount) || 0, grandTotal: Number(sale.grandTotal) || 0,
                     items: sale.items.map(item => ({ ...item, qty: Number(item.qty) || 0, sellPrice: Number(item.sellPrice) || 0 }))
@@ -765,17 +922,21 @@
             const [colorNamesList, setColorNamesList] = useState([]);
             const barcodeRef = useRef(null);
             const scannerInputRef = useRef(null);
-            
+
             const [searchQuery, setSearchQuery] = useState('');
-            const [ledgerView, setLedgerView] = useState('table'); 
+            const [ledgerView, setLedgerView] = useState('table');
             const [selectedPeriod, setSelectedPeriod] = useState('daily');
             const [currentCalendarDate, setCurrentCalendarDate] = useState(new Date());
             const [tableFilters, setTableFilters] = useState({ dateFrom: '', dateTo: '', invoiceSearch: '', minAmount: '', maxAmount: '' });
             const chartCanvasRef = useRef(null);
             const chartInstanceRef = useRef(null);
+            const salesAnalyticsCanvasRef = useRef(null);
+            const salesAnalyticsChartRef = useRef(null);
 
             const [invoiceItems, setInvoiceItems] = useState([]);
             const [scanInput, setScanInput] = useState('');
+            const [scanSuggestions, setScanSuggestions] = useState([]);
+            const [showSuggestions, setShowSuggestions] = useState(false);
             const [discountPercentage, setDiscountPercentage] = useState(0);
             const [selectedReferrer, setSelectedReferrer] = useState('');
 
@@ -786,10 +947,42 @@
             const [newReferrer, setNewReferrer] = useState({ name: '', phone: '', email: '', address: '', notes: '' });
             const [editingReferrer, setEditingReferrer] = useState(null);
 
-            const emptyProduct = { id: generateNewId(), name: '', category: '', gender: 'Unisex', size: 'M', stockQty: '', costPrice: '', sellPrice: '', images: [], dominantColor: '', colorName: '', entryDate: '' };
+            // Customer Management
+            const [customers, setCustomers] = useState(() => {
+                const saved = localStorage.getItem('A2Z_Customers');
+                return saved ? JSON.parse(saved) : [];
+            });
+            const [customerName, setCustomerName] = useState('');
+            const [customerPhone, setCustomerPhone] = useState('');
+
+            // Invoice Filters
+            const [invoiceFilterDay, setInvoiceFilterDay] = useState('');
+            const [invoiceFilterReferrer, setInvoiceFilterReferrer] = useState('');
+
+            // New structure: variants is an array of { colorName, colorCode, size, stockQty, barcode }
+            const emptyProduct = { id: generateNewId(), name: '', category: '', gender: 'Unisex', costPrice: '', sellPrice: '', images: [], entryDate: '', variants: [] };
             const [product, setProduct] = useState(emptyProduct);
+            // For adding a variant
+            const [variantInput, setVariantInput] = useState({ colorName: '', colorCode: '', size: 'M', stockQty: '', barcode: '' });
+            // Track if editing an existing variant
+            const [editingVariantBarcode, setEditingVariantBarcode] = useState(null);
+
+            // Sales Analytics State
+            const [selectedSalesman, setSelectedSalesman] = useState('');
+            const [salesAnalyticsPeriod, setSalesAnalyticsPeriod] = useState('today');
+            const [salesAnalyticsDateFrom, setSalesAnalyticsDateFrom] = useState('');
+            const [salesAnalyticsDateTo, setSalesAnalyticsDateTo] = useState('');
 
             const uniqueCategories = useMemo(() => Array.from(new Set(catalog.map(item => item.category).filter(Boolean))).sort(), [catalog]);
+
+            // Get unique salesman list from sales ledger
+            const uniqueSalesmen = useMemo(() => {
+                const names = new Set();
+                salesLedger.forEach(sale => {
+                    if (sale.referrer) names.add(sale.referrer);
+                });
+                return Array.from(names).sort();
+            }, [salesLedger]);
 
             // --- JSON IMPORT/EXPORT HELPERS --- //
             const readFileAsText = (file) => {
@@ -834,9 +1027,9 @@
             // --- LOGIN LOGIC --- //
             const handleLoginSubmit = async (e) => {
                 e.preventDefault();
-                
+
                 if (loginInput.userId === userProfile.userId && loginInput.password === userProfile.password) {
-                    
+
                     try {
                         if (pendingFiles.products) {
                             const text = await readFileAsText(pendingFiles.products);
@@ -870,13 +1063,13 @@
             };
 
             // --- HELPERS --- //
-            const hexToRgb = (hex) => { const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? [ parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16) ] : [0,0,0]; };
+            const hexToRgb = (hex) => { const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : [0, 0, 0]; };
             const getNearestColorName = (targetRgb) => {
                 if (colorNamesList.length === 0) return "Loading...";
                 let minDistance = Infinity; let closestName = "Unknown";
                 for (let i = 0; i < colorNamesList.length; i++) {
                     const c = colorNamesList[i];
-                    const dist = Math.sqrt( Math.pow(targetRgb[0] - c.rgb[0], 2) + Math.pow(targetRgb[1] - c.rgb[1], 2) + Math.pow(targetRgb[2] - c.rgb[2], 2) );
+                    const dist = Math.sqrt(Math.pow(targetRgb[0] - c.rgb[0], 2) + Math.pow(targetRgb[1] - c.rgb[1], 2) + Math.pow(targetRgb[2] - c.rgb[2], 2));
                     if (dist < minDistance) { minDistance = dist; closestName = c.name; }
                 }
                 return closestName;
@@ -888,7 +1081,71 @@
                 const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
                 return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
             };
-            const getPeriodKey = (date, period) => {
+            // Get sales for salesman based on period
+            const getSalesmanSales = (salesmanName, period) => {
+                let filtered = salesLedger.filter(sale => sale.referrer === salesmanName);
+                const now = new Date();
+
+                switch (period) {
+                    case 'today': {
+                        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                        filtered = filtered.filter(s => new Date(s.date) >= today && new Date(s.date) < new Date(today.getTime() + 86400000));
+                        break;
+                    }
+                    case 'week': {
+                        const curr = new Date(now);
+                        const first = curr.getDate() - curr.getDay();
+                        const weekStart = new Date(curr.setDate(first));
+                        weekStart.setHours(0, 0, 0, 0);
+                        filtered = filtered.filter(s => new Date(s.date) >= weekStart);
+                        break;
+                    }
+                    case 'month': {
+                        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+                        filtered = filtered.filter(s => new Date(s.date) >= monthStart);
+                        break;
+                    }
+                    case 'quarter': {
+                        const quarter = Math.floor(now.getMonth() / 3);
+                        const quarterStart = new Date(now.getFullYear(), quarter * 3, 1);
+                        const quarterEnd = new Date(now.getFullYear(), quarter * 3 + 3, 0);
+                        filtered = filtered.filter(s => {
+                            const sDate = new Date(s.date);
+                            return sDate >= quarterStart && sDate <= quarterEnd;
+                        });
+                        break;
+                    }
+                    case 'custom': {
+                        if (salesAnalyticsDateFrom) {
+                            const from = new Date(salesAnalyticsDateFrom);
+                            filtered = filtered.filter(s => new Date(s.date) >= from);
+                        }
+                        if (salesAnalyticsDateTo) {
+                            const to = new Date(salesAnalyticsDateTo);
+                            to.setHours(23, 59, 59, 999);
+                            filtered = filtered.filter(s => new Date(s.date) <= to);
+                        }
+                        break;
+                    }
+                }
+                return filtered;
+            };
+
+            // Get period label
+            const getPeriodLabel = (period) => {
+                const now = new Date();
+                switch (period) {
+                    case 'today': return 'Today';
+                    case 'week': return `This Week (${getWeekNumber(now)})`;
+                    case 'month': return `This Month (${now.toLocaleString('default', { month: 'long' })} ${now.getFullYear()})`;
+                    case 'quarter': {
+                        const q = Math.floor(now.getMonth() / 3) + 1;
+                        return `This Quarter (Q${q} ${now.getFullYear()})`;
+                    }
+                    case 'custom': return `Custom (${salesAnalyticsDateFrom} to ${salesAnalyticsDateTo})`;
+                    default: return 'All Time';
+                }
+            }; const getPeriodKey = (date, period) => {
                 const dateObj = new Date(date);
                 switch (period) {
                     case 'daily': return `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
@@ -911,7 +1168,7 @@
                 const year = date.getFullYear(); const month = date.getMonth();
                 const firstDay = new Date(year, month, 1);
                 const startDate = new Date(firstDay); startDate.setDate(firstDay.getDate() - firstDay.getDay());
-                
+
                 const calendarDays = []; const currentDate = new Date(startDate);
                 const dailySales = {};
                 salesLedger.forEach(sale => {
@@ -921,7 +1178,7 @@
                         dailySales[dayKey] = (dailySales[dayKey] || 0) + sale.grandTotal;
                     }
                 });
-                
+
                 for (let i = 0; i < 42; i++) {
                     const day = currentDate.getDate(); const isCurrentMonth = currentDate.getMonth() === month;
                     const sales = isCurrentMonth ? dailySales[day] || 0 : 0;
@@ -931,7 +1188,7 @@
                 return calendarDays;
             };
             const navigateMonth = (direction) => { setCurrentCalendarDate(prev => { const newDate = new Date(prev); newDate.setMonth(newDate.getMonth() + direction); return newDate; }); };
-            
+
             const filterSalesLedger = (sales) => {
                 return sales.filter(sale => {
                     const saleDate = new Date(sale.date);
@@ -944,6 +1201,62 @@
                 });
             };
             const handleInputChange = (e) => setProduct(prev => ({ ...prev, [e.target.name]: e.target.value }));
+            // For variant input
+            const handleVariantInputChange = (e) => setVariantInput(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+            // Duplicate variant (populate form with variant details)
+            const duplicateVariant = (variant) => {
+                setVariantInput({
+                    colorName: variant.colorName,
+                    colorCode: variant.colorCode,
+                    size: variant.size,
+                    stockQty: variant.stockQty,
+                    barcode: variant.barcode
+                });
+                // Don't set editingVariantBarcode yet - user can modify and it will become a new variant or update existing
+            };
+
+            // Clear variant input and editing state
+            const clearVariantInput = () => {
+                setVariantInput({ colorName: '', colorCode: '', size: 'M', stockQty: '', barcode: '' });
+                setEditingVariantBarcode(null);
+            };
+
+            // Add or update variant
+            const addVariant = () => {
+                if (!variantInput.colorName || !variantInput.size || !variantInput.stockQty) {
+                    alert('Please fill color, size, and stock.');
+                    return;
+                }
+                // Barcode format: <productId>-<colorCode>-<size> (product.id already has A2Z- prefix)
+                const colorCode = (variantInput.colorCode || variantInput.colorName).replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
+                const barcode = `${product.id}-${colorCode}-${variantInput.size}`;
+
+                // Check if this barcode already exists
+                const existingVariantIndex = product.variants.findIndex(v => v.barcode === barcode);
+
+                setProduct(prev => {
+                    const newVariants = [...(prev.variants || [])];
+
+                    if (existingVariantIndex !== -1) {
+                        // Update existing variant
+                        newVariants[existingVariantIndex] = { ...variantInput, colorCode, barcode, stockQty: Number(variantInput.stockQty) };
+                    } else {
+                        // Add new variant
+                        newVariants.push({ ...variantInput, colorCode, barcode, stockQty: Number(variantInput.stockQty) });
+                    }
+
+                    return { ...prev, variants: newVariants };
+                });
+
+                clearVariantInput();
+            };
+
+            // Remove variant
+            const removeVariant = (barcode) => {
+                setProduct(prev => ({ ...prev, variants: prev.variants.filter(v => v.barcode !== barcode) }));
+                if (editingVariantBarcode === barcode) clearVariantInput();
+            };
 
             // --- INITIALIZATION --- //
             useEffect(() => {
@@ -953,13 +1266,31 @@
                     .catch(err => { console.warn('Color names not loaded:', err); setColorNamesList([]); });
             }, []);
 
+            // Save customers to localStorage
+            useEffect(() => {
+                localStorage.setItem('A2Z_Customers', JSON.stringify(customers));
+                if (dirHandle) {
+                    const saveCustomers = async () => {
+                        try {
+                            const fileHandle = await dirHandle.getFileHandle('a2z_customers.json', { create: true });
+                            const writable = await fileHandle.createWritable();
+                            await writable.write(JSON.stringify(customers, null, 2));
+                            await writable.close();
+                        } catch (e) {
+                            console.error('Failed to save customers', e);
+                        }
+                    };
+                    saveCustomers();
+                }
+            }, [customers, dirHandle]);
+
             useEffect(() => { if (currentTab === 'pos' && scannerInputRef.current) scannerInputRef.current.focus(); }, [currentTab, invoiceItems]);
             useEffect(() => { if (barcodeRef.current && currentTab === 'admin') { JsBarcode(barcodeRef.current, product.id, { width: 1.5, height: 40, displayValue: true }); } }, [product.id, currentTab]);
 
             // Safely save to Local Storage
             useEffect(() => {
-                try { 
-                    localStorage.setItem('A2Z_Database', JSON.stringify(catalog)); 
+                try {
+                    localStorage.setItem('A2Z_Database', JSON.stringify(catalog));
                     localStorage.setItem('A2Z_Sales', JSON.stringify(salesLedger));
                     localStorage.setItem('A2Z_UserProfile', JSON.stringify(userProfile));
                     localStorage.setItem('A2Z_Referrers', JSON.stringify(referrers));
@@ -977,10 +1308,10 @@
                     });
                     const sortedEntries = Object.entries(periodTotals).sort((a, b) => getSortValue(a[0], selectedPeriod) - getSortValue(b[0], selectedPeriod));
                     const ctx = chartCanvasRef.current.getContext('2d');
-                    
+
                     const computedStyle = getComputedStyle(document.documentElement);
                     const barColor = computedStyle.getPropertyValue('--primary').trim() || '#001451';
-                    
+
                     chartInstanceRef.current = new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -992,7 +1323,55 @@
                 }
             }, [currentTab, ledgerView, salesLedger, selectedPeriod]);
 
-            // --- PRINT LABEL LOGIC --- //
+            // --- SALES ANALYTICS CHART EFFECT --- //
+            useEffect(() => {
+                if (currentTab === 'salesanalytics' && selectedSalesman && salesAnalyticsCanvasRef.current) {
+                    if (salesAnalyticsChartRef.current) { salesAnalyticsChartRef.current.destroy(); }
+                    const salesData = getSalesmanSales(selectedSalesman, salesAnalyticsPeriod);
+                    const dailyTotals = {};
+                    salesData.forEach(sale => {
+                        const saleDate = new Date(sale.date).toLocaleDateString('en-IN');
+                        dailyTotals[saleDate] = (dailyTotals[saleDate] || 0) + sale.grandTotal;
+                    });
+                    const sortedDates = Object.keys(dailyTotals).sort((a, b) => new Date(a) - new Date(b));
+                    const values = sortedDates.map(d => dailyTotals[d]);
+                    const avgValue = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+                    const totalSales = values.reduce((a, b) => a + b, 0);
+
+                    const ctx = salesAnalyticsCanvasRef.current.getContext('2d');
+                    const computedStyle = getComputedStyle(document.documentElement);
+                    const barColor = computedStyle.getPropertyValue('--primary').trim() || '#001451';
+                    const avgLineColor = computedStyle.getPropertyValue('--success').trim() || '#4CAF50';
+
+                    salesAnalyticsChartRef.current = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: sortedDates,
+                            datasets: [
+                                { label: 'Sales Amount (₹)', data: values, backgroundColor: barColor, borderRadius: 4, yAxisID: 'y' },
+                                { label: `Period Avg: ₹${avgValue.toFixed(0)}`, data: Array(sortedDates.length).fill(avgValue), type: 'line', borderColor: avgLineColor, borderWidth: 3, borderDash: [5, 5], fill: false, pointRadius: 0, yAxisID: 'y' }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            interaction: { mode: 'index' },
+                            scales: {
+                                x: {
+                                    title: { display: true, text: 'Date', font: { weight: 'bold' } }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'Sales Amount (₹)', font: { weight: 'bold' } }
+                                }
+                            },
+                            plugins: {
+                                title: { display: true, text: `${selectedSalesman}'s Sales - ${getPeriodLabel(salesAnalyticsPeriod)}`, font: { size: 16, weight: 'bold' } },
+                                legend: { display: true }
+                            }
+                        }
+                    });
+                }
+            }, [currentTab, selectedSalesman, salesAnalyticsPeriod, salesLedger, salesAnalyticsDateFrom, salesAnalyticsDateTo]);             // --- PRINT LABEL LOGIC --- //
             const printLabel = (item) => {
                 const canvas = document.createElement('canvas');
                 JsBarcode(canvas, item.id, { width: 1.5, height: 40, displayValue: false });
@@ -1009,34 +1388,149 @@
             };
 
             // --- POS LOGIC --- //
+            // New scan logic: barcode = A2Z-<productId>-<colorCode>-<size>
             const handleScanSubmit = (e) => {
                 e.preventDefault();
-                const scannedId = scanInput.trim().toUpperCase();
-                if (!scannedId) return;
-                const foundProduct = catalog.find(p => p.id.toUpperCase() === scannedId);
-                
-                if (foundProduct) {
-                    const existingInCart = invoiceItems.find(item => item.id === foundProduct.id);
+                const scanned = scanInput.trim().toUpperCase();
+                if (!scanned) return;
+                // Try to match barcode to a variant
+                let found = null, foundProduct = null;
+                for (const p of catalog) {
+                    if (p.variants && Array.isArray(p.variants)) {
+                        for (const v of p.variants) {
+                            if (v.barcode === scanned) {
+                                found = v;
+                                foundProduct = p;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (found && foundProduct) {
+                    // Check if already in cart (by barcode)
+                    const existingInCart = invoiceItems.find(item => item.barcode === found.barcode);
                     const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
-                    if (currentQtyInCart + 1 > foundProduct.stockQty) { alert(`Cannot add! Only ${foundProduct.stockQty} pieces left.`); } 
-                    else { setInvoiceItems(prev => { if (existingInCart) return prev.map(item => item.id === foundProduct.id ? { ...item, qty: item.qty + 1 } : item); return [...prev, { ...foundProduct, qty: 1 }]; }); }
-                } else { alert(`Product ID ${scannedId} not found in catalog.`); }
-                setScanInput(''); 
+                    if (currentQtyInCart + 1 > found.stockQty) {
+                        alert(`Cannot add! Only ${found.stockQty} pieces left for ${found.colorName} / ${found.size}.`);
+                    } else {
+                        setInvoiceItems(prev => {
+                            if (existingInCart) return prev.map(item => item.barcode === found.barcode ? { ...item, qty: item.qty + 1 } : item);
+                            return [...prev, { ...foundProduct, ...found, qty: 1 }];
+                        });
+                        alert(`Scanned: ${foundProduct.name} | Color: ${found.colorName} | Size: ${found.size}`);
+                    }
+                } else {
+                    alert(`Barcode ${scanned} not found in inventory.`);
+                }
+                setScanInput('');
+                setShowSuggestions(false);
             };
 
-            const updateQty = (id, delta) => {
-                const catalogItem = catalog.find(p => p.id === id);
+            // Autocomplete logic for scanner input
+            useEffect(() => {
+                if (!scanInput) {
+                    setScanSuggestions([]);
+                    setShowSuggestions(false);
+                    return;
+                }
+                const query = scanInput.trim().toLowerCase();
+                let matches = [];
+                catalog.forEach(product => {
+                    if (product.variants && Array.isArray(product.variants)) {
+                        product.variants.forEach(variant => {
+                            if (
+                                variant.barcode.toLowerCase().includes(query) ||
+                                (product.name && product.name.toLowerCase().includes(query)) ||
+                                (variant.colorName && variant.colorName.toLowerCase().includes(query))
+                            ) {
+                                matches.push({
+                                    ...variant,
+                                    productName: product.name,
+                                    productId: product.id,
+                                    productImage: product.images && product.images.length > 0 ? product.images[0] : null,
+                                    sellPrice: product.sellPrice
+                                });
+                            }
+                        });
+                    }
+                });
+                setScanSuggestions(matches.slice(0, 8));
+                setShowSuggestions(matches.length > 0);
+            }, [scanInput, catalog]);
+
+            // --- Print individual variant barcode ---
+            const printVariantBarcode = (variant, colorName) => {
+                const canvas = document.createElement('canvas');
+                window.JsBarcode(canvas, variant.barcode, { width: 2, height: 50, displayValue: true });
+                const barcodeDataUrl = canvas.toDataURL('image/png');
+                const printWindow = window.open('', '_blank', 'width=400,height=500');
+                printWindow.document.write(`
+                    <html>
+                        <head><title>Print Barcode - ${variant.barcode}</title>
+                        <style>@page { margin: 10px; } body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; margin: 0; padding: 20px; } h2 { margin: 0 0 10px 0; font-size: 20px; } .code { color: #666; font-size: 12px; margin-bottom: 10px; } .barcode-img { max-width: 100%; height: auto; margin: 20px 0; } .footer { font-size: 11px; color: #999; margin-top: 20px; }</style></head>
+                        <body><h2>A2Z COLLECTION</h2><div class="code">${colorName}</div><img class="barcode-img" src="${barcodeDataUrl}" /><div class="footer">Barcode: ${variant.barcode}</div><script>window.onload = function() { window.print(); }<\/script></body>
+                    </html>
+                `);
+                printWindow.document.close();
+            };
+
+            // --- Render barcodes for variants (top-level useEffect for barcode SVG rendering) ---
+            useEffect(() => {
+                if (window && window.JsBarcode && product && Array.isArray(product.variants)) {
+                    product.variants.forEach((v, i) => {
+                        const svg = document.getElementById(`barcode-variant-${i}`);
+                        if (svg) {
+                            window.JsBarcode(svg, v.barcode, { width: 1.5, height: 40, displayValue: true });
+                        }
+                    });
+                }
+            }, [product && product.variants]);
+
+            const handleSuggestionClick = (suggestion) => {
+                // Add to invoiceItems directly
+                const existingInCart = invoiceItems.find(item => item.barcode === suggestion.barcode);
+                const currentQtyInCart = existingInCart ? existingInCart.qty : 0;
+                if (currentQtyInCart + 1 > suggestion.stockQty) {
+                    alert(`Cannot add! Only ${suggestion.stockQty} pieces left for ${suggestion.colorName} / ${suggestion.size}.`);
+                } else {
+                    setInvoiceItems(prev => {
+                        if (existingInCart) return prev.map(item => item.barcode === suggestion.barcode ? { ...item, qty: item.qty + 1 } : item);
+                        return [...prev, {
+                            id: suggestion.productId,
+                            name: suggestion.productName,
+                            images: suggestion.productImage ? [suggestion.productImage] : [],
+                            sellPrice: suggestion.sellPrice,
+                            ...suggestion,
+                            qty: 1
+                        }];
+                    });
+                }
+                setScanInput('');
+                setShowSuggestions(false);
+            };
+
+            // Update qty by barcode (variant)
+            const updateQty = (barcode, delta) => {
+                // Find the product and variant
+                let catalogItem = null, variant = null;
+                for (const p of catalog) {
+                    if (p.variants) {
+                        const v = p.variants.find(vv => vv.barcode === barcode);
+                        if (v) { catalogItem = p; variant = v; break; }
+                    }
+                }
                 setInvoiceItems(prev => prev.map(item => {
-                    if (item.id === id) {
+                    if (item.barcode === barcode) {
                         const newQty = item.qty + delta;
-                        if (newQty > catalogItem.stockQty) { alert(`Not enough stock! Only ${catalogItem.stockQty} pieces available.`); return item; }
+                        if (variant && newQty > variant.stockQty) { alert(`Not enough stock! Only ${variant.stockQty} pieces available for ${variant.colorName} / ${variant.size}.`); return item; }
                         return newQty > 0 ? { ...item, qty: newQty } : item;
                     }
                     return item;
                 }));
             };
 
-            const removeFromInvoice = (id) => setInvoiceItems(prev => prev.filter(item => item.id !== id));
+            // Remove by barcode
+            const removeFromInvoice = (barcode) => setInvoiceItems(prev => prev.filter(item => item.barcode !== barcode));
             const subtotal = invoiceItems.reduce((sum, item) => sum + (Number(item.sellPrice) * item.qty), 0);
             const discountAmount = subtotal * (Number(discountPercentage) / 100);
             const grandTotal = subtotal - discountAmount;
@@ -1045,22 +1539,116 @@
                 if (invoiceItems.length === 0) { alert("Add items to the invoice first."); return; }
                 const invoiceDate = new Date().toISOString();
                 const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
-                setSalesLedger([...salesLedger, { invoiceNo: invoiceNumber, date: invoiceDate, items: invoiceItems, subtotal, discountPercentage, discountAmount, grandTotal, referrer: selectedReferrer }]);
                 
+                // Save customer if provided
+                if (customerName.trim() && customerPhone.trim()) {
+                    const existingCustomer = customers.find(c => c.phone === customerPhone.trim());
+                    if (!existingCustomer) {
+                        setCustomers([...customers, { id: Date.now(), name: customerName.trim(), phone: customerPhone.trim(), joinDate: invoiceDate }]);
+                    }
+                }
+                
+                setSalesLedger([...salesLedger, { invoiceNo: invoiceNumber, date: invoiceDate, items: invoiceItems, subtotal, discountPercentage, discountAmount, grandTotal, referrer: selectedReferrer, customerName: customerName.trim(), customerPhone: customerPhone.trim() }]);
+
+                // Deduct stock from correct variant
                 const updatedCatalog = catalog.map(catItem => {
-                    const purchasedItem = invoiceItems.find(i => i.id === catItem.id);
-                    return purchasedItem ? { ...catItem, stockQty: Number(catItem.stockQty) - purchasedItem.qty } : catItem;
+                    if (!catItem.variants) return catItem;
+                    // Copy variants array
+                    const newVariants = catItem.variants.map(variant => {
+                        const purchased = invoiceItems.find(i => i.barcode === variant.barcode);
+                        if (purchased) {
+                            return { ...variant, stockQty: Number(variant.stockQty) - purchased.qty };
+                        }
+                        return variant;
+                    });
+                    return { ...catItem, variants: newVariants };
                 });
                 setCatalog(updatedCatalog);
 
-                const printWindow = window.open('', '_blank', 'width=400,height=600');
-                let itemsHTML = '';
-                invoiceItems.forEach(item => { itemsHTML += `<div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 14px;"><div style="width: 50%;">${item.name} (${item.size})</div><div style="width: 15%; text-align: center;">${item.qty}</div><div style="width: 35%; text-align: right;">₹${(item.sellPrice * item.qty).toFixed(2)}</div></div>`; });
+                const printWindow = window.open('', '_blank', 'width=420,height=700');
+                const storePhone = userProfile.phone || '+91-9644444661';
+                const storeAddress = userProfile.address || '111, B.K Sindhi Colony, Main Square, Bhawarlia Main Road, Indore, Madhya Pradesh';
+                const gstLine = userProfile.gstNumber ? `<div class="gst-box">GSTIN: ${userProfile.gstNumber}</div>` : '';
+                const itemRowsHTML = invoiceItems.map((item, i) => `
+                    <tr>
+                        <td style="text-align:center;padding:4px 3px;">${i + 1}</td>
+                        <td style="padding:4px 3px;">${item.name}<br><span style="font-size:9px;color:#555;">${item.colorName} / ${item.size}</span></td>
+                        <td style="text-align:center;padding:4px 3px;">${item.qty}</td>
+                        <td style="text-align:right;padding:4px 3px;">&#8377;${Number(item.sellPrice).toFixed(0)}</td>
+                        <td style="text-align:right;padding:4px 3px;font-weight:bold;">&#8377;${(item.sellPrice * item.qty).toFixed(2)}</td>
+                    </tr>`).join('');
                 printWindow.document.write(`
-                    <html><head><title>Invoice ${invoiceNumber}</title><style>@page { margin: 0; } body { font-family: 'Courier New', Courier, monospace; margin: 0; padding: 15px; width: 300px; color: #000; } h2 { text-align: center; margin: 0 0 5px 0; font-family: serif; font-size: 24px;} .divider { border-bottom: 1px dashed #000; margin: 10px 0; } .header-text { text-align: center; font-size: 12px; margin-bottom: 10px; } .totals { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-top: 5px;}</style></head><body><h2>A2Z COLLECTION</h2><div class="header-text">Date: ${new Date().toLocaleString()}<br/>Bill No: ${invoiceNumber}${selectedReferrer ? `<br/>Referred by: ${selectedReferrer}` : ''}</div><div class="divider"></div><div style="display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; font-size: 14px;"><div style="width: 50%;">Item</div><div style="width: 15%; text-align: center;">Qty</div><div style="width: 35%; text-align: right;">Total</div></div>${itemsHTML}<div class="divider"></div><div style="display: flex; justify-content: space-between; font-size: 14px;"><span>Subtotal:</span><span>₹${subtotal.toFixed(2)}</span></div>${discountPercentage > 0 ? `<div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 5px;"><span>Discount (${discountPercentage}%):</span><span>-₹${discountAmount.toFixed(2)}</span></div>` : ''}<div class="divider"></div><div class="totals"><span>GRAND TOTAL:</span><span>₹${grandTotal.toFixed(2)}</span></div><div class="divider"></div><div style="text-align: center; font-size: 12px; margin-top: 20px;">Thank you for shopping!<br/>No Exchange, No Refund.</div><script>window.onload = function() { window.print(); }<\/script></body></html>
+                    <html><head><title>Invoice ${invoiceNumber}</title>
+                    <style>
+                        @page { margin: 6mm; }
+                        body { font-family: 'Courier New', Courier, monospace; margin: 0; padding: 10px; width: 320px; color: #000; font-size: 11px; }
+                        .top-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; font-size: 10px; font-weight: bold; }
+                        .gst-box { color: #333; letter-spacing: 0.5px; }
+                        .inv-no-box { text-align: right; }
+                        .store-name { text-align: center; font-size: 22px; font-weight: bold; font-family: Georgia, serif; letter-spacing: 1px; margin: 2px 0 3px; }
+                        .store-info { text-align: center; font-size: 10px; line-height: 1.55; color: #333; }
+                        hr.dash { border: none; border-top: 1px dashed #000; margin: 7px 0; }
+                        .bill-meta { display: flex; justify-content: space-between; font-size: 10px; margin: 3px 0; }
+                        table.items { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+                        table.items thead tr th { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 3px; font-size: 10px; }
+                        table.items thead th:first-child { text-align: center; width: 20px; }
+                        table.items thead th:nth-child(3) { text-align: center; }
+                        table.items thead th:nth-child(4), table.items thead th:nth-child(5) { text-align: right; }
+                        table.items tbody tr:last-child td { border-bottom: 1px solid #000; }
+                        table.totals { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 4px; }
+                        table.totals td { padding: 2px 3px; }
+                        table.totals td.lbl { text-align: left; color: #444; }
+                        table.totals td.val { text-align: right; font-weight: bold; }
+                        .grand-row td { font-size: 14px; font-weight: bold; border-top: 2px solid #000; padding-top: 5px; }
+                        .footer { text-align: center; font-size: 10px; margin-top: 14px; color: #555; line-height: 1.6; }
+                    </style></head>
+                    <body>
+                        <div class="top-bar">
+                            <div class="gst-box">${userProfile.gstNumber ? 'GSTIN: ' + userProfile.gstNumber : ''}</div>
+                            <div class="inv-no-box">Bill No: ${invoiceNumber}</div>
+                        </div>
+                        <div class="store-name"><h4>Dealer Under Composition Scheme</h4></div>
+                        <div class="store-name">A2Z COLLECTION LLP</div>
+                        <div class="store-info">
+                            111, B.K Sindhi Colony, Main Square<br>
+                            Bhawarkuan Main Road, Indore<br>
+                            Madhya Pradesh<br>
+                            Ph: ${storePhone}
+                        </div>
+                        <hr class="dash">
+                        <div class="bill-meta">
+                            <span>Date: ${new Date().toLocaleString('en-IN', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</span>
+                            ${selectedReferrer ? `<span>Ref: ${selectedReferrer}</span>` : ''}
+                        </div>
+                        ${customerName.trim() ? `<div class="bill-meta"><span>Customer: ${customerName.trim()}</span>${customerPhone.trim() ? `<span>${customerPhone.trim()}</span>` : ''}</div>` : ''}
+                        <hr class="dash">
+                        <table class="items">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Rate</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>${itemRowsHTML}</tbody>
+                        </table>
+                        <hr class="dash">
+                        <table class="totals">
+                            <tr><td class="lbl">Subtotal</td><td class="val">&#8377;${subtotal.toFixed(2)}</td></tr>
+                            ${discountPercentage > 0 ? `<tr><td class="lbl">Discount (${discountPercentage}%)</td><td class="val" style="color:#c00;">-&#8377;${discountAmount.toFixed(2)}</td></tr>` : ''}
+                        </table>
+                        <table class="totals">
+                            <tr class="grand-row"><td class="lbl">GRAND TOTAL</td><td class="val">&#8377;${grandTotal.toFixed(2)}</td></tr>
+                        </table>
+                        <hr class="dash">
+                        <div class="footer">Thank you for shopping with us!<br>No Exchange &bull; No Refund</div>
+                        <script>window.onload = function() { window.print(); }<\/script>
+                    </body></html>
                 `);
                 printWindow.document.close();
-                setInvoiceItems([]); setDiscountPercentage(0); setSelectedReferrer('');
+                setInvoiceItems([]); setDiscountPercentage(0); setSelectedReferrer(''); setCustomerName(''); setCustomerPhone('');
             };
 
             // --- ADMIN LOGIC --- //
@@ -1073,7 +1661,7 @@
                             const canvas = document.createElement('canvas'); const MAX_WIDTH = 400; const scaleSize = MAX_WIDTH / img.width;
                             canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
                             const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+                            resolve(canvas.toDataURL('image/jpeg', 0.6));
                         };
                     };
                 });
@@ -1087,7 +1675,7 @@
                     if (compressed.length > 0) {
                         const imgElement = new Image(); imgElement.src = compressed[0];
                         imgElement.onload = () => {
-                            const colorThief = new ColorThief(); const colorArr = colorThief.getColor(imgElement); 
+                            const colorThief = new ColorThief(); const colorArr = colorThief.getColor(imgElement);
                             setProduct(prev => ({ ...prev, dominantColor: `rgb(${colorArr[0]}, ${colorArr[1]}, ${colorArr[2]})`, colorName: getNearestColorName(colorArr) }));
                         };
                     }
@@ -1096,23 +1684,28 @@
 
             const handleSubmit = (e) => {
                 e.preventDefault();
-                const productToSave = { ...product, stockQty: Number(product.stockQty) || 0, costPrice: Number(product.costPrice) || 0, sellPrice: Number(product.sellPrice) || 0 };
-                if (isEditing) { setCatalog(catalog.map(item => item.id === product.id ? productToSave : item)); setIsEditing(false); } 
+                const productToSave = { ...product, costPrice: Number(product.costPrice) || 0, sellPrice: Number(product.sellPrice) || 0 };
+                if (!productToSave.variants || productToSave.variants.length === 0) {
+                    alert('Add at least one color/size variant.');
+                    return;
+                }
+                if (isEditing) { setCatalog(catalog.map(item => item.id === product.id ? productToSave : item)); setIsEditing(false); }
                 else { setCatalog([...catalog, { ...productToSave, entryDate: new Date().toLocaleString() }]); }
                 setProduct({ ...emptyProduct, id: generateNewId() });
-                const imgInput = document.getElementById("imageInput"); if(imgInput) imgInput.value = "";
+                setVariantInput({ colorName: '', colorCode: '', size: 'M', stockQty: '', barcode: '' });
+                const imgInput = document.getElementById("imageInput"); if (imgInput) imgInput.value = "";
             };
 
             const handleEdit = (itemToEdit) => { setProduct(itemToEdit); setIsEditing(true); setCurrentTab('admin'); window.scrollTo({ top: 0, behavior: 'smooth' }); };
             const handleDelete = (idToDelete) => {
-                if(window.confirm(`Delete product ${idToDelete}?`)) {
+                if (window.confirm(`Delete product ${idToDelete}?`)) {
                     setCatalog(catalog.filter(item => item.id !== idToDelete));
-                    if(isEditing && product.id === idToDelete) { setProduct({ ...emptyProduct, id: generateNewId() }); setIsEditing(false); }
+                    if (isEditing && product.id === idToDelete) { setProduct({ ...emptyProduct, id: generateNewId() }); setIsEditing(false); }
                 }
             };
 
             // --- TABS RENDERING --- //
-            
+
             // 1. Grid Tab
             const renderGridTab = () => {
                 const filteredCatalog = catalog.filter(p => {
@@ -1127,33 +1720,33 @@
                 return (
                     <div>
                         <input type="text" className="search-bar" placeholder="Search by Product Name, ID, or Color..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                        {Object.keys(groupedCatalog).length === 0 ? ( <p style={{textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32) 0'}}>No products found in catalog.</p> ) : (
+                        {Object.keys(groupedCatalog).length === 0 ? (<p style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32) 0' }}>No products found in catalog.</p>) : (
                             Object.keys(groupedCatalog).sort().map(category => (
                                 <div key={category} className="category-section">
                                     <h2 className="category-title">{category}</h2>
-                                    <div className="grid-container">
+                                    <motion.div className="grid-container" variants={cardContainerVariants} initial="hidden" animate="visible">
                                         {groupedCatalog[category].map(item => (
-                                            <div key={item.id} className="product-card">
+                                            <motion.div key={item.id} className="product-card" variants={cardVariants} whileTap={{ scale: 0.98 }}>
                                                 <div>
-                                                    {item.images.length > 0 ? ( <img src={item.images[0]} alt={item.name} /> ) : (
-                                                        <div style={{ height: '160px', display: 'flex', alignItems:'center', justifyContent:'center', background:'var(--surface-container-high)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface-variant)'}}>No Image</div>
+                                                    {item.images.length > 0 ? (<img src={item.images[0]} alt={item.name} />) : (
+                                                        <div style={{ height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-container-high)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface-variant)' }}>No Image</div>
                                                     )}
                                                     <h4>{item.name}</h4>
-                                                    <div style={{fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-8)'}}>{item.id}</div>
+                                                    <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-8)' }}>{item.id}</div>
                                                     <div><span className="size-badge">{item.size}</span></div>
-                                                    <div style={{fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginTop: 'var(--spacing-8)'}}>Color: {item.colorName || 'N/A'}</div>
+                                                    <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginTop: 'var(--spacing-8)' }}>Color: {item.colorName || 'N/A'}</div>
                                                     <div style={{ fontSize: '0.875rem', color: item.stockQty <= 2 ? 'var(--error)' : 'var(--success)', fontWeight: '600', marginTop: 'var(--spacing-8)', display: 'inline-block', backgroundColor: item.stockQty <= 2 ? 'var(--error-container)' : 'var(--success-container)', padding: 'var(--spacing-4) var(--spacing-8)', borderRadius: 'var(--radius-full)' }}>Stock: {item.stockQty}</div>
                                                 </div>
                                                 <div>
                                                     <div className="prices">
-                                                        <span style={{color: 'var(--on-surface-variant)', textDecoration: 'line-through', marginRight: 'var(--spacing-8)'}}>Cost: ₹{item.costPrice}</span>
-                                                        <strong style={{color: 'var(--primary)'}}>MRP: ₹{item.sellPrice}</strong>
+                                                        <span style={{ color: 'var(--on-surface-variant)', textDecoration: 'line-through', marginRight: 'var(--spacing-8)' }}>Cost: ₹{item.costPrice}</span>
+                                                        <strong style={{ color: 'var(--primary)' }}>MRP: ₹{item.sellPrice}</strong>
                                                     </div>
-                                                    <button onClick={() => printLabel(item)} className="action-btn" style={{backgroundColor: 'var(--success)', color: 'var(--on-success)'}}><span className="material-icons">print</span> Print Label</button>
+                                                    <button onClick={() => printLabel(item)} className="action-btn" style={{ backgroundColor: 'var(--success)', color: 'var(--on-success)' }}><span className="material-icons">print</span> Print Label</button>
                                                 </div>
-                                            </div>
+                                            </motion.div>
                                         ))}
-                                    </div>
+                                    </motion.div>
                                 </div>
                             ))
                         )}
@@ -1166,35 +1759,99 @@
                 return (
                     <div className="pos-layout">
                         <div className="pos-main">
-                            <div className="card">
-                                <form onSubmit={handleScanSubmit}>
-                                    <label style={{fontSize: '1.125rem', color: 'var(--success)', fontWeight: '600'}}>Scanner Input</label>
-                                    <input ref={scannerInputRef} type="text" className="scanner-input" placeholder="Scan barcode here..." value={scanInput} onChange={(e) => setScanInput(e.target.value)} autoComplete="off" />
+                            <div className="card" style={{ position: 'relative' }}>
+                                <form onSubmit={handleScanSubmit} autoComplete="off">
+                                    <label style={{ fontSize: '1.125rem', color: 'var(--success)', fontWeight: '600' }}>Scanner Input</label>
+                                    <input
+                                        ref={scannerInputRef}
+                                        type="text"
+                                        className="scanner-input"
+                                        placeholder="Scan barcode or search..."
+                                        value={scanInput}
+                                        onChange={e => setScanInput(e.target.value)}
+                                        autoComplete="off"
+                                        onFocus={() => { if (scanSuggestions.length > 0) setShowSuggestions(true); }}
+                                        onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                                        style={{ position: 'relative', zIndex: 2 }}
+                                    />
+                                    {showSuggestions && scanSuggestions.length > 0 && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '70px',
+                                            left: 0,
+                                            right: 0,
+                                            background: 'var(--surface-container-highest)',
+                                            border: '1px solid var(--outline-variant)',
+                                            borderRadius: 'var(--radius-md)',
+                                            boxShadow: 'var(--shadow-lg)',
+                                            zIndex: 10,
+                                            maxHeight: '320px',
+                                            overflowY: 'auto',
+                                            minWidth: '320px'
+                                        }}>
+                                            {scanSuggestions.map((s, idx) => (
+                                                <div
+                                                    key={s.barcode}
+                                                    onMouseDown={() => handleSuggestionClick(s)}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '12px',
+                                                        padding: '10px',
+                                                        cursor: 'pointer',
+                                                        borderBottom: idx !== scanSuggestions.length - 1 ? '1px solid var(--outline-variant)' : 'none',
+                                                        background: 'var(--surface-container-lowest)',
+                                                        transition: 'background 0.2s',
+                                                    }}
+                                                >
+                                                    {s.productImage ? (
+                                                        <img src={s.productImage} alt="preview" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #eee' }} />
+                                                    ) : (
+                                                        <div style={{ width: '48px', height: '48px', background: '#f3f3f3', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb', fontSize: '18px' }}>No Image</div>
+                                                    )}
+                                                    <div style={{ flex: 1 }}>
+                                                        <div style={{ fontWeight: 600 }}>{s.productName}</div>
+                                                        <div style={{ fontSize: '0.95em', color: '#888' }}>Color: {s.colorName} | Size: {s.size}</div>
+                                                        <div style={{ fontSize: '0.9em', color: '#aaa' }}>Barcode: {s.barcode}</div>
+                                                    </div>
+                                                    <div style={{ fontWeight: 700, color: 'var(--primary)' }}>₹{s.sellPrice}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </form>
                             </div>
                             <div className="card">
-                                <h3 style={{marginTop: 0, marginBottom: 'var(--spacing-16)'}}>Current Order</h3>
-                                <div style={{maxHeight: '400px', overflowY: 'auto'}}>
+                                <h3 style={{ marginTop: 0, marginBottom: 'var(--spacing-16)' }}>Current Order</h3>
+                                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
                                     <table className="data-table">
-                                        <thead><tr><th>Product</th><th>Size</th><th>Stock</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead>
+                                        <thead><tr><th>Product</th><th>Color</th><th>Size</th><th>Stock</th><th>Price</th><th>Qty</th><th>Total</th><th></th></tr></thead>
                                         <tbody>
-                                            {invoiceItems.length === 0 ? ( <tr><td colSpan="7" style={{textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-20)'}}>No items scanned yet.</td></tr> ) : (
+                                            <AnimatePresence>
+                                            {invoiceItems.length === 0 ? (<tr><td colSpan="8" style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-20)' }}>No items scanned yet.</td></tr>) : (
                                                 invoiceItems.map(item => {
-                                                    const dbItem = catalog.find(c => c.id === item.id);
-                                                    const stockLeft = dbItem ? dbItem.stockQty - item.qty : 0;
+                                                    // Find the variant in the catalog
+                                                    const dbProduct = catalog.find(c => c.id === item.id);
+                                                    let variant = null;
+                                                    if (dbProduct && dbProduct.variants) {
+                                                        variant = dbProduct.variants.find(v => v.barcode === item.barcode);
+                                                    }
+                                                    const stockLeft = variant ? variant.stockQty - item.qty : 0;
                                                     return (
-                                                        <tr key={item.id}>
-                                                            <td style={{fontWeight: '600'}}>{item.name}<br/><small style={{color: 'var(--on-surface-variant)'}}>{item.id}</small></td>
+                                                        <motion.tr key={item.barcode} variants={rowVariants} initial="hidden" animate="visible" exit="exit">
+                                                            <td style={{ fontWeight: '600' }}>{item.name}<br /><small style={{ color: 'var(--on-surface-variant)' }}>{item.id}</small></td>
+                                                            <td>{item.colorName}</td>
                                                             <td><span className="size-badge">{item.size}</span></td>
-                                                            <td style={{color: stockLeft <= 2 ? 'var(--error)' : 'var(--on-surface-variant)'}}>{stockLeft}</td>
+                                                            <td style={{ color: stockLeft <= 2 ? 'var(--error)' : 'var(--on-surface-variant)' }}>{stockLeft}</td>
                                                             <td>₹{item.sellPrice}</td>
-                                                            <td><div className="qty-controls"><button className="qty-btn" onClick={() => updateQty(item.id, -1)}>-</button><span style={{fontWeight: 'bold', width: '20px', textAlign: 'center'}}>{item.qty}</span><button className="qty-btn" onClick={() => updateQty(item.id, 1)}>+</button></div></td>
-                                                            <td style={{fontWeight: 'bold'}}>₹{(item.sellPrice * item.qty).toFixed(2)}</td>
-                                                            <td><button className="btn-sm btn-delete" onClick={() => removeFromInvoice(item.id)}><span className="material-icons">delete</span></button></td>
-                                                        </tr>
+                                                            <td><div className="qty-controls"><button className="qty-btn" onClick={() => updateQty(item.barcode, -1)}>-</button><span style={{ fontWeight: 'bold', width: '20px', textAlign: 'center' }}>{item.qty}</span><button className="qty-btn" onClick={() => updateQty(item.barcode, 1)}>+</button></div></td>
+                                                            <td style={{ fontWeight: 'bold' }}>₹{(item.sellPrice * item.qty).toFixed(2)}</td>
+                                                            <td><button className="btn-sm btn-delete" onClick={() => removeFromInvoice(item.barcode)}><span className="material-icons">delete</span></button></td>
+                                                        </motion.tr>
                                                     );
                                                 })
                                             )}
+                                            </AnimatePresence>
                                         </tbody>
                                     </table>
                                 </div>
@@ -1202,23 +1859,31 @@
                         </div>
                         <div className="pos-sidebar">
                             <div>
-                                <h3 style={{marginTop: 0, marginBottom: 'var(--spacing-16)', color: 'var(--primary)'}}>Bill Summary</h3>
-                                <div className="totals-row"><span style={{color: 'var(--on-surface-variant)'}}>Subtotal:</span><span>₹{subtotal.toFixed(2)}</span></div>
-                                <div style={{marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)'}}>
-                                    <label style={{color: 'var(--on-surface-variant)', fontSize: '0.875rem'}}>Discount (%)</label>
+                                <h3 style={{ marginTop: 0, marginBottom: 'var(--spacing-16)', color: 'var(--primary)' }}>Bill Summary</h3>
+                                <div className="totals-row"><span style={{ color: 'var(--on-surface-variant)' }}>Subtotal:</span><span>₹{subtotal.toFixed(2)}</span></div>
+                                <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
+                                    <label style={{ color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>Discount (%)</label>
                                     <input type="number" min="0" max="100" value={discountPercentage} onChange={(e) => setDiscountPercentage(e.target.value)} style={{ fontSize: '1rem', textAlign: 'right', marginTop: 'var(--spacing-4)', width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', color: 'var(--on-surface)' }} />
                                 </div>
-                                {discountPercentage > 0 && ( <div className="totals-row" style={{color: 'var(--success)'}}><span>Discount Amount:</span><span>-₹{discountAmount.toFixed(2)}</span></div> )}
-                                <div style={{marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)'}}>
-                                    <label style={{color: 'var(--on-surface-variant)', fontSize: '0.875rem'}}>Refer by</label>
+                                {discountPercentage > 0 && (<div className="totals-row" style={{ color: 'var(--success)' }}><span>Discount Amount:</span><span>-₹{discountAmount.toFixed(2)}</span></div>)}
+                                <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
+                                    <label style={{ color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>Customer Name</label>
+                                    <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Enter customer name (optional)" style={{ fontSize: '1rem', marginTop: 'var(--spacing-4)', width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', color: 'var(--on-surface)' }} />
+                                </div>
+                                <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
+                                    <label style={{ color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>Customer Phone</label>
+                                    <input type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Enter customer phone (optional)" style={{ fontSize: '1rem', marginTop: 'var(--spacing-4)', width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', color: 'var(--on-surface)' }} />
+                                </div>
+                                <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
+                                    <label style={{ color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>Refer by</label>
                                     <select value={selectedReferrer} onChange={(e) => setSelectedReferrer(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', marginTop: 'var(--spacing-4)' }}>
                                         <option value="">Select Referrer (Optional)</option>
-                                        {referrers.map((referrer, index) => ( <option key={index} value={referrer.name}>{referrer.name}</option> ))}
+                                        {referrers.map((referrer, index) => (<option key={index} value={referrer.name}>{referrer.name}</option>))}
                                     </select>
                                 </div>
                                 <div className="totals-row grand-total"><span>Total:</span><span>₹{grandTotal.toFixed(2)}</span></div>
                             </div>
-                            <button className="action-btn" style={{backgroundColor: 'var(--success)', color: 'white', fontSize: '1.125rem', padding: 'var(--spacing-16)'}} onClick={completeSaleAndPrint}>
+                            <button className="action-btn" style={{ backgroundColor: 'var(--success)', color: 'white', fontSize: '1.125rem', padding: 'var(--spacing-16)' }} onClick={completeSaleAndPrint}>
                                 <span className="material-icons">check_circle</span> Complete Sale & Print
                             </button>
                         </div>
@@ -1232,7 +1897,7 @@
                 const totalInvoices = salesLedger.length;
                 const calendarData = getCalendarData(currentCalendarDate);
                 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                
+
                 return (
                     <div className="card">
                         <div className="ledger-header">
@@ -1274,11 +1939,11 @@
                                     <button onClick={() => navigateMonth(1)} style={{ backgroundColor: 'var(--secondary)', color: 'var(--on-secondary)', border: 'none', padding: 'var(--spacing-8) var(--spacing-16)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600' }}>Next ▶</button>
                                 </div>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 'var(--spacing-4)', backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-20)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
-                                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => ( <div key={day} style={{ textAlign: 'center', fontWeight: '600', color: 'var(--secondary)', padding: 'var(--spacing-12)', fontSize: '0.875rem' }}>{day}</div> ))}
+                                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (<div key={day} style={{ textAlign: 'center', fontWeight: '600', color: 'var(--secondary)', padding: 'var(--spacing-12)', fontSize: '0.875rem' }}>{day}</div>))}
                                     {calendarData.map((dayData, index) => (
                                         <div key={index} style={{ backgroundColor: dayData.isCurrentMonth ? (dayData.hasSales ? 'var(--secondary)' : 'var(--surface-container-lowest)') : 'var(--surface-variant)', color: dayData.isCurrentMonth ? (dayData.hasSales ? 'var(--on-secondary)' : 'var(--on-surface)') : 'var(--on-surface-variant)', padding: 'var(--spacing-12)', borderRadius: 'var(--radius-md)', textAlign: 'center', minHeight: '80px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', cursor: dayData.hasSales ? 'pointer' : 'default', border: dayData.hasSales ? '2px solid var(--on-secondary)' : '1px solid var(--outline-variant)', transition: 'all 0.3s ease' }}>
                                             <div style={{ fontSize: '1.125rem', fontWeight: '600' }}>{dayData.day}</div>
-                                            {dayData.hasSales && ( <div style={{ fontSize: '0.75rem', fontWeight: '600' }}>₹{dayData.sales.toFixed(0)}</div> )}
+                                            {dayData.hasSales && (<div style={{ fontSize: '0.75rem', fontWeight: '600' }}>₹{dayData.sales.toFixed(0)}</div>)}
                                         </div>
                                     ))}
                                 </div>
@@ -1319,16 +1984,16 @@
                                         <tbody>
                                             {(() => {
                                                 const filteredSales = filterSalesLedger([...salesLedger].reverse());
-                                                return filteredSales.length === 0 ? ( <tr><td colSpan="5" style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-20)', fontStyle: 'italic' }}>No sales match the current filters.</td></tr> ) : 
-                                                filteredSales.map((sale, i) => (
-                                                    <tr key={i} style={{ borderBottom: '1px solid var(--outline-variant)', backgroundColor: i % 2 === 0 ? 'var(--surface-container-low)' : 'var(--surface-container-highest)' }}>
-                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{new Date(sale.date).toLocaleString()}</td>
-                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontFamily: 'var(--font-family-mono)' }}>{sale.invoiceNo}</td>
-                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{sale.items.reduce((sum, item) => sum + item.qty, 0)} items</td>
-                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{sale.discountPercentage}%</td>
-                                                        <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontWeight: '600', color: 'var(--primary)' }}>₹{sale.grandTotal.toFixed(2)}</td>
-                                                    </tr>
-                                                ));
+                                                return filteredSales.length === 0 ? (<tr><td colSpan="5" style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-20)', fontStyle: 'italic' }}>No sales match the current filters.</td></tr>) :
+                                                    filteredSales.map((sale, i) => (
+                                                        <tr key={i} style={{ borderBottom: '1px solid var(--outline-variant)', backgroundColor: i % 2 === 0 ? 'var(--surface-container-low)' : 'var(--surface-container-highest)' }}>
+                                                            <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{new Date(sale.date).toLocaleString()}</td>
+                                                            <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontFamily: 'var(--font-family-mono)' }}>{sale.invoiceNo}</td>
+                                                            <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{sale.items.reduce((sum, item) => sum + item.qty, 0)} items</td>
+                                                            <td style={{ padding: 'var(--spacing-12) var(--spacing-16)' }}>{sale.discountPercentage}%</td>
+                                                            <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontWeight: '600', color: 'var(--primary)' }}>₹{sale.grandTotal.toFixed(2)}</td>
+                                                        </tr>
+                                                    ));
                                             })()}
                                         </tbody>
                                     </table>
@@ -1343,40 +2008,291 @@
                 );
             };
 
+            // 3.5 Sales Analytics Tab
+            const exportSalesDataToPDF = (salesmenName, period, data, stats) => {
+                if (!window.jsPDF) {
+                    alert('PDF library not loaded. Please try again.');
+                    return;
+                }
+
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                let yPosition = 15;
+                const margin = 10;
+                const maxWidth = pageWidth - (2 * margin);
+
+                // Add header
+                doc.setFontSize(18);
+                doc.setFont(undefined, 'bold');
+                doc.text('A2Z Collection - Sales Report', margin, yPosition);
+                yPosition += 10;
+
+                // Add report info
+                doc.setFontSize(11);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Salesman: ${salesmenName}`, margin, yPosition);
+                yPosition += 6;
+                doc.text(`Period: ${getPeriodLabel(period)}`, margin, yPosition);
+                yPosition += 6;
+                doc.text(`Generated: ${new Date().toLocaleDateString('en-IN')} ${new Date().toLocaleTimeString()}`, margin, yPosition);
+                yPosition += 10;
+
+                // Add stats
+                doc.setFont(undefined, 'bold');
+                doc.text('Summary Statistics', margin, yPosition);
+                yPosition += 6;
+                doc.setFont(undefined, 'normal');
+                doc.setFontSize(10);
+                doc.text(`Total Sales: ₹${stats.totalSales.toFixed(2)}`, margin, yPosition);
+                yPosition += 5;
+                doc.text(`Total Invoices: ${stats.totalInvoices}`, margin, yPosition);
+                yPosition += 5;
+                doc.text(`Average Sale: ₹${stats.avgSale.toFixed(2)}`, margin, yPosition);
+                yPosition += 8;
+
+                // Add table
+                if (data && data.length > 0) {
+                    const columns = ['Invoice No.', 'Date', 'Amount (₹)', 'Discount', 'Grand Total (₹)'];
+                    const rows = data.map(sale => [
+                        sale.invoiceNo,
+                        new Date(sale.date).toLocaleDateString('en-IN'),
+                        sale.subtotal.toFixed(2),
+                        sale.discountPercentage > 0 ? `${sale.discountPercentage}%` : 'None',
+                        sale.grandTotal.toFixed(2)
+                    ]);
+
+                    doc.autoTable({
+                        startY: yPosition,
+                        head: [columns],
+                        body: rows,
+                        margin: { top: margin, left: margin, right: margin },
+                        columnStyles: {
+                            0: { cellWidth: 30 },
+                            1: { cellWidth: 30 },
+                            2: { cellWidth: 25 },
+                            3: { cellWidth: 25 },
+                            4: { cellWidth: 30 }
+                        },
+                        headStyles: {
+                            fillColor: [0, 20, 81],
+                            textColor: 255,
+                            fontStyle: 'bold'
+                        },
+                        bodyStyles: {
+                            textColor: 30
+                        },
+                        alternateRowStyles: {
+                            fillColor: [232, 242, 253]
+                        }
+                    });
+                }
+
+                // Download PDF
+                const filename = `Sales_Report_${salesmenName}_${new Date().getTime()}.pdf`;
+                doc.save(filename);
+            };
+
+            const renderSalesAnalyticsTab = () => {
+                const salesmenList = uniqueSalesmen;
+                const currentSalesmen = selectedSalesman || (salesmenList.length > 0 ? salesmenList[0] : '');
+                const salesData = currentSalesmen ? getSalesmanSales(currentSalesmen, salesAnalyticsPeriod) : [];
+                const totalSales = salesData.reduce((sum, s) => sum + s.grandTotal, 0);
+                const totalInvoices = salesData.length;
+                const avgSale = totalInvoices > 0 ? totalSales / totalInvoices : 0;
+
+                return (
+                    <div className="card">
+                        <h2 style={{ marginTop: 0, marginBottom: 'var(--spacing-16)' }}>Sales Analytics - Salesman Performance</h2>
+
+                        {/* Filters Section */}
+                        <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-20)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
+                            <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-16)' }}><span className="material-icons" style={{ verticalAlign: 'middle', marginRight: 'var(--spacing-8)' }}>filter_list</span>Filter Options</h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--spacing-16)' }}>
+                                <div>
+                                    <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Select Salesman</label>                                    <select value={selectedSalesman || (salesmenList.length > 0 ? salesmenList[0] : '')} onChange={(e) => setSelectedSalesman(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }}>
+                                        <option value="">-- Select a Salesman --</option>
+                                        {salesmenList.map(name => <option key={name} value={name}>{name}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Period</label>
+                                    <select value={salesAnalyticsPeriod} onChange={(e) => setSalesAnalyticsPeriod(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }}>
+                                        <option value="today">Today</option>
+                                        <option value="week">This Week</option>
+                                        <option value="month">This Month</option>
+                                        <option value="quarter">This Quarter</option>
+                                        <option value="custom">Custom Date Range</option>
+                                    </select>
+                                </div>
+                                {salesAnalyticsPeriod === 'custom' && (
+                                    <>
+                                        <div>
+                                            <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Date From</label>
+                                            <input type="date" value={salesAnalyticsDateFrom} onChange={(e) => setSalesAnalyticsDateFrom(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} />
+                                        </div>
+                                        <div>
+                                            <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Date To</label>
+                                            <input type="date" value={salesAnalyticsDateTo} onChange={(e) => setSalesAnalyticsDateTo(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }} />
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Stats Section */}
+                        {currentSalesmen && (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-16)', marginBottom: 'var(--spacing-20)' }}>
+                                <div style={{ backgroundColor: 'var(--primary-container)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--on-primary-container)', marginBottom: 'var(--spacing-8)' }}>Total Sales</div>
+                                    <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--on-primary-container)' }}>₹{totalSales.toFixed(2)}</div>
+                                </div>
+                                <div style={{ backgroundColor: 'var(--secondary-container)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--on-secondary-container)', marginBottom: 'var(--spacing-8)' }}>Total Invoices</div>
+                                    <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--on-secondary-container)' }}>{totalInvoices}</div>
+                                </div>
+                                <div style={{ backgroundColor: 'var(--success-container)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--on-success-container)', marginBottom: 'var(--spacing-8)' }}>Average Sale</div>
+                                    <div style={{ fontSize: '1.75rem', fontWeight: 'bold', color: 'var(--on-success-container)' }}>₹{avgSale.toFixed(2)}</div>
+                                </div>
+                                <div style={{ backgroundColor: 'var(--tertiary-container)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-lg)', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '0.875rem', color: 'var(--on-tertiary-container)', marginBottom: 'var(--spacing-8)' }}>Period</div>
+                                    <div style={{ fontSize: '1rem', fontWeight: 'bold', color: 'var(--on-tertiary-container)' }}>{getPeriodLabel(salesAnalyticsPeriod)}</div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Chart Section */}
+                        {currentSalesmen ? (
+                            <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-20)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)' }}>
+                                <canvas ref={salesAnalyticsCanvasRef} style={{ maxHeight: '400px' }}></canvas>
+                            </div>
+                        ) : (
+                            <div style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32)' }}>Please select a salesman to view analytics.</div>
+                        )}
+
+                        {/* Sales Details Table */}
+                        {currentSalesmen && salesData.length > 0 && (
+                            <div style={{ marginTop: 'var(--spacing-20)' }}>
+                                <h4 style={{ color: 'var(--secondary)', marginBottom: 'var(--spacing-16)' }}>Sales Details ({salesData.length} invoices)</h4>
+                                <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', overflow: 'auto', boxShadow: 'var(--shadow-sm)' }}>
+                                    <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'var(--surface-container-low)', color: 'var(--on-surface)' }}>
+                                        <thead style={{ backgroundColor: 'var(--primary-container)' }}>
+                                            <tr>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Invoice No.</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Date</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Amount (₹)</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Discount</th>
+                                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Grand Total (₹)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {salesData.map((sale, idx) => (
+                                                <tr key={idx} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)' }}>{sale.invoiceNo}</td>
+                                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)' }}>{new Date(sale.date).toLocaleDateString('en-IN')}</td>
+                                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)' }}>₹{sale.subtotal.toFixed(2)}</td>
+                                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: sale.discountPercentage > 0 ? 'var(--success)' : 'var(--on-surface)' }}>{sale.discountPercentage > 0 ? `${sale.discountPercentage}% (-₹${sale.discountAmount.toFixed(2)})` : 'None'}</td>
+                                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', fontWeight: '600', color: 'var(--primary)' }}>₹{sale.grandTotal.toFixed(2)}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+                        {currentSalesmen && salesData.length === 0 && (
+                            <div style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32)' }}>No sales found for {currentSalesmen} in {getPeriodLabel(salesAnalyticsPeriod)}</div>
+                        )}
+
+                        {/* Export Button */}
+                        {currentSalesmen && salesData.length > 0 && (
+                            <div style={{ marginTop: 'var(--spacing-20)', display: 'flex', justifyContent: 'flex-end' }}>
+                                <button 
+                                    onClick={() => exportSalesDataToPDF(currentSalesmen, salesAnalyticsPeriod, salesData, { totalSales, totalInvoices, avgSale })}
+                                    className="action-btn"
+                                    style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)', backgroundColor: 'var(--success)' }}
+                                >
+                                    <span className="material-icons" style={{ fontSize: '20px' }}>file_download</span>
+                                    Export as PDF
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
             // 4. Admin Tab
             const renderAdminTab = () => {
                 return (
                     <div className="card">
                         <h3>{isEditing ? `Edit Product: ${product.id}` : 'Add New Product'}</h3>
                         <form onSubmit={handleSubmit}>
-                            <div className="form-group"><label>Product ID</label><input type="text" value={product.id} readOnly style={{ color: '#aaa' }} /><div className="barcode-container"><svg ref={barcodeRef}></svg></div></div>
+                            <div className="form-group"><label>Product ID</label><input type="text" value={product.id} readOnly style={{ color: '#aaa' }} /></div>
                             <div className="form-group"><label>Product Name</label><input type="text" name="name" value={product.name} onChange={handleInputChange} required /></div>
                             <div className="row-group">
                                 <div><label>Category</label><input type="text" name="category" list="categoryOptions" value={product.category} onChange={handleInputChange} placeholder="Select or type..." required /><datalist id="categoryOptions">{uniqueCategories.map((cat, i) => <option key={i} value={cat} />)}</datalist></div>
                                 <div><label>Gender</label><select name="gender" value={product.gender} onChange={handleInputChange}><option value="Male">Male</option><option value="Female">Female</option><option value="Unisex">Unisex</option></select></div>
-                                <div><label>Size</label><select name="size" value={product.size} onChange={handleInputChange}>{sizeOptions.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
                             </div>
-                            <div className="row-group" style={{marginTop: '15px'}}>
-                                <div><label>Total Stock Quantity</label><input type="number" name="stockQty" value={product.stockQty} onChange={handleInputChange} min="0" required placeholder="Pieces in stock" /></div>
+                            <div className="row-group" style={{ marginTop: '15px' }}>
                                 <div><label>Cost Price</label><div className="input-wrapper"><span className="currency-symbol">₹</span><input type="number" name="costPrice" value={product.costPrice} onChange={handleInputChange} min="0" required /></div></div>
                                 <div><label>Sell Price (MRP)</label><div className="input-wrapper"><span className="currency-symbol">₹</span><input type="number" name="sellPrice" value={product.sellPrice} onChange={handleInputChange} min="0" required /></div></div>
                             </div>
-                            <div className="form-group" style={{marginTop: '15px'}}>
+                            <div className="form-group" style={{ marginTop: '15px' }}>
                                 <label>Images (Max 5)</label><input id="imageInput" type="file" multiple accept="image/*" onChange={handleImageUpload} />
-                                {product.images.length > 0 && (<div style={{ marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>{product.images.map((imgSrc, index) => ( <img key={index} src={imgSrc} alt="Preview" className="img-preview" /> ))}</div>)}
-                                {product.dominantColor && (<div style={{ marginTop: '10px' }}>Color: <span className="color-box" style={{ backgroundColor: product.dominantColor }}></span><span style={{ marginLeft: '10px' }}>{product.colorName}</span></div>)}
+                                {product.images.length > 0 && (<div style={{ marginTop: '15px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>{product.images.map((imgSrc, index) => (<img key={index} src={imgSrc} alt="Preview" className="img-preview" />))}</div>)}
+                            </div>
+                            <div className="form-group" style={{ marginTop: '15px', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', padding: '15px', backgroundColor: 'var(--surface-container-low)' }}>
+                                <label style={{ fontWeight: 700, display: 'block', marginBottom: '12px', fontSize: '1rem' }}>{variantInput.colorName ? 'Modify Variant' : 'Add Color/Size/Stock Variant'}</label>
+                                <div className="row-group" style={{ gap: '12px' }}>
+                                    <div><label style={{ fontSize: '0.85rem' }}>Color Name</label><input type="text" name="colorName" value={variantInput.colorName} onChange={handleVariantInputChange} placeholder="e.g. Red" /></div>
+                                    <div><label style={{ fontSize: '0.85rem' }}>Color Code (hex or short)</label><input type="text" name="colorCode" value={variantInput.colorCode} onChange={handleVariantInputChange} placeholder="#FF0000 or RED" /></div>
+                                    <div><label style={{ fontSize: '0.85rem' }}>Size</label><select name="size" value={variantInput.size} onChange={handleVariantInputChange}>{sizeOptions.map(s => <option key={s} value={s}>{s}</option>)}</select></div>
+                                    <div><label style={{ fontSize: '0.85rem' }}>Stock Qty</label><input type="number" name="stockQty" value={variantInput.stockQty} onChange={handleVariantInputChange} min="0" /></div>
+                                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end', gap: '6px' }}><button type="button" className="btn-sm btn-edit" onClick={addVariant} style={{ height: '36px', padding: '0 16px' }}>{variantInput.colorName ? 'Update/Save Variant' : 'Add Variant'}</button>{variantInput.colorName && (<button type="button" className="btn-sm" onClick={clearVariantInput} style={{ height: '36px', padding: '0 16px', backgroundColor: 'var(--surface-variant)', color: 'var(--on-surface-variant)' }}>Cancel</button>)}</div>
+                                </div>
+                                {product.variants && product.variants.length > 0 && (
+                                    <div style={{ marginTop: '15px', backgroundColor: 'var(--surface-container-low)', padding: '12px', borderRadius: 'var(--radius-md)' }}>
+                                        <strong style={{ display: 'block', marginBottom: '10px' }}>Variants:</strong>
+                                        {product.variants.map((v, i) => (
+                                            <div key={v.barcode} style={{ backgroundColor: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', padding: '12px', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                                                        <span style={{ fontWeight: 700, fontSize: '1rem' }}>{v.colorName}</span>
+                                                        <span className="size-badge">{v.size}</span>
+                                                        <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>Stock: {v.stockQty}</span>
+                                                    </div>
+                                                    <div style={{ marginTop: '8px' }}>
+                                                        <div style={{ color: 'var(--on-surface-variant)', fontSize: '0.85rem', marginBottom: '4px' }}>Barcode: <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{v.barcode}</span></div>
+                                                        <div className="barcode-container" style={{ marginTop: '6px', padding: '8px', backgroundColor: '#fff', borderRadius: '4px' }}>
+                                                            <svg id={`barcode-variant-${i}`}></svg>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '6px', flexDirection: 'column' }}>
+                                                    <button type="button" className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', padding: '6px 8px', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => duplicateVariant(v)} title="Duplicate this variant"><span className="material-icons" style={{ fontSize: '18px' }}>content_copy</span></button>
+                                                    <button type="button" className="btn-sm" style={{ backgroundColor: 'var(--success)', color: 'white', padding: '6px 8px', display: 'flex', alignItems: 'center', gap: '4px' }} onClick={() => printVariantBarcode(v, v.colorName)} title="Print this barcode"><span className="material-icons" style={{ fontSize: '18px' }}>print</span></button>
+                                                    <button type="button" className="btn-sm btn-delete" onClick={() => removeVariant(v.barcode)}><span className="material-icons">delete</span></button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             <button type="submit" className="action-btn">{isEditing ? 'Update Product & Inventory' : 'Save Product to Inventory'}</button>
-                            {isEditing && (<button type="button" className="action-btn" style={{backgroundColor: 'var(--surface-variant)', color: 'var(--on-surface-variant)'}} onClick={() => { setIsEditing(false); setProduct({...emptyProduct, id: generateNewId()}); }}>Cancel Edit</button>)}
+                            {isEditing && (<button type="button" className="action-btn" style={{ backgroundColor: 'var(--surface-variant)', color: 'var(--on-surface-variant)' }} onClick={() => { setIsEditing(false); setProduct({ ...emptyProduct, id: generateNewId() }); setVariantInput({ colorName: '', colorCode: '', size: 'M', stockQty: '', barcode: '' }); }}>Cancel Edit</button>)}
                         </form>
 
                         <div style={{ marginTop: '40px' }}>
-                            <h3 style={{borderBottom: '1px solid var(--outline-variant)', paddingBottom: '10px'}}>Current Inventory List</h3>
+                            <h3 style={{ borderBottom: '1px solid var(--outline-variant)', paddingBottom: '10px' }}>Current Inventory List</h3>
                             {catalog.map((item, index) => (
                                 <div key={index} style={{ borderBottom: '1px solid var(--surface-container-high)', padding: '15px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ flex: 1 }}>
-                                        <strong>{item.name}</strong> <span className="size-badge">{item.size}</span>
-                                        <span style={{ marginLeft: '10px', color: item.stockQty <= 2 ? 'var(--error)' : 'var(--success)', fontWeight: 'bold'}}>Stock: {item.stockQty}</span><br/>
+                                        <strong>{item.name}</strong>
+                                        {item.variants && item.variants.map((v, vi) => (
+                                            <span key={v.barcode} className="size-badge" style={{ marginLeft: '8px' }}>{v.colorName} / {v.size} / Stock: {v.stockQty}</span>
+                                        ))}
+                                        <br />
                                         <small style={{ color: 'var(--on-surface-variant)' }}>{item.id} | MRP: ₹{item.sellPrice}</small>
                                     </div>
                                     <div>
@@ -1390,7 +2306,160 @@
                 );
             };
 
-            // 5. User Profile Tab
+            // 5. Invoices Tab
+            const renderInvoicesTab = () => {
+                // Get unique days and referrers from sales ledger
+                const uniqueDays = useMemo(() => {
+                    const days = new Set();
+                    salesLedger.forEach(sale => {
+                        const date = new Date(sale.date).toLocaleDateString('en-IN');
+                        days.add(date);
+                    });
+                    return Array.from(days).sort().reverse();
+                }, [salesLedger]);
+
+                const uniqueReferrersInvoices = useMemo(() => {
+                    const names = new Set();
+                    salesLedger.forEach(sale => {
+                        if (sale.referrer) names.add(sale.referrer);
+                    });
+                    return Array.from(names).sort();
+                }, [salesLedger]);
+
+                // Filter invoices
+                const filteredInvoices = useMemo(() => {
+                    return salesLedger.filter(sale => {
+                        const saleDay = new Date(sale.date).toLocaleDateString('en-IN');
+                        const matchDay = !invoiceFilterDay || saleDay === invoiceFilterDay;
+                        const matchReferrer = !invoiceFilterReferrer || sale.referrer === invoiceFilterReferrer;
+                        return matchDay && matchReferrer;
+                    }).sort((a, b) => new Date(b.date) - new Date(a.date));
+                }, [salesLedger, invoiceFilterDay, invoiceFilterReferrer]);
+
+                return (
+                    <div className="card">
+                        <h2 style={{ marginTop: 0, marginBottom: 'var(--spacing-16)' }}>Invoices</h2>
+
+                        {/* Filters Section */}
+                        <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-20)', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
+                            <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-16)' }}>
+                                <span className="material-icons" style={{ verticalAlign: 'middle', marginRight: 'var(--spacing-8)' }}>filter_list</span>
+                                Filters
+                            </h4>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--spacing-16)' }}>
+                                <div>
+                                    <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Filter by Day</label>
+                                    <select value={invoiceFilterDay} onChange={(e) => setInvoiceFilterDay(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }}>
+                                        <option value="">All Days</option>
+                                        {uniqueDays.map(day => <option key={day} value={day}>{day}</option>)}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Filter by Referrer</label>
+                                    <select value={invoiceFilterReferrer} onChange={(e) => setInvoiceFilterReferrer(e.target.value)} style={{ width: '100%', padding: 'var(--spacing-8)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0' }}>
+                                        <option value="">All Referrers</option>
+                                        {uniqueReferrersInvoices.map(referrer => <option key={referrer} value={referrer}>{referrer}</option>)}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Invoices Table */}
+                        {filteredInvoices.length === 0 ? (
+                            <div style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32)' }}>
+                                <p>No invoices found for the selected filters.</p>
+                            </div>
+                        ) : (
+                            <div style={{ overflow: 'auto', boxShadow: 'var(--shadow-sm)', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--surface-container-low)' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', color: 'var(--on-surface)' }}>
+                                    <thead>
+                                        <tr style={{ backgroundColor: 'var(--primary-container)' }}>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Invoice No.</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Date & Time</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Referrer</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Customer</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Subtotal (₹)</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Discount</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Grand Total (₹)</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Items</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredInvoices.map((invoice, idx) => (
+                                            <tr key={idx} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--primary)', fontWeight: '600', fontFamily: 'monospace' }}>{invoice.invoiceNo}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)', fontSize: '0.875rem' }}>
+                                                    {new Date(invoice.date).toLocaleDateString('en-IN')} {new Date(invoice.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                                                </td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--secondary)', fontWeight: '500' }}>{invoice.referrer || '-'}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)', fontSize: '0.875rem' }}>{invoice.customerName || '-'}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)', textAlign: 'right' }}>₹{invoice.subtotal.toFixed(2)}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: invoice.discountPercentage > 0 ? 'var(--success)' : 'var(--on-surface)', textAlign: 'right' }}>
+                                                    {invoice.discountPercentage > 0 ? `${invoice.discountPercentage}% (-₹${invoice.discountAmount.toFixed(2)})` : 'None'}
+                                                </td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--primary)', fontWeight: 'bold', textAlign: 'right' }}>₹{invoice.grandTotal.toFixed(2)}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface-variant)', textAlign: 'center', fontSize: '0.875rem' }}>{invoice.items.length}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        <div style={{ marginTop: 'var(--spacing-20)', padding: 'var(--spacing-16)', backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }}>
+                            <p style={{ marginTop: 0, color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>
+                                <strong>Total Invoices:</strong> {filteredInvoices.length} / {salesLedger.length}
+                            </p>
+                        </div>
+                    </div>
+                );
+            };
+
+            // 6. Customers Tab
+            const renderCustomersTab = () => {
+                const sortedCustomers = [...customers].sort((a, b) => new Date(b.joinDate) - new Date(a.joinDate));
+                return (
+                    <div className="card">
+                        <h2 style={{ marginTop: 0, marginBottom: 'var(--spacing-16)' }}>Customer Contacts</h2>
+                        {sortedCustomers.length === 0 ? (
+                            <div style={{ textAlign: 'center', color: 'var(--on-surface-variant)', padding: 'var(--spacing-32)' }}>
+                                <p>No customers yet. Add customer details while creating an invoice.</p>
+                            </div>
+                        ) : (
+                            <div style={{ overflow: 'auto' }}>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', color: 'var(--on-surface)' }}>
+                                    <thead>
+                                        <tr style={{ backgroundColor: 'var(--primary-container)' }}>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Customer Name</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Phone Number</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'left', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Join Date</th>
+                                            <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sortedCustomers.map((customer, idx) => (
+                                            <tr key={customer.id} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)' }}>{customer.name}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)', fontFamily: 'monospace' }}>{customer.phone}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>{new Date(customer.joinDate).toLocaleDateString('en-IN')}</td>
+                                                <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center' }}>
+                                                    <button className="btn-sm btn-delete" onClick={() => setCustomers(customers.filter(c => c.id !== customer.id))} title="Delete customer"><span className="material-icons">delete</span></button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                        <div style={{ marginTop: 'var(--spacing-20)', padding: 'var(--spacing-16)', backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-md)' }}>
+                            <p style={{ marginTop: 0, color: 'var(--on-surface-variant)', fontSize: '0.875rem' }}>
+                                <strong>Total Customers:</strong> {sortedCustomers.length}
+                            </p>
+                        </div>
+                    </div>
+                );
+            };
+
+            // 6. User Profile Tab
             const renderProfileTab = () => {
                 return (
                     <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
@@ -1424,16 +2493,19 @@
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
                                     <div>
                                         <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Phone Number</label>
-                                        <input type="tel" value={userProfile.phone} onChange={(e) => setUserProfile(prev => ({ ...prev, phone: e.target.value }))} placeholder="Enter your phone number" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
+                                        <input type="tel" value={userProfile.phone} onChange={(e) => setUserProfile(prev => ({ ...prev, phone: e.target.value }))} placeholder="e.g. +91-9644444661" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem' }} />
                                     </div>
-                                    <div></div>
+                                    <div>
+                                        <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>GST Number <span style={{ color: 'var(--on-surface-variant)', fontWeight: 400 }}>(appears on invoice top-left)</span></label>
+                                        <input type="text" value={userProfile.gstNumber || ''} onChange={(e) => setUserProfile(prev => ({ ...prev, gstNumber: e.target.value }))} placeholder="e.g. 23AAAAA0000A1Z5 (optional)" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem', fontFamily: 'monospace', letterSpacing: '1px' }} />
+                                    </div>
                                 </div>
                                 <div>
                                     <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Address</label>
                                     <textarea value={userProfile.address} onChange={(e) => setUserProfile(prev => ({ ...prev, address: e.target.value }))} placeholder="Enter your address" rows="3" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem', resize: 'vertical', minHeight: '80px' }} />
                                 </div>
                             </div>
-                            
+
                             <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', marginTop: 'var(--spacing-20)' }}>
                                 <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)' }}>Data Management (JSON Backup)</h4>
                                 <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Export your current data to keep a secure backup, or import a JSON file to restore your database.</p>
@@ -1441,16 +2513,16 @@
                                     <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
                                         <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Products Database</h5>
                                         <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', marginTop: 'var(--spacing-20)' }}>
-                                <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)' }}>Data Management & Auto-Save</h4>
-                                <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Link a local folder on your PC. The app will automatically sync and overwrite JSON files in this folder as you work.</p>
-                                
-                                <div style={{ marginBottom: 'var(--spacing-24)', paddingBottom: 'var(--spacing-16)', borderBottom: '1px solid var(--outline-variant)' }}>
-                                    <button type="button" onClick={linkLocalFolder} style={{ backgroundColor: dirHandle ? 'var(--success)' : 'var(--primary)', color: 'white', border: 'none', padding: 'var(--spacing-12)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
-                                        <span className="material-icons">{dirHandle ? 'folder_special' : 'create_new_folder'}</span>
-                                        {dirHandle ? 'Folder Linked & Auto-Saving' : 'Link Local Auto-Save Folder'}
-                                    </button>
-                                </div>
-                                </div>
+                                            <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)' }}>Data Management & Auto-Save</h4>
+                                            <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Link a local folder on your PC. The app will automatically sync and overwrite JSON files in this folder as you work.</p>
+
+                                            <div style={{ marginBottom: 'var(--spacing-24)', paddingBottom: 'var(--spacing-16)', borderBottom: '1px solid var(--outline-variant)' }}>
+                                                <button type="button" onClick={linkLocalFolder} style={{ backgroundColor: dirHandle ? 'var(--success)' : 'var(--primary)', color: 'white', border: 'none', padding: 'var(--spacing-12)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                                                    <span className="material-icons">{dirHandle ? 'folder_special' : 'create_new_folder'}</span>
+                                                    {dirHandle ? 'Folder Linked & Auto-Saving' : 'Link Local Auto-Save Folder'}
+                                                </button>
+                                            </div>
+                                        </div>
                                         <button type="button" onClick={() => exportToJson(catalog, 'a2z_products.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>Download Products (JSON)</button>
                                         <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Products JSON:</label>
                                         <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'products')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
@@ -1463,7 +2535,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <button type="submit" style={{ backgroundColor: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: 'var(--spacing-12) var(--spacing-20)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)', marginTop: 'var(--spacing-20)' }}>
                                 <span className="material-icons">save</span> Save Profile
                             </button>
@@ -1477,7 +2549,7 @@
                     <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
                         <h3 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-8)', fontSize: '1.5rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}><span className="material-icons">people</span>Manage Referrers</h3>
                         <p style={{ color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-20)', fontSize: '0.875rem' }}>Add and manage referrer contacts for billing purposes.</p>
-                        
+
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             if (!newReferrer.name.trim()) return;
@@ -1499,10 +2571,10 @@
                             </div>
                             <button type="submit" style={{ backgroundColor: 'var(--primary)', color: 'var(--on-primary)', border: 'none', padding: 'var(--spacing-12) var(--spacing-20)', borderRadius: 'var(--radius-md)', cursor: 'pointer', fontWeight: '600', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)', marginTop: 'var(--spacing-16)' }}><span className="material-icons">person_add</span> Add Referrer</button>
                         </form>
-                        
+
                         <div>
                             <h4 style={{ color: 'var(--secondary)', marginBottom: 'var(--spacing-16)', fontSize: '1.125rem', fontWeight: '600' }}>Referrer List ({referrers.length})</h4>
-                            {referrers.length === 0 ? ( <p style={{ color: 'var(--on-surface-variant)', textAlign: 'center', padding: 'var(--spacing-20)', fontStyle: 'italic' }}>No referrers added yet. Add your first referrer above.</p> ) : (
+                            {referrers.length === 0 ? (<p style={{ color: 'var(--on-surface-variant)', textAlign: 'center', padding: 'var(--spacing-20)', fontStyle: 'italic' }}>No referrers added yet. Add your first referrer above.</p>) : (
                                 <div style={{ display: 'grid', gap: 'var(--spacing-12)' }}>
                                     {referrers.map(referrer => (
                                         <div key={referrer.id} style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', border: '1px solid var(--outline-variant)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: 'var(--shadow-sm)' }}>
@@ -1514,7 +2586,7 @@
                                                     {referrer.address && <div><strong style={{ color: 'var(--on-surface)' }}>Address:</strong> {referrer.address}</div>}
                                                     <div><strong style={{ color: 'var(--on-surface)' }}>Added:</strong> {new Date(referrer.createdDate).toLocaleDateString()}</div>
                                                 </div>
-                                                {referrer.notes && ( <div style={{ marginTop: 'var(--spacing-12)', fontSize: '0.875rem', color: 'var(--on-surface-variant)' }}><strong style={{ color: 'var(--on-surface)' }}>Notes:</strong> {referrer.notes}</div> )}
+                                                {referrer.notes && (<div style={{ marginTop: 'var(--spacing-12)', fontSize: '0.875rem', color: 'var(--on-surface-variant)' }}><strong style={{ color: 'var(--on-surface)' }}>Notes:</strong> {referrer.notes}</div>)}
                                             </div>
                                             <div style={{ display: 'flex', gap: 'var(--spacing-8)' }}>
                                                 <button style={{ backgroundColor: 'var(--secondary-container)', color: 'var(--on-secondary-container)', border: 'none', padding: 'var(--spacing-8)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => { setEditingReferrer(referrer); setNewReferrer({ name: referrer.name, phone: referrer.phone || '', email: referrer.email || '', address: referrer.address || '', notes: referrer.notes || '' }); }} title="Edit referrer"><span className="material-icons" style={{ fontSize: '1.125rem' }}>edit</span></button>
@@ -1525,7 +2597,7 @@
                                 </div>
                             )}
                         </div>
-                        
+
                         {editingReferrer && (
                             <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
                                 <div style={{ backgroundColor: 'var(--surface-container-low)', padding: 'var(--spacing-24)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--outline-variant)', maxWidth: '500px', width: '90%', boxShadow: 'var(--shadow-lg)' }}>
@@ -1533,7 +2605,7 @@
                                     <form onSubmit={(e) => {
                                         e.preventDefault();
                                         if (!newReferrer.name.trim()) return;
-                                        setReferrers(prev => prev.map(r => r.id === editingReferrer.id ? { ...r, name: newReferrer.name.trim(), phone: newReferrer.phone.trim(), email: newReferrer.email.trim(), address: newReferrer.address.trim(), notes: newReferrer.notes.trim() } : r ));
+                                        setReferrers(prev => prev.map(r => r.id === editingReferrer.id ? { ...r, name: newReferrer.name.trim(), phone: newReferrer.phone.trim(), email: newReferrer.email.trim(), address: newReferrer.address.trim(), notes: newReferrer.notes.trim() } : r));
                                         setEditingReferrer(null);
                                         setNewReferrer({ name: '', phone: '', email: '', address: '', notes: '' });
                                     }}>
@@ -1564,7 +2636,7 @@
             //             <div className="login-card">
             //                 <h1 style={{ marginBottom: 'var(--spacing-8)', color: 'var(--primary)' }}>A2Z Collection</h1>
             //                 <p style={{ marginBottom: 'var(--spacing-32)' }}>Inventory & Point of Sale System</p>
-                            
+
             //                 <form onSubmit={handleLoginSubmit}>
             //                     <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-16)' }}>
             //                         <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>User ID</label>
@@ -1588,14 +2660,14 @@
             //                             style={{ width: '100%' }}
             //                         />
             //                     </div>
-                                
+
             //                     <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-24)', backgroundColor: 'var(--surface)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', border: '1px dashed var(--outline-variant)' }}>
             //                         <p style={{ fontSize: '0.875rem', fontWeight: '600', margin: '0 0 var(--spacing-8) 0', color: 'var(--primary)' }}>Local JSON Setup (Optional)</p>
             //                         <p style={{ fontSize: '0.75rem', margin: '0 0 var(--spacing-12) 0', color: 'var(--on-surface-variant)' }}>Upload local files to restore your databases before logging in.</p>
-                                    
+
             //                         <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '500', marginBottom: '4px' }}>Products JSON:</label>
             //                         <input type="file" accept=".json" onChange={(e) => setPendingFiles(prev => ({...prev, products: e.target.files[0]}))} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', marginBottom: 'var(--spacing-8)', border: 'none', backgroundColor: 'transparent' }} />
-                                    
+
             //                         <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: '500', marginBottom: '4px' }}>Sales JSON:</label>
             //                         <input type="file" accept=".json" onChange={(e) => setPendingFiles(prev => ({...prev, sales: e.target.files[0]}))} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', border: 'none', backgroundColor: 'transparent' }} />
             //                     </div>
@@ -1612,22 +2684,22 @@
             if (!isAuthenticated) {
                 return (
                     <div className="login-wrapper">
-                        <div className="login-card">
+                        <motion.div className="login-card" initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}>
                             <h1 style={{ marginBottom: 'var(--spacing-8)', color: 'var(--primary)' }}>A2Z Collection</h1>
                             <p style={{ marginBottom: 'var(--spacing-32)' }}>Inventory & Point of Sale System</p>
-                            
+
                             <form onSubmit={handleLoginSubmit}>
                                 <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-16)' }}>
                                     <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>User ID</label>
-                                    <input type="text" value={loginInput.userId} onChange={(e) => setLoginInput({...loginInput, userId: e.target.value})} placeholder="Default: admin" required style={{ width: '100%' }} />
+                                    <input type="text" value={loginInput.userId} onChange={(e) => setLoginInput({ ...loginInput, userId: e.target.value })} placeholder="Default: admin" required style={{ width: '100%' }} />
                                 </div>
                                 <div style={{ textAlign: 'left', marginBottom: 'var(--spacing-24)' }}>
                                     <label style={{ display: 'block', marginBottom: 'var(--spacing-8)', fontWeight: '600' }}>Password</label>
-                                    <input type="password" value={loginInput.password} onChange={(e) => setLoginInput({...loginInput, password: e.target.value})} placeholder="Default: admin" required style={{ width: '100%' }} />
+                                    <input type="password" value={loginInput.password} onChange={(e) => setLoginInput({ ...loginInput, password: e.target.value })} placeholder="Default: admin" required style={{ width: '100%' }} />
                                 </div>
-                                
+
                                 <button type="submit" className="action-btn" style={{ padding: 'var(--spacing-16)', fontSize: '1.125rem' }}>Login to POS</button>
-                                
+
                                 <button type="button" onClick={() => {
                                     localStorage.clear();
                                     alert("App reset to factory defaults. Please login with 'admin' and 'admin'.");
@@ -1636,7 +2708,7 @@
                                     Locked out? Factory Reset App
                                 </button>
                             </form>
-                        </div>
+                        </motion.div>
                     </div>
                 );
             }
@@ -1646,8 +2718,8 @@
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
                         <h1>A2Z Collection</h1>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-16)' }}>
-                            <select 
-                                value={currentTheme} 
+                            <select
+                                value={currentTheme}
                                 onChange={(e) => setCurrentTheme(e.target.value)}
                                 style={{
                                     padding: 'var(--spacing-8)',
@@ -1666,11 +2738,11 @@
                                 <option value="dark">Dark Mode</option>
                                 <option value="terracotta">Earthy Terracotta</option>
                             </select>
-                            
+
                             <div className="profile-icon" onClick={() => setCurrentTab('profile')} title="User Profile">
                                 <span className="material-icons">account_circle</span>
                             </div>
-                            
+
                             <div className="power-icon" onClick={confirmLogout} title="Logout">
                                 <span className="material-icons">power_settings_new</span>
                             </div>
@@ -1681,14 +2753,22 @@
                         <button className={`tab-btn ${currentTab === 'pos' ? 'active' : ''}`} onClick={() => setCurrentTab('pos')}><span className="material-icons">point_of_sale</span> POS / Billing</button>
                         <button className={`tab-btn ${currentTab === 'admin' ? 'active' : ''}`} onClick={() => setCurrentTab('admin')}><span className="material-icons">settings</span> Manage Inventory</button>
                         <button className={`tab-btn ${currentTab === 'referrers' ? 'active' : ''}`} onClick={() => setCurrentTab('referrers')}><span className="material-icons">people</span> Referrers</button>
+                        <button className={`tab-btn ${currentTab === 'salesanalytics' ? 'active' : ''}`} onClick={() => setCurrentTab('salesanalytics')}><span className="material-icons">trending_up</span> Sales Analytics</button>
+                        <button className={`tab-btn ${currentTab === 'customers' ? 'active' : ''}`} onClick={() => setCurrentTab('customers')}><span className="material-icons">contacts</span> Customers</button>
                         <button className={`tab-btn ${currentTab === 'ledger' ? 'active' : ''}`} onClick={() => setCurrentTab('ledger')}><span className="material-icons">analytics</span> Sales Ledger</button>
                     </div>
-                    {currentTab === 'grid' && renderGridTab()}
-                    {currentTab === 'pos' && renderPOSTab()}
-                    {currentTab === 'admin' && renderAdminTab()}
-                    {currentTab === 'referrers' && renderReferrersTab()}
-                    {currentTab === 'ledger' && renderLedgerTab()}
-                    {currentTab === 'profile' && renderProfileTab()}
+                    <AnimatePresence mode="wait">
+                        <motion.div key={currentTab} variants={tabVariants} initial="initial" animate="animate" exit="exit">
+                            {currentTab === 'grid' && renderGridTab()}
+                            {currentTab === 'pos' && renderPOSTab()}
+                            {currentTab === 'admin' && renderAdminTab()}
+                            {currentTab === 'referrers' && renderReferrersTab()}
+                            {currentTab === 'salesanalytics' && renderSalesAnalyticsTab()}
+                            {currentTab === 'customers' && renderCustomersTab()}
+                            {currentTab === 'ledger' && renderLedgerTab()}
+                            {currentTab === 'profile' && renderProfileTab()}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
             );
         };
@@ -1697,4 +2777,5 @@
         root.render(<ErrorBoundary><App /></ErrorBoundary>);
     </script>
 </body>
+
 </html>
