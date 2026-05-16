@@ -123,7 +123,7 @@ export default function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="material-icons menu-icon" onClick={() => setIsDrawerOpen(true)}>menu</span>
-                    <h1 style={{ margin: 0 }}>A2Z Collection</h1>
+                    <h1 style={{ margin: 0 }}>Mobile1x POS</h1>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-16)' }}>
                     <select value={currentTheme} onChange={(e) => setCurrentTheme(e.target.value)} style={{ padding: 'var(--spacing-8)', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', cursor: 'pointer', width: 'auto', fontSize: '0.875rem', fontWeight: '600' }}>
