@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import JsBarcode from 'jsbarcode';
 // Notice: ColorThief import is completely removed from here!
 
-const generateNewId = () => `A2Z-${Date.now().toString().slice(-6)}`;
+const generateNewId = () => `M1x-${Date.now().toString().slice(-6)}`;
 const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', 'XXXXXXL', 'XXXXXXXL'];
 
 export default function InventoryManager({ catalog, setCatalog }) {

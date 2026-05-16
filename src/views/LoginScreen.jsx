@@ -8,7 +8,7 @@ export default function LoginScreen({ setIsAuthenticated, userProfile, setCatalo
         e.preventDefault();
         if (loginInput.userId === userProfile.userId && loginInput.password === userProfile.password) {
             setIsAuthenticated(true);
-            localStorage.setItem('A2Z_Auth', 'true');
+            localStorage.setItem('M1x_Auth', 'true');
         } else {
             alert("Invalid User ID or Password");
         }
@@ -17,7 +17,7 @@ export default function LoginScreen({ setIsAuthenticated, userProfile, setCatalo
     return (
         <div className="login-wrapper">
             <motion.div className="login-card" initial={{ opacity: 0, y: 24, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}>
-                <h1 style={{ marginBottom: 'var(--spacing-8)', color: 'var(--primary)' }}>Mobile1x POS</h1>
+                <h1 style={{ marginBottom: 'var(--spacing-8)', color: 'var(--primary)' }}>M1x POS</h1>
                 <p style={{ marginBottom: 'var(--spacing-32)' }}>Inventory & Point of Sale System</p>
 
                 <form onSubmit={handleLoginSubmit}>

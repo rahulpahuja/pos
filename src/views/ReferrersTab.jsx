@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const generateNewId = () => `A2Z-${Date.now().toString().slice(-6)}`;
+const generateNewId = () => `M1x-${Date.now().toString().slice(-6)}`;
 
 export default function ReferrersTab({ referrers, setReferrers }) {
     const [newReferrer, setNewReferrer] = useState({ name: '', phone: '', email: '', address: '', notes: '' });

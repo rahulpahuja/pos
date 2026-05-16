@@ -24,21 +24,21 @@ const tabVariants = {
 
 // --- SAFE DATA INITIALIZERS ---
 const getInitialProfile = () => {
-    const saved = localStorage.getItem('A2Z_UserProfile');
+    const saved = localStorage.getItem('M1x_UserProfile');
     return saved ? JSON.parse(saved) : { userId: 'admin', password: 'admin', name: 'Administrator', email: '', phone: '+91-9644444661', address: '111, B.K Sindhi Colony, Main Square, Bhawarlia Main Road, Indore, Madhya Pradesh', gstNumber: '' };
 };
 
-const getInitialTheme = () => localStorage.getItem('A2Z_Theme') || 'default';
-const getInitialAuth = () => localStorage.getItem('A2Z_Auth') === 'true';
+const getInitialTheme = () => localStorage.getItem('M1x_Theme') || 'default';
+const getInitialAuth = () => localStorage.getItem('M1x_Auth') === 'true';
 
 const getInitialCatalog = () => {
-    const saved = localStorage.getItem('A2Z_Database');
+    const saved = localStorage.getItem('M1x_Database');
     let parsed = saved ? JSON.parse(saved) : [];
     return parsed.map(item => ({ ...item, stockQty: Number(item.stockQty) || 0, costPrice: Number(item.costPrice) || 0, sellPrice: Number(item.sellPrice) || 0 }));
 };
 
 const getInitialSales = () => {
-    const saved = localStorage.getItem('A2Z_Sales');
+    const saved = localStorage.getItem('M1x_Sales');
     let parsed = saved ? JSON.parse(saved) : [];
     return parsed.map(sale => ({
         ...sale, subtotal: Number(sale.subtotal) || 0, discountPercentage: Number(sale.discountPercentage) || 0, discountAmount: Number(sale.discountAmount) || 0, grandTotal: Number(sale.grandTotal) || 0,
@@ -47,17 +47,17 @@ const getInitialSales = () => {
 };
 
 const getInitialCustomers = () => {
-    const saved = localStorage.getItem('A2Z_Customers');
+    const saved = localStorage.getItem('M1x_Customers');
     return saved ? JSON.parse(saved) : [];
 };
 
 const getInitialReferrers = () => {
-    const saved = localStorage.getItem('A2Z_Referrers');
+    const saved = localStorage.getItem('M1x_Referrers');
     return saved ? JSON.parse(saved) : [];
 };
 
 const getInitialInvoiceSettings = () => {
-    const saved = localStorage.getItem('A2Z_InvoiceSettings');
+    const saved = localStorage.getItem('M1x_InvoiceSettings');
     return saved ? JSON.parse(saved) : {
         paperSize: '80mm',
         headerMessage: 'Dealer Under Composition Scheme',
@@ -85,25 +85,25 @@ export default function App() {
     // Theme Effect
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', currentTheme);
-        localStorage.setItem('A2Z_Theme', currentTheme);
+        localStorage.setItem('M1x_Theme', currentTheme);
     }, [currentTheme]);
 
     // Save Data Effect
     useEffect(() => {
         try {
-            localStorage.setItem('A2Z_Database', JSON.stringify(catalog));
-            localStorage.setItem('A2Z_Sales', JSON.stringify(salesLedger));
-            localStorage.setItem('A2Z_UserProfile', JSON.stringify(userProfile));
-            localStorage.setItem('A2Z_Referrers', JSON.stringify(referrers));
-            localStorage.setItem('A2Z_Customers', JSON.stringify(customers));
-            localStorage.setItem('A2Z_InvoiceSettings', JSON.stringify(invoiceSettings));
+            localStorage.setItem('M1x_Database', JSON.stringify(catalog));
+            localStorage.setItem('M1x_Sales', JSON.stringify(salesLedger));
+            localStorage.setItem('M1x_UserProfile', JSON.stringify(userProfile));
+            localStorage.setItem('M1x_Referrers', JSON.stringify(referrers));
+            localStorage.setItem('M1x_Customers', JSON.stringify(customers));
+            localStorage.setItem('M1x_InvoiceSettings', JSON.stringify(invoiceSettings));
         } catch (e) { if (e.name === 'QuotaExceededError') alert("ERROR: Local storage full!"); }
     }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings]);
 
     const confirmLogout = () => {
         if (window.confirm("Are you sure you want to log out?")) {
             setIsAuthenticated(false);
-            localStorage.removeItem('A2Z_Auth');
+            localStorage.removeItem('M1x_Auth');
         }
     };
 
@@ -123,7 +123,7 @@ export default function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="material-icons menu-icon" onClick={() => setIsDrawerOpen(true)}>menu</span>
-                    <h1 style={{ margin: 0 }}>Mobile1x POS</h1>
+                    <h1 style={{ margin: 0 }}>M1x POS</h1>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-16)' }}>
                     <select value={currentTheme} onChange={(e) => setCurrentTheme(e.target.value)} style={{ padding: 'var(--spacing-8)', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', cursor: 'pointer', width: 'auto', fontSize: '0.875rem', fontWeight: '600' }}>

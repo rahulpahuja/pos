@@ -6,7 +6,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
     const handleProfileSubmit = (e) => {
         e.preventDefault();
         alert('Profile updated successfully!');
-        localStorage.setItem('A2Z_UserProfile', JSON.stringify(userProfile));
+        localStorage.setItem('M1x_UserProfile', JSON.stringify(userProfile));
     };
 
     const linkLocalFolder = async () => {
@@ -117,7 +117,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                                 </div>
                             </div>
                             
-                            <button type="button" onClick={() => exportToJson(catalog, 'a2z_products.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>
+                            <button type="button" onClick={() => exportToJson(catalog, 'm1x_products.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>
                                 Download Products (JSON)
                             </button>
                             <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Products JSON:</label>
@@ -126,7 +126,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                         
                         <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
                             <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Sales Database</h5>
-                            <button type="button" onClick={() => exportToJson(salesLedger, 'a2z_sales.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>
+                            <button type="button" onClick={() => exportToJson(salesLedger, 'm1x_sales.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>
                                 Download Sales (JSON)
                             </button>
                             <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Sales JSON:</label>

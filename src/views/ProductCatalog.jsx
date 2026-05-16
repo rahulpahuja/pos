@@ -9,7 +9,7 @@ export default function ProductCatalog({ catalog }) {
     const [searchQuery, setSearchQuery] = useState('');
     
     // State to track the currently selected size filter for each product card
-    // Format: { 'A2Z-123456': 'XL', 'A2Z-987654': 'All' }
+    // Format: { 'M1x-123456': 'XL', 'M1x-987654': 'All' }
     const [selectedSizes, setSelectedSizes] = useState({});
 
     // Search filter checks both root product details and variant details
@@ -46,7 +46,7 @@ export default function ProductCatalog({ catalog }) {
             <html>
                 <head><title>Print Label - ${item.id}</title>
                 <style>@page { margin: 0; } body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; margin: 0; padding: 10px; width: 2.5in; } h2 { margin: 0; font-size: 18px; font-family: serif; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 5px;} .product-name { font-size: 14px; margin: 4px 0; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} .size { font-size: 16px; font-weight: bold; border: 1px solid #000; display: inline-block; padding: 2px 6px; margin: 5px 0;} .price { font-size: 18px; font-weight: bold; margin-bottom: 5px; } .barcode-img { max-width: 100%; height: 50px; margin-top: 5px; } .id-text { font-size: 12px; font-family: monospace; letter-spacing: 2px; }</style></head>
-                <body><h2>A2Z COLLECTION</h2><div class="product-name">${item.name}</div><div class="size">SIZE: ${sizesText}</div><div class="price">MRP: ₹${item.sellPrice}</div><img class="barcode-img" src="${barcodeDataUrl}" /><div class="id-text">${item.id}</div><script>window.onload = function() { window.print(); }<\/script></body>
+                <body><h2>M1x COLLECTION</h2><div class="product-name">${item.name}</div><div class="size">SIZE: ${sizesText}</div><div class="price">MRP: ₹${item.sellPrice}</div><img class="barcode-img" src="${barcodeDataUrl}" /><div class="id-text">${item.id}</div><script>window.onload = function() { window.print(); }<\/script></body>
             </html>
         `);
         printWindow.document.close();

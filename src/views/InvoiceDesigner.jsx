@@ -19,12 +19,12 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
     const [activeTab, setActiveTab] = useState('layout'); // layout, header, table, fields, footer, templates
     
     const [templateHistory, setTemplateHistory] = useState(() => {
-        const saved = localStorage.getItem('A2Z_TemplateHistory');
+        const saved = localStorage.getItem('M1x_TemplateHistory');
         return saved ? JSON.parse(saved) : [];
     });
 
     useEffect(() => {
-        localStorage.setItem('A2Z_TemplateHistory', JSON.stringify(templateHistory));
+        localStorage.setItem('M1x_TemplateHistory', JSON.stringify(templateHistory));
     }, [templateHistory]);
 
     // --- HANDLERS ---
