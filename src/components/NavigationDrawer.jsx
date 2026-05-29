@@ -79,10 +79,13 @@ export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, curren
                             Operations & Setup
                         </div>
                         <button className={`drawer-btn ${currentTab === 'admin' ? 'active' : ''}`} onClick={() => handleNavClick('admin')}>
-                            <span className="material-icons">settings</span> Manage Inventory
+                            <span className="material-icons">inventory</span> Manage Inventory
                         </button>
                         <button className={`drawer-btn ${currentTab === 'designer' ? 'active' : ''}`} onClick={() => handleNavClick('designer')}>
                             <span className="material-icons">receipt_long</span> Invoice Designer
+                        </button>
+                        <button className={`drawer-btn ${currentTab === 'profile' ? 'active' : ''}`} onClick={() => handleNavClick('profile')}>
+                            <span className="material-icons">settings</span> Profile & Settings
                         </button>
                     </div>
 

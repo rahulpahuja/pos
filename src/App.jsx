@@ -129,7 +129,20 @@ export default function App() {
     };
 
     if (!isAuthenticated) {
-        return <LoginScreen setIsAuthenticated={setIsAuthenticated} userProfile={userProfile} setUserProfile={setUserProfile} setCatalog={setCatalog} setSalesLedger={setSalesLedger} />;
+        return (
+            <LoginScreen 
+                setIsAuthenticated={setIsAuthenticated} 
+                userProfile={userProfile} 
+                setUserProfile={setUserProfile} 
+                setCatalog={setCatalog} 
+                setSalesLedger={setSalesLedger} 
+                setCustomers={setCustomers}
+                setParties={setParties}
+                setExpenses={setExpenses}
+                setReferrers={setReferrers}
+                setInvoiceSettings={setInvoiceSettings}
+            />
+        );
     }
 
     return (
@@ -187,7 +200,7 @@ export default function App() {
                     {/* Routing Logic */}
                     {currentTab === 'grid' && <ProductCatalog catalog={catalog} />}
                     {currentTab === 'pos' && <PointOfSale catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} setCustomers={setCustomers} referrers={referrers} userProfile={userProfile} invoiceSettings={invoiceSettings} parties={parties} setParties={setParties} />}
-                    {currentTab === 'modifier' && <OrderModifier salesLedger={salesLedger} setSalesLedger={setSalesLedger} catalog={catalog} setCatalog={setCatalog} />}
+                    {currentTab === 'modifier' && <OrderModifier salesLedger={salesLedger} setSalesLedger={setSalesLedger} catalog={catalog} setCatalog={setCatalog} parties={parties} setParties={setParties} />}
                     {currentTab === 'admin' && <InventoryManager catalog={catalog} setCatalog={setCatalog} />}
                     {currentTab === 'designer' && <InvoiceDesigner invoiceSettings={invoiceSettings} setInvoiceSettings={setInvoiceSettings} userProfile={userProfile} />}
                     {currentTab === 'referrers' && <ReferrersTab referrers={referrers} setReferrers={setReferrers} />}

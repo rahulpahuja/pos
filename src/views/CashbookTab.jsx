@@ -57,6 +57,7 @@ export default function CashbookTab({ expenses, setExpenses, salesLedger, partie
 
         // 1. POS Sales Inflows (actual cash received, i.e., amountPaid)
         salesLedger.forEach(sale => {
+            if (sale.status === 'VOID') return;
             const actualPaid = sale.amountPaid !== undefined ? sale.amountPaid : sale.grandTotal;
             if (actualPaid > 0) {
                 entries.push({

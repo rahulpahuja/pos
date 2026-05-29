@@ -104,7 +104,11 @@ export default function InvoicesTab({ salesLedger }) {
                                         ₹{(invoice.balanceDue !== undefined ? invoice.balanceDue : 0).toFixed(2)}
                                     </td>
                                     <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center' }}>
-                                        {invoice.balanceDue > 0 ? (
+                                        {invoice.status === 'VOID' ? (
+                                            <span style={{ color: 'var(--error)', backgroundColor: 'var(--error-container)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>VOIDED</span>
+                                        ) : invoice.status === 'RETURNED' ? (
+                                            <span style={{ color: 'var(--primary)', backgroundColor: 'var(--primary-container)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>RETURNED</span>
+                                        ) : invoice.balanceDue > 0 ? (
                                             <span style={{ color: 'var(--error)', backgroundColor: 'var(--error-container)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>DUE</span>
                                         ) : (
                                             <span style={{ color: 'var(--success)', backgroundColor: 'var(--success-container)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>PAID</span>
