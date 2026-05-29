@@ -344,37 +344,79 @@ p {
     visibility: visible;
 }
 
+/* Layout container */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    padding-left: 72px; /* Collapsed sidebar width spacing */
+    transition: padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    width: calc(100% - 72px);
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding-left: 0;
+        width: 100%;
+    }
+}
+
 .nav-drawer {
     position: fixed;
     top: 0;
-    left: -320px;
-    width: 300px;
+    left: 0;
+    width: 72px; /* Collapsed width */
     height: 100vh;
     background-color: var(--surface-container-lowest);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-md);
     z-index: 1000;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
-.nav-drawer.open {
-    transform: translateX(320px);
+.nav-drawer.open,
+.nav-drawer:hover {
+    width: 280px; /* Expanded width */
+    box-shadow: var(--shadow-xl);
+}
+
+@media (max-width: 768px) {
+    .nav-drawer {
+        left: -280px;
+        width: 280px;
+    }
+    .nav-drawer.open {
+        left: 0;
+        width: 280px;
+    }
+    .nav-drawer:hover {
+        width: 280px;
+    }
 }
 
 .drawer-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-20);
+    padding: var(--spacing-16);
     border-bottom: 1px solid var(--outline-variant);
     background-color: var(--surface-container-low);
+    height: 64px;
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .drawer-header h2 {
     margin: 0;
     color: var(--primary);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     gap: var(--spacing-8);
@@ -391,11 +433,12 @@ p {
 }
 
 .drawer-content {
-    padding: var(--spacing-16);
+    padding: var(--spacing-12) 0;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-8);
+    gap: var(--spacing-4);
     overflow-y: auto;
+    overflow-x: hidden;
     flex: 1;
 }
 
@@ -403,22 +446,26 @@ p {
     background: transparent;
     color: var(--on-surface);
     border: none;
-    padding: var(--spacing-16);
-    border-radius: var(--radius-md);
+    padding: var(--spacing-12) var(--spacing-16);
+    border-radius: var(--radius-full); /* Gmail-style rounded pills */
     cursor: pointer;
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 500;
     text-align: left;
     display: flex;
     align-items: center;
     gap: var(--spacing-16);
     transition: all 0.2s ease;
+    width: 256px;
+    margin: 0 var(--spacing-12);
+    box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .drawer-btn:hover {
     background: var(--surface-container-high);
-    padding-left: var(--spacing-20);
 }
 
 .drawer-btn.active {
@@ -430,6 +477,44 @@ p {
 
 .drawer-btn.active .material-icons {
     color: var(--on-primary);
+}
+
+/* Collapsed item state styles */
+.nav-drawer:not(.open):not(:hover) .drawer-btn {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    justify-content: center;
+    margin: 0 auto;
+    gap: 0;
+}
+
+.nav-drawer:not(.open):not(:hover) .drawer-btn .drawer-text,
+.nav-drawer:not(.open):not(:hover) .drawer-btn .badge-soon {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    margin: 0;
+}
+
+.drawer-btn .drawer-text {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+/* Collapsed divider padding */
+.drawer-divider {
+    border: none;
+    border-top: 1px solid var(--outline-variant);
+    margin: var(--spacing-8) 0;
+    opacity: 0.6;
+}
+
+.nav-drawer:not(.open):not(:hover) .drawer-divider {
+    margin: var(--spacing-12) 0;
 }
 
 /* Cards */
@@ -914,4 +999,16 @@ button.action-btn:hover {
         flex-direction: column;
         gap: var(--spacing-12);
     }
+}
+
+/* Logout Container adaptation for Collapsible Drawer */
+.logout-container {
+    padding: var(--spacing-16); 
+    border-top: 1px solid var(--outline-variant); 
+    background-color: var(--surface-container-low);
+    transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-drawer:not(.open):not(:hover) .logout-container {
+    padding: var(--spacing-12) 0;
 }

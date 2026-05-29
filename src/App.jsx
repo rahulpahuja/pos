@@ -177,7 +177,7 @@ export default function App() {
     }
 
     return (
-        <div className="container">
+        <div className="app-layout">
             <NavigationDrawer 
                 isDrawerOpen={isDrawerOpen} 
                 setIsDrawerOpen={setIsDrawerOpen} 
@@ -186,11 +186,12 @@ export default function App() {
                 confirmLogout={confirmLogout}
             />
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span className="material-icons menu-icon" onClick={() => setIsDrawerOpen(true)}>menu</span>
-                    <h1 style={{ margin: 0 }}>M1x POS</h1>
-                </div>
+            <div className="main-content container">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <span className="material-icons menu-icon" onClick={() => setIsDrawerOpen(!isDrawerOpen)} style={{ cursor: 'pointer', marginRight: 'var(--spacing-16)' }}>menu</span>
+                        <h1 style={{ margin: 0 }}>M1x POS</h1>
+                    </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-16)' }}>
                     <div className="profile-icon" onClick={() => setCurrentTab('profile')} title={`User Profile: ${userProfile.name}`} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}>
                         {userProfile.photoURL ? (
@@ -237,6 +238,7 @@ export default function App() {
                     {currentTab === 'profile' && <UserProfile userProfile={userProfile} setUserProfile={setUserProfile} catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} parties={parties} setParties={setParties} currentTheme={currentTheme} setCurrentTheme={setCurrentTheme} />}
                 </motion.div>
             </AnimatePresence>
+            </div>
         </div>
     );
 }

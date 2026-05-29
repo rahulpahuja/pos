@@ -119,6 +119,18 @@ export default function ProductCatalog({ catalog }) {
 
     return (
         <div>
+            <div style={{ position: 'relative', width: '100%', marginBottom: 'var(--spacing-16)' }}>
+                <input 
+                    type="text" 
+                    className="search-bar" 
+                    placeholder="Search by Product Name, ID, or Color..." 
+                    value={searchQuery} 
+                    onChange={(e) => setSearchQuery(e.target.value)} 
+                    style={{ margin: 0, paddingLeft: '48px' }}
+                />
+                <span className="material-icons" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)', pointerEvents: 'none' }}>search</span>
+            </div>
+
             <div 
                 style={{ 
                     backgroundColor: 'var(--surface-container-low)', 
@@ -129,22 +141,6 @@ export default function ProductCatalog({ catalog }) {
                 }}
             >
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-16)' }}>
-                    {/* Search Bar */}
-                    <div>
-                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: 'var(--on-surface)', marginBottom: '8px' }}>Search Products</label>
-                        <div style={{ position: 'relative' }}>
-                            <input 
-                                type="text" 
-                                className="search-bar" 
-                                placeholder="Search by Name, ID, Color..." 
-                                value={searchQuery} 
-                                onChange={(e) => setSearchQuery(e.target.value)} 
-                                style={{ margin: 0, paddingLeft: '40px', height: '44px', width: '100%' }}
-                            />
-                            <span className="material-icons" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)', pointerEvents: 'none' }}>search</span>
-                        </div>
-                    </div>
-
                     {/* Category Filter */}
                     <div>
                         <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: 'var(--on-surface)', marginBottom: '8px' }}>Category</label>
