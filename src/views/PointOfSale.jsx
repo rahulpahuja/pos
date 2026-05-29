@@ -388,7 +388,7 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                                                 style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} 
                                                 onError={(e) => {
                                                     e.target.onerror = null;
-                                                    e.target.src = 'https://images.unsplash.com/photo-1540959733332-eab4deceeaf7?auto=format&fit=crop&w=100&q=80';
+                                                    e.target.src = 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=100&q=80';
                                                 }}
                                             />
                                         ) : (<div style={{ width: '48px', height: '48px', background: '#f3f3f3', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Image</div>)}

@@ -24,7 +24,7 @@ export const getRahulDummyData = () => {
     // Define 50 authentic products with categorized photos from Unsplash
     const productTemplates = [
         // Category: Apparel (15 items)
-        { name: 'Slim Fit Cotton Chinos', category: 'Apparel', costPrice: 700, sellPrice: 1200, img: 'photo-1624378439575-d8705ad7ae80', gender: 'Male' },
+        { name: 'Slim Fit Cotton Chinos', category: 'Apparel', costPrice: 700, sellPrice: 1200, img: 'photo-1617137968427-85924c800a22', gender: 'Male' },
         { name: 'Oversized Vintage Hoodie', category: 'Apparel', costPrice: 1000, sellPrice: 1800, img: 'photo-1556821840-3a63f95609a7', gender: 'Unisex' },
         { name: 'Classic Denim Jacket', category: 'Apparel', costPrice: 1500, sellPrice: 2800, img: 'photo-1576995853123-5a10305d93c0', gender: 'Unisex' },
         { name: 'Premium Crewneck T-Shirt', category: 'Apparel', costPrice: 400, sellPrice: 800, img: 'photo-1521572267360-ee0c2909d518', gender: 'Unisex' },
@@ -33,7 +33,7 @@ export const getRahulDummyData = () => {
         { name: 'Linen Summer Shirt', category: 'Apparel', costPrice: 500, sellPrice: 1100, img: 'photo-1596755094514-f87e34085b2c', gender: 'Male' },
         { name: 'Knit Turtleneck Sweater', category: 'Apparel', costPrice: 800, sellPrice: 1600, img: 'photo-1614975058789-41316d0e2e9c', gender: 'Female' },
         { name: 'Cargo Utility Shorts', category: 'Apparel', costPrice: 450, sellPrice: 950, img: 'photo-1591195853828-11db59a44f6b', gender: 'Male' },
-        { name: 'Pleated Midi Skirt', category: 'Apparel', costPrice: 600, sellPrice: 1400, img: 'photo-1583496661160-fb48862c6a72', gender: 'Female' },
+        { name: 'Pleated Midi Skirt', category: 'Apparel', costPrice: 600, sellPrice: 1400, img: 'photo-1551488831-00ddcb6c6bd3', gender: 'Female' },
         { name: 'Athletic Gym Joggers', category: 'Apparel', costPrice: 700, sellPrice: 1500, img: 'photo-1515886657613-9f3515b0c78f', gender: 'Unisex' },
         { name: 'Formal Oxford Dress Shirt', category: 'Apparel', costPrice: 900, sellPrice: 1950, img: 'photo-1603252109303-2751441dd157', gender: 'Male' },
         { name: 'Sherpa Lined Corduroy Jacket', category: 'Apparel', costPrice: 1800, sellPrice: 3500, img: 'photo-1507679799987-c73779587ccf', gender: 'Unisex' },
@@ -43,7 +43,7 @@ export const getRahulDummyData = () => {
         // Category: Footwear (10 items)
         { name: 'Runner Pro Sneakers', category: 'Footwear', costPrice: 1400, sellPrice: 2400, img: 'photo-1542291026-7eec264c27ff', gender: 'Unisex' },
         { name: 'Classic Leather Loafers', category: 'Footwear', costPrice: 1800, sellPrice: 3500, img: 'photo-1533867617858-e7b97e060509', gender: 'Male' },
-        { name: 'Canvas Low-Top Sneakers', category: 'Footwear', costPrice: 600, sellPrice: 1200, img: 'photo-1525966222134-fcfa99dd8ec7', gender: 'Unisex' },
+        { name: 'Canvas Low-Top Sneakers', category: 'Footwear', costPrice: 600, sellPrice: 1200, img: 'photo-1560769629-975ec94e6a86', gender: 'Unisex' },
         { name: 'Suede Chelsea Boots', category: 'Footwear', costPrice: 2200, sellPrice: 4500, img: 'photo-1608256246200-53e635b5b65f', gender: 'Male' },
         { name: 'Athletic Trainer Shoes', category: 'Footwear', costPrice: 1300, sellPrice: 2600, img: 'photo-1460353581641-37baddab0fa2', gender: 'Unisex' },
         { name: 'Cozy Slide Sandals', category: 'Footwear', costPrice: 300, sellPrice: 750, img: 'photo-1603487742131-4160ec999306', gender: 'Unisex' },
@@ -53,26 +53,26 @@ export const getRahulDummyData = () => {
         { name: 'Platform High-Top Canvas', category: 'Footwear', costPrice: 850, sellPrice: 1750, img: 'photo-1549298916-b41d501d3772', gender: 'Female' },
 
         // Category: Accessories (10 items)
-        { name: 'Minimalist Leather Wallet', category: 'Accessories', costPrice: 400, sellPrice: 950, img: 'photo-1627124118304-4f273b3c373c', gender: 'Unisex' },
+        { name: 'Minimalist Leather Wallet', category: 'Accessories', costPrice: 400, sellPrice: 950, img: 'photo-1559563458-527698bf5295', gender: 'Unisex' },
         { name: 'Chronograph Steel Watch', category: 'Accessories', costPrice: 3000, sellPrice: 6500, img: 'photo-1523275335684-37898b6baf30', gender: 'Unisex' },
         { name: 'Polarized Aviator Sunglasses', category: 'Accessories', costPrice: 600, sellPrice: 1500, img: 'photo-1511499767150-a48a237f0083', gender: 'Unisex' },
         { name: 'Canvas Travel Duffle Bag', category: 'Accessories', costPrice: 1200, sellPrice: 2400, img: 'photo-1553062407-98eeb64c6a62', gender: 'Unisex' },
-        { name: 'Brass Buckle Leather Belt', category: 'Accessories', costPrice: 350, sellPrice: 850, img: 'photo-1624222247344-550fb8ec8bd6', gender: 'Unisex' },
+        { name: 'Brass Buckle Leather Belt', category: 'Accessories', costPrice: 350, sellPrice: 850, img: 'photo-1607522370275-f14206abe5d3', gender: 'Unisex' },
         { name: 'Commuter Laptop Backpack', category: 'Accessories', costPrice: 1400, sellPrice: 2900, img: 'photo-1553062407-98eeb64c6a62', gender: 'Unisex' },
-        { name: 'Knit Beanie Hat', category: 'Accessories', costPrice: 250, sellPrice: 600, img: 'photo-1576871337622-98d48d4aa53e', gender: 'Unisex' },
+        { name: 'Knit Beanie Hat', category: 'Accessories', costPrice: 250, sellPrice: 600, img: 'photo-1509551388413-e18d0ac5d495', gender: 'Unisex' },
         { name: 'Silk Patterned Necktie', category: 'Accessories', costPrice: 300, sellPrice: 800, img: 'photo-1598033129183-c4f50c736f10', gender: 'Male' },
-        { name: 'Warm Wool Scarf', category: 'Accessories', costPrice: 400, sellPrice: 950, img: 'photo-1520903781411-0e20eebd71d5', gender: 'Unisex' },
+        { name: 'Warm Wool Scarf', category: 'Accessories', costPrice: 400, sellPrice: 950, img: 'photo-1584917865442-de89df76afd3', gender: 'Unisex' },
         { name: 'Stainless Steel Key Organizer', category: 'Accessories', costPrice: 250, sellPrice: 600, img: 'photo-1582139329536-e7284fece509', gender: 'Unisex' },
 
         // Category: Electronics (8 items)
         { name: 'Wireless ANC Earbuds', category: 'Electronics', costPrice: 2000, sellPrice: 3500, img: 'photo-1590658268037-6bf12165a8df', gender: 'Unisex' },
         { name: 'Bluetooth Portable Speaker', category: 'Electronics', costPrice: 1500, sellPrice: 2990, img: 'photo-1608043152269-423dbba4e7e1', gender: 'Unisex' },
-        { name: 'Fast Charging Power Bank', category: 'Electronics', costPrice: 800, sellPrice: 1750, img: 'photo-1609592424109-dd825b68233f', gender: 'Unisex' },
+        { name: 'Fast Charging Power Bank', category: 'Electronics', costPrice: 800, sellPrice: 1750, img: 'photo-1609081219090-a6d81d3085bf', gender: 'Unisex' },
         { name: 'USB-C Braided Cable (1m)', category: 'Electronics', costPrice: 120, sellPrice: 390, img: 'photo-1563770660941-20978e870e26', gender: 'Unisex' },
         { name: 'Wireless Desktop Mouse', category: 'Electronics', costPrice: 600, sellPrice: 1290, img: 'photo-1615663245857-ac93bb7c39e7', gender: 'Unisex' },
         { name: 'Mechanical Gaming Keyboard', category: 'Electronics', costPrice: 2200, sellPrice: 4500, img: 'photo-1618384887929-16ec33fab9ef', gender: 'Unisex' },
         { name: 'Smart Fitness Tracker', category: 'Electronics', costPrice: 1800, sellPrice: 3200, img: 'photo-1575311373937-040b8e1fd5b6', gender: 'Unisex' },
-        { name: 'Dual-Device Wireless Charger', category: 'Electronics', costPrice: 900, sellPrice: 1990, img: 'photo-1622445262465-2481c4574875', gender: 'Unisex' },
+        { name: 'Dual-Device Wireless Charger', category: 'Electronics', costPrice: 900, sellPrice: 1990, img: 'photo-1616410011236-7a42121dd981', gender: 'Unisex' },
 
         // Category: Home & Living (7 items)
         { name: 'Vacuum Insulated Water Bottle', category: 'Home & Living', costPrice: 500, sellPrice: 1200, img: 'photo-1602143407151-7111542de6e8', gender: 'Unisex' },

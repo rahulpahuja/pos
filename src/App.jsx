@@ -33,10 +33,41 @@ const getInitialProfile = () => {
 const getInitialTheme = () => localStorage.getItem('M1x_Theme') || 'default';
 const getInitialAuth = () => localStorage.getItem('M1x_Auth') === 'true';
 
+const fixBrokenCatalogImages = (catalogList) => {
+    const replacements = {
+        'photo-1624378439575-d8705ad7ae80': 'photo-1617137968427-85924c800a22',
+        'photo-1583496661160-fb48862c6a72': 'photo-1551488831-00ddcb6c6bd3',
+        'photo-1525966222134-fcfa99dd8ec7': 'photo-1560769629-975ec94e6a86',
+        'photo-1627124118304-4f273b3c373c': 'photo-1559563458-527698bf5295',
+        'photo-1624222247344-550fb8ec8bd6': 'photo-1607522370275-f14206abe5d3',
+        'photo-1576871337622-98d48d4aa53e': 'photo-1509551388413-e18d0ac5d495',
+        'photo-1520903781411-0e20eebd71d5': 'photo-1584917865442-de89df76afd3',
+        'photo-1609592424109-dd825b68233f': 'photo-1609081219090-a6d81d3085bf',
+        'photo-1622445262465-2481c4574875': 'photo-1616410011236-7a42121dd981'
+    };
+
+    return catalogList.map(item => {
+        if (item.images && item.images.length > 0) {
+            const updatedImages = item.images.map(imgUrl => {
+                let newUrl = imgUrl;
+                Object.entries(replacements).forEach(([oldId, newId]) => {
+                    if (imgUrl.includes(oldId)) {
+                        newUrl = imgUrl.replace(oldId, newId);
+                    }
+                });
+                return newUrl;
+            });
+            return { ...item, images: updatedImages };
+        }
+        return item;
+    });
+};
+
 const getInitialCatalog = () => {
     const saved = localStorage.getItem('M1x_Database');
     let parsed = saved ? JSON.parse(saved) : [];
-    return parsed.map(item => ({ ...item, stockQty: Number(item.stockQty) || 0, costPrice: Number(item.costPrice) || 0, sellPrice: Number(item.sellPrice) || 0 }));
+    const fixed = fixBrokenCatalogImages(parsed);
+    return fixed.map(item => ({ ...item, stockQty: Number(item.stockQty) || 0, costPrice: Number(item.costPrice) || 0, sellPrice: Number(item.sellPrice) || 0 }));
 };
 
 const getInitialSales = () => {

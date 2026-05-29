@@ -89,6 +89,27 @@ export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, curren
                         </button>
                     </div>
 
+                    <hr style={{ border: 'none', borderTop: '1px solid var(--outline-variant)', margin: '8px 0', opacity: 0.6 }} />
+
+                    {/* SECTION 5: AI Intelligence */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <div style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', color: 'var(--primary)', letterSpacing: '0.08em', padding: '6px 12px 2px 12px', opacity: 0.8 }}>
+                            AI Intelligence
+                        </div>
+                        <button className="drawer-btn" disabled style={{ opacity: 0.6, cursor: 'not-allowed', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingRight: '12px' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <span className="material-icons">psychology</span> Smart Sales Forecaster
+                            </span>
+                            <span style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', backgroundColor: 'var(--secondary-container)', color: 'var(--on-secondary-container)', padding: '2px 6px', borderRadius: '4px' }}>Soon</span>
+                        </button>
+                        <button className="drawer-btn" disabled style={{ opacity: 0.6, cursor: 'not-allowed', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingRight: '12px' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <span className="material-icons">auto_awesome</span> Customer Insights AI
+                            </span>
+                            <span style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', backgroundColor: 'var(--secondary-container)', color: 'var(--on-secondary-container)', padding: '2px 6px', borderRadius: '4px' }}>Soon</span>
+                        </button>
+                    </div>
+
                 </div>
                 
                 {/* Logout Button Pinned to Bottom of Drawer */}

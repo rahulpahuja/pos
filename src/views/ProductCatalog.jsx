@@ -2,6 +2,25 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import JsBarcode from 'jsbarcode';
 
+const ProductCardImage = ({ src, alt }) => {
+    const [failed, setFailed] = useState(false);
+    if (failed || !src) {
+        return (
+            <div style={{ height: '160px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-container-high)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-12)' }}>
+                <span className="material-icons" style={{ fontSize: '32px', color: 'var(--on-surface-variant)', opacity: 0.7, marginBottom: '4px' }}>image_not_supported</span>
+                <span style={{ fontSize: '0.75rem', opacity: 0.6 }}>No Image Preview</span>
+            </div>
+        );
+    }
+    return (
+        <img 
+            src={src} 
+            alt={alt} 
+            onError={() => setFailed(true)} 
+        />
+    );
+};
+
 const cardContainerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const cardVariants = { hidden: { opacity: 0, y: 16, scale: 0.97 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.22 } } };
 
@@ -100,18 +119,6 @@ export default function ProductCatalog({ catalog }) {
 
     return (
         <div>
-            <div style={{ position: 'relative', width: '100%', marginBottom: 'var(--spacing-16)' }}>
-                <input 
-                    type="text" 
-                    className="search-bar" 
-                    placeholder="Search by Product Name, ID, or Color..." 
-                    value={searchQuery} 
-                    onChange={(e) => setSearchQuery(e.target.value)} 
-                    style={{ margin: 0, paddingLeft: '48px' }}
-                />
-                <span className="material-icons" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)', pointerEvents: 'none' }}>search</span>
-            </div>
-
             <div 
                 style={{ 
                     backgroundColor: 'var(--surface-container-low)', 
@@ -122,6 +129,22 @@ export default function ProductCatalog({ catalog }) {
                 }}
             >
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-16)' }}>
+                    {/* Search Bar */}
+                    <div>
+                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: 'var(--on-surface)', marginBottom: '8px' }}>Search Products</label>
+                        <div style={{ position: 'relative' }}>
+                            <input 
+                                type="text" 
+                                className="search-bar" 
+                                placeholder="Search by Name, ID, Color..." 
+                                value={searchQuery} 
+                                onChange={(e) => setSearchQuery(e.target.value)} 
+                                style={{ margin: 0, paddingLeft: '40px', height: '44px', width: '100%' }}
+                            />
+                            <span className="material-icons" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)', pointerEvents: 'none' }}>search</span>
+                        </div>
+                    </div>
+
                     {/* Category Filter */}
                     <div>
                         <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: 'var(--on-surface)', marginBottom: '8px' }}>Category</label>
@@ -309,18 +332,7 @@ export default function ProductCatalog({ catalog }) {
                                 return (
                                     <motion.div key={item.id} className="product-card" variants={cardVariants} whileTap={{ scale: 0.98 }}>
                                         <div>
-                                            {item.images && item.images.length > 0 ? (
-                                                <img 
-                                                    src={item.images[0]} 
-                                                    alt={item.name} 
-                                                    onError={(e) => {
-                                                        e.target.onerror = null;
-                                                        e.target.src = 'https://images.unsplash.com/photo-1540959733332-eab4deceeaf7?auto=format&fit=crop&w=300&q=80';
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div style={{ height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-container-high)', borderRadius: 'var(--radius-md)', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-12)' }}>No Image</div>
-                                            )}
+                                            <ProductCardImage src={item.images && item.images[0]} alt={item.name} />
                                             <h4>{item.name}</h4>
                                             <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-8)' }}>{item.id}</div>
                                             
