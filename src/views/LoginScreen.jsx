@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getRahulDummyData } from '../utils/demoData';
 
 export default function LoginScreen({ 
     setIsAuthenticated, 
@@ -19,284 +20,28 @@ export default function LoginScreen({
 
     // --- RAHUL / RAHUL DUMMY DATA SEEDING ENGINE ---
     const loadRahulDummyData = () => {
-        // Setup past dates for sales charts and cashbook
-        const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-        const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
-        const yesterday = new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString();
-        const todayMorning = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
-        const todayNow = new Date().toISOString();
-
-        // 1. User Profile Setup
-        const profile = {
-            userId: 'rahul',
-            password: 'rahul',
-            name: 'Rahul Pahuja',
-            email: 'rahul@m1xpos.com',
-            phone: '+91-9988776655',
-            address: 'M1x Corporate Tower, Vijay Nagar, Indore, M.P. - 452010',
-            gstNumber: '23AAAAA1111A1Z1',
-            logo: null,
-            logoHeight: 50,
-            logoAlign: 'center'
-        };
-
-        // 2. Product Catalog Setup (Multiple items, colors, sizes, barcode mappings)
-        const catalogData = [
-            {
-                id: 'PROD-COT-CHINOS',
-                name: 'Slim Fit Cotton Chinos',
-                category: 'Apparel',
-                costPrice: 700,
-                sellPrice: 1200,
-                images: [],
-                variants: [
-                    { size: '30', colorName: 'Olive Green', barcode: '1001', stockQty: 12 },
-                    { size: '32', colorName: 'Olive Green', barcode: '1002', stockQty: 8 },
-                    { size: '34', colorName: 'Khaki', barcode: '1003', stockQty: 2 },
-                    { size: '36', colorName: 'Khaki', barcode: '1004', stockQty: 0 }
-                ]
-            },
-            {
-                id: 'PROD-RUN-SNEAKERS',
-                name: 'Runner Pro Sneakers',
-                category: 'Footwear',
-                costPrice: 1400,
-                sellPrice: 2400,
-                images: [],
-                variants: [
-                    { size: '8', colorName: 'Carbon Black', barcode: '2001', stockQty: 5 },
-                    { size: '9', colorName: 'Carbon Black', barcode: '2002', stockQty: 7 },
-                    { size: '10', colorName: 'Neon Blue', barcode: '2003', stockQty: 4 }
-                ]
-            },
-            {
-                id: 'PROD-VINTAGE-HOODIE',
-                name: 'Oversized Vintage Hoodie',
-                category: 'Apparel',
-                costPrice: 1000,
-                sellPrice: 1800,
-                images: [],
-                variants: [
-                    { size: 'M', colorName: 'Heather Grey', barcode: '3001', stockQty: 15 },
-                    { size: 'L', colorName: 'Heather Grey', barcode: '3002', stockQty: 10 },
-                    { size: 'XL', colorName: 'Charcoal', barcode: '3003', stockQty: 3 }
-                ]
-            },
-            {
-                id: 'PROD-ANC-EARBUDS',
-                name: 'Wireless Noise-Canceling Earbuds',
-                category: 'Electronics',
-                costPrice: 2000,
-                sellPrice: 3500,
-                images: [],
-                variants: [
-                    { size: 'Standard', colorName: 'Matte Black', barcode: '4001', stockQty: 20 },
-                    { size: 'Standard', colorName: 'Arctic White', barcode: '4002', stockQty: 15 }
-                ]
-            }
-        ];
-
-        // 3. Customers Database
-        const customersData = [
-            { id: 16210001, name: 'Priya Sharma', phone: '9876543210', joinDate: threeDaysAgo },
-            { id: 16210002, name: 'Amit Verma', phone: '9826012345', joinDate: twoDaysAgo },
-            { id: 16210003, name: 'Rohan Gupta', phone: '7000112233', joinDate: todayMorning }
-        ];
-
-        // 4. Sales Referrers / Staff DB
-        const referrersData = [
-            { id: 'ref-1', name: 'Vicky', details: 'Floor Associate' },
-            { id: 'ref-2', name: 'Sunny', details: 'Counter Executive' }
-        ];
-
-        // 5. Invoices / Sales Ledger
-        const salesData = [
-            {
-                invoiceNo: 'INV-500101',
-                date: threeDaysAgo,
-                items: [
-                    { id: 'PROD-VINTAGE-HOODIE', name: 'Oversized Vintage Hoodie', barcode: '3002', size: 'L', colorName: 'Heather Grey', qty: 1, sellPrice: 1800 }
-                ],
-                subtotal: 1800,
-                discountPercentage: 10,
-                discountAmount: 180,
-                grandTotal: 1620,
-                referrer: 'Vicky',
-                customerName: 'Priya Sharma',
-                customerPhone: '9876543210',
-                paymentType: 'full',
-                amountPaid: 1620,
-                balanceDue: 0
-            },
-            {
-                invoiceNo: 'INV-500102',
-                date: twoDaysAgo,
-                items: [
-                    { id: 'PROD-RUN-SNEAKERS', name: 'Runner Pro Sneakers', barcode: '2002', size: '9', colorName: 'Carbon Black', qty: 1, sellPrice: 2400 },
-                    { id: 'PROD-COT-CHINOS', name: 'Slim Fit Cotton Chinos', barcode: '1002', size: '32', colorName: 'Olive Green', qty: 1, sellPrice: 1200 }
-                ],
-                subtotal: 3600,
-                discountPercentage: 0,
-                discountAmount: 0,
-                grandTotal: 3600,
-                referrer: 'Sunny',
-                customerName: 'Amit Verma',
-                customerPhone: '9826012345',
-                paymentType: 'partial',
-                amountPaid: 2000,
-                balanceDue: 1600
-            },
-            {
-                invoiceNo: 'INV-500103',
-                date: yesterday,
-                items: [
-                    { id: 'PROD-ANC-EARBUDS', name: 'Wireless Noise-Canceling Earbuds', barcode: '4001', size: 'Standard', colorName: 'Matte Black', qty: 1, sellPrice: 3500 }
-                ],
-                subtotal: 3500,
-                discountPercentage: 0,
-                discountAmount: 0,
-                grandTotal: 3500,
-                referrer: '',
-                customerName: '',
-                customerPhone: '',
-                paymentType: 'full',
-                amountPaid: 3500,
-                balanceDue: 0
-            },
-            {
-                invoiceNo: 'INV-500104',
-                date: todayMorning,
-                items: [
-                    { id: 'PROD-VINTAGE-HOODIE', name: 'Oversized Vintage Hoodie', barcode: '3003', size: 'XL', colorName: 'Charcoal', qty: 1, sellPrice: 1800 },
-                    { id: 'PROD-COT-CHINOS', name: 'Slim Fit Cotton Chinos', barcode: '1001', size: '30', colorName: 'Olive Green', qty: 1, sellPrice: 1200 }
-                ],
-                subtotal: 3000,
-                discountPercentage: 5,
-                discountAmount: 150,
-                grandTotal: 2850,
-                referrer: 'Vicky',
-                customerName: 'Rohan Gupta',
-                customerPhone: '7000112233',
-                paymentType: 'partial',
-                amountPaid: 1500,
-                balanceDue: 1350
-            },
-            {
-                invoiceNo: 'INV-500105',
-                date: todayNow,
-                items: [
-                    { id: 'PROD-COT-CHINOS', name: 'Slim Fit Cotton Chinos', barcode: '1001', size: '30', colorName: 'Olive Green', qty: 2, sellPrice: 1200 }
-                ],
-                subtotal: 2400,
-                discountPercentage: 0,
-                discountAmount: 0,
-                grandTotal: 1200,
-                referrer: '',
-                customerName: 'Priya Sharma',
-                customerPhone: '9876543210',
-                paymentType: 'full',
-                amountPaid: 1200,
-                balanceDue: 0,
-                status: 'RETURNED',
-                refundAmount: 1200,
-                returnedItems: [
-                    { barcode: '1001', name: 'Slim Fit Cotton Chinos', sellPrice: 1200, colorName: 'Olive Green', size: '30', qty: 1 }
-                ]
-            }
-        ];
-
-        // 6. Parties Credit Accounts
-        const partiesData = [
-            {
-                id: 'PRT-12345',
-                name: 'Amit Verma',
-                phone: '9826012345',
-                email: 'amit.verma@example.com',
-                address: 'Vijay Nagar, Indore, MP',
-                gstin: '',
-                notes: 'Credit client. Restocking fee waived.',
-                balance: 1600,
-                createdDate: twoDaysAgo,
-                history: [
-                    {
-                        id: 'TXN-SALE-500102',
-                        date: twoDaysAgo,
-                        type: 'sale',
-                        invoiceNo: 'INV-500102',
-                        amount: 3600,
-                        paid: 2000,
-                        balanceDue: 1600,
-                        description: 'Purchased items on credit (Invoice: INV-500102)'
-                    }
-                ]
-            },
-            {
-                id: 'PRT-67890',
-                name: 'Rohan Gupta',
-                phone: '7000112233',
-                email: 'rohan.gupta@example.com',
-                address: 'Rajendra Nagar, Indore, MP',
-                gstin: '',
-                notes: 'Dues paid within 15 days.',
-                balance: 1350,
-                createdDate: todayMorning,
-                history: [
-                    {
-                        id: 'TXN-SALE-500104',
-                        date: todayMorning,
-                        type: 'sale',
-                        invoiceNo: 'INV-500104',
-                        amount: 2850,
-                        paid: 1500,
-                        balanceDue: 1350,
-                        description: 'Purchased items on credit (Invoice: INV-500104)'
-                    }
-                ]
-            }
-        ];
-
-        // 7. Manual Expenses Outflows
-        const expensesData = [
-            { id: 'EXP-101', amount: 8000, category: 'Rent', particulars: 'Store Monthly Rent (Vijay Nagar Hub)', type: 'outflow', paymentMode: 'Cash', date: threeDaysAgo },
-            { id: 'EXP-102', amount: 1500, category: 'Utilities', particulars: 'Electricity Bill', type: 'outflow', paymentMode: 'UPI', date: yesterday },
-            { id: 'EXP-103', amount: 350, category: 'Other', particulars: 'Snacks & tea for showroom staff', type: 'outflow', paymentMode: 'Cash', date: todayMorning }
-        ];
-
-        // 8. Invoice Layout Setup
-        const settingsData = {
-            paperSize: '80mm',
-            fontFamily: "'Outfit', sans-serif",
-            fontColor: '#1e3a8a',
-            headerMessage: 'Composition Scheme - Tax Invoice',
-            footerMessage: 'Thank you for shopping at M1x!\nExchanges allowed within 7 days with tags.',
-            columns: { sno: true, item: true, variants: true, rate: true, qty: true, amount: true },
-            tableStyle: { borderWidth: 1, fontSize: 11, padding: 5 },
-            customFields: [
-                { id: 1, label: 'Payment Mode', value: 'Counter Pay' },
-                { id: 2, label: 'Operator', value: 'Rahul P.' }
-            ]
-        };
-
+        const data = getRahulDummyData();
+        
         // Write directly to local storage
-        localStorage.setItem('M1x_UserProfile', JSON.stringify(profile));
-        localStorage.setItem('M1x_Database', JSON.stringify(catalogData));
-        localStorage.setItem('M1x_Sales', JSON.stringify(salesData));
-        localStorage.setItem('M1x_Customers', JSON.stringify(customersData));
-        localStorage.setItem('M1x_Referrers', JSON.stringify(referrersData));
-        localStorage.setItem('M1x_Parties', JSON.stringify(partiesData));
-        localStorage.setItem('M1x_Expenses', JSON.stringify(expensesData));
-        localStorage.setItem('M1x_InvoiceSettings', JSON.stringify(settingsData));
+        localStorage.setItem('M1x_UserProfile', JSON.stringify(data.profile));
+        localStorage.setItem('M1x_Database', JSON.stringify(data.catalogData));
+        localStorage.setItem('M1x_Sales', JSON.stringify(data.salesData));
+        localStorage.setItem('M1x_Customers', JSON.stringify(data.customersData));
+        localStorage.setItem('M1x_Referrers', JSON.stringify(data.referrersData));
+        localStorage.setItem('M1x_Parties', JSON.stringify(data.partiesData));
+        localStorage.setItem('M1x_Expenses', JSON.stringify(data.expensesData));
+        localStorage.setItem('M1x_InvoiceSettings', JSON.stringify(data.settingsData));
         localStorage.setItem('M1x_Auth', 'true');
 
         // Sync parent states immediately
-        setUserProfile(profile);
-        setCatalog(catalogData);
-        setSalesLedger(salesData);
-        setCustomers(customersData);
-        setParties(partiesData);
-        setExpenses(expensesData);
-        setReferrers(referrersData);
-        setInvoiceSettings(settingsData);
+        setUserProfile(data.profile);
+        setCatalog(data.catalogData);
+        setSalesLedger(data.salesData);
+        setCustomers(data.customersData);
+        setParties(data.partiesData);
+        setExpenses(data.expensesData);
+        setReferrers(data.referrersData);
+        setInvoiceSettings(data.settingsData);
     };
 
     const handleLoginSubmit = (e) => {

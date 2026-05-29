@@ -161,29 +161,22 @@ export default function App() {
                     <h1 style={{ margin: 0 }}>M1x POS</h1>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-16)' }}>
-                    <select value={currentTheme} onChange={(e) => setCurrentTheme(e.target.value)} style={{ padding: 'var(--spacing-8)', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--surface-container-high)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', cursor: 'pointer', width: 'auto', fontSize: '0.875rem', fontWeight: '600' }}>
-                        <option value="default">Corporate Blue</option>
-                        <option value="peacock">Peacock & Gold</option>
-                        <option value="dark">Dark Mode</option>
-                        <option value="terracotta">Earthy Terracotta</option>
-                        <option value="sunset">Sunset Burgundy</option>
-                        <option value="sage">Forest Sage</option>
-                        <option value="orchid">Royal Orchid</option>
-                        <option value="cyberpunk">Cyberpunk Neon</option>
-                    </select>
                     <div className="profile-icon" onClick={() => setCurrentTab('profile')} title={`User Profile: ${userProfile.name}`} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}>
                         {userProfile.photoURL ? (
-                            <img 
-                                src={userProfile.photoURL} 
-                                alt="profile" 
-                                style={{ 
-                                    width: '32px', 
-                                    height: '32px', 
-                                    borderRadius: '50%', 
-                                    objectFit: 'cover',
-                                    border: '2px solid var(--primary)'
-                                }} 
-                            />
+                             <img 
+                                 src={userProfile.photoURL} 
+                                 alt="profile" 
+                                 style={{ 
+                                     width: '32px', 
+                                     height: '32px', 
+                                     borderRadius: '50%', 
+                                     objectFit: 'cover',
+                                     border: '2px solid var(--primary)'
+                                 }} 
+                                 onError={() => {
+                                     setUserProfile(prev => ({ ...prev, photoURL: '' }));
+                                 }}
+                             />
                         ) : (
                             <span className="material-icons" style={{ fontSize: '32px' }}>account_circle</span>
                         )}
@@ -207,10 +200,10 @@ export default function App() {
                     {currentTab === 'customers' && <CustomersTab customers={customers} setCustomers={setCustomers} />}
                     {currentTab === 'parties' && <PartiesTab parties={parties} setParties={setParties} salesLedger={salesLedger} />}
                     {currentTab === 'cashbook' && <CashbookTab expenses={expenses} setExpenses={setExpenses} salesLedger={salesLedger} parties={parties} />}
-                    {currentTab === 'invoices' && <InvoicesTab salesLedger={salesLedger} />}
+                    {currentTab === 'invoices' && <InvoicesTab salesLedger={salesLedger} invoiceSettings={invoiceSettings} userProfile={userProfile} />}
                     {currentTab === 'salesanalytics' && <SalesAnalytics salesLedger={salesLedger} />}
                     {currentTab === 'ledger' && <SalesLedger salesLedger={salesLedger} />}
-                    {currentTab === 'profile' && <UserProfile userProfile={userProfile} setUserProfile={setUserProfile} catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} parties={parties} setParties={setParties} />}
+                    {currentTab === 'profile' && <UserProfile userProfile={userProfile} setUserProfile={setUserProfile} catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} parties={parties} setParties={setParties} currentTheme={currentTheme} setCurrentTheme={setCurrentTheme} />}
                 </motion.div>
             </AnimatePresence>
         </div>

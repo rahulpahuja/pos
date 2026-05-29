@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger, parties = [], setParties, expenses = [], setExpenses }) {
+export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger, parties = [], setParties, expenses = [], setExpenses, currentTheme, setCurrentTheme }) {
     const [dirHandle, setDirHandle] = useState(null);
 
     const handleProfileSubmit = (e) => {
@@ -54,7 +54,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
         <div style={{ backgroundColor: 'var(--surface-container-low)', borderRadius: 'var(--radius-lg)', padding: 'var(--spacing-20)', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-20)', fontSize: '1.5rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}>
-                    <span className="material-icons">account_circle</span>User Profile
+                    <span className="material-icons">settings</span>Profile & Settings
                 </h3>
             </div>
             
@@ -96,6 +96,42 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                     <div>
                         <label style={{ color: 'var(--on-surface)', display: 'block', marginBottom: 'var(--spacing-8)', fontSize: '0.875rem', fontWeight: '500' }}>Address</label>
                         <textarea value={userProfile.address} onChange={(e) => setUserProfile(prev => ({ ...prev, address: e.target.value }))} placeholder="Enter your address" rows="3" style={{ width: '100%', padding: 'var(--spacing-12)', backgroundColor: 'var(--surface-container-highest)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderBottom: '2px solid var(--primary)', borderRadius: 'var(--radius-md) var(--radius-md) 0 0', fontSize: '1rem', resize: 'vertical', minHeight: '80px' }} />
+                    </div>
+                </div>
+
+                {/* Application Theme Card */}
+                <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)', marginTop: 'var(--spacing-20)' }}>
+                    <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span className="material-icons">palette</span> System Color Theme
+                    </h4>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Select a color palette for the user interface. Changes apply instantly across the entire application.</p>
+                    
+                    <div className="form-group" style={{ maxWidth: '400px', margin: 0 }}>
+                        <select 
+                            value={currentTheme} 
+                            onChange={(e) => setCurrentTheme(e.target.value)} 
+                            style={{ 
+                                width: '100%', 
+                                padding: 'var(--spacing-12)', 
+                                backgroundColor: 'var(--surface-container-low)', 
+                                color: 'var(--on-surface)', 
+                                border: '1px solid var(--outline-variant)', 
+                                borderBottom: '2px solid var(--primary)', 
+                                borderRadius: 'var(--radius-md) var(--radius-md) 0 0', 
+                                cursor: 'pointer',
+                                fontSize: '1rem',
+                                fontWeight: '500'
+                            }}
+                        >
+                            <option value="default">Corporate Blue</option>
+                            <option value="peacock">Peacock & Gold</option>
+                            <option value="dark">Dark Mode</option>
+                            <option value="terracotta">Earthy Terracotta</option>
+                            <option value="sunset">Sunset Burgundy</option>
+                            <option value="sage">Forest Sage</option>
+                            <option value="orchid">Royal Orchid</option>
+                            <option value="cyberpunk">Cyberpunk Neon</option>
+                        </select>
                     </div>
                 </div>
 

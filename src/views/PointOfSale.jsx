@@ -381,7 +381,17 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                             <div style={{ position: 'absolute', top: '70px', left: 0, right: 0, background: 'var(--surface-container-highest)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-lg)', zIndex: 10, maxHeight: '320px', overflowY: 'auto' }}>
                                 {scanSuggestions.map((s, idx) => (
                                     <div key={s.barcode} onMouseDown={() => handleSuggestionClick(s)} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px', cursor: 'pointer', borderBottom: idx !== scanSuggestions.length - 1 ? '1px solid var(--outline-variant)' : 'none', background: 'var(--surface-container-lowest)' }}>
-                                        {s.productImage ? (<img src={s.productImage} alt="preview" style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} />) : (<div style={{ width: '48px', height: '48px', background: '#f3f3f3', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Image</div>)}
+                                        {s.productImage ? (
+                                            <img 
+                                                src={s.productImage} 
+                                                alt="preview" 
+                                                style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} 
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = 'https://images.unsplash.com/photo-1540959733332-eab4deceeaf7?auto=format&fit=crop&w=100&q=80';
+                                                }}
+                                            />
+                                        ) : (<div style={{ width: '48px', height: '48px', background: '#f3f3f3', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Image</div>)}
                                         <div style={{ flex: 1 }}>
                                             <div style={{ fontWeight: 600 }}>{s.productName}</div>
                                             <div style={{ fontSize: '0.95em', color: '#888' }}>Color: {s.colorName} | Size: {s.size}</div>
