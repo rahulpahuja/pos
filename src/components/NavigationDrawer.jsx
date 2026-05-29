@@ -131,6 +131,10 @@ export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, curren
                         <div className="drawer-section-label">
                             AI Intelligence
                         </div>
+                        <button className={`drawer-btn ${currentTab === 'ai-image-generator' ? 'active' : ''}`} onClick={() => handleNavClick('ai-image-generator')} title="AI Image Generator">
+                            <span className="material-icons">image_search</span>
+                            <span className="drawer-text">AI Image Generator</span>
+                        </button>
                         <button className="drawer-btn has-badge" disabled style={{ opacity: 0.6, cursor: 'not-allowed' }} title="Smart Sales Forecaster (Soon)">
                             <span className="btn-content">
                                 <span className="material-icons">psychology</span>

@@ -18,6 +18,7 @@ import UserProfile from './views/UserProfile';
 import PartiesTab from './views/PartiesTab';
 import CashbookTab from './views/CashbookTab';
 import LabelDesigner from './views/LabelDesigner';
+import AIImageGenerator from './views/AIImageGenerator';
 
 const tabVariants = {
     initial: { opacity: 0, y: 10 },
@@ -272,6 +273,7 @@ export default function App() {
                     {currentTab === 'salesanalytics' && <SalesAnalytics salesLedger={salesLedger} />}
                     {currentTab === 'ledger' && <SalesLedger salesLedger={salesLedger} />}
                     {currentTab === 'profile' && <UserProfile userProfile={userProfile} setUserProfile={setUserProfile} catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} parties={parties} setParties={setParties} currentTheme={currentTheme} setCurrentTheme={setCurrentTheme} />}
+                    {currentTab === 'ai-image-generator' && <AIImageGenerator />}
                 </motion.div>
             </AnimatePresence>
             </div>
