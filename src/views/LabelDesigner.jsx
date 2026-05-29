@@ -6,7 +6,7 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
     // --- DEFAULT INITIAL STATE ---
     const defaultSettings = {
         width: '2.5in',
-        height: '1.25in',
+        height: '1.5in',
         padding: '10px',
         bg: '#ffffff',
         fontColor: '#000000',
@@ -146,7 +146,7 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
     const tabList = [
         { id: 'layout', icon: 'aspect_ratio', label: 'Layout & Colors' },
         { id: 'text', icon: 'font_download', label: 'Text & Fonts' },
-        { id: 'barcode', icon: 'barcode', label: 'Barcode Style' },
+        { id: 'barcode', icon: 'qr_code', label: 'Barcode Style' },
         { id: 'templates', icon: 'bookmarks', label: 'Presets' }
     ];
 
@@ -539,7 +539,8 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                                 width: '100%',
                                 overflow: 'hidden',
                                 whiteSpace: 'nowrap',
-                                textOverflow: 'ellipsis'
+                                textOverflow: 'ellipsis',
+                                flexShrink: 0
                             }}
                         >
                             {settings.headerText}
@@ -554,14 +555,15 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                                 width: '100%',
                                 overflow: 'hidden',
                                 whiteSpace: 'nowrap',
-                                textOverflow: 'ellipsis'
+                                textOverflow: 'ellipsis',
+                                flexShrink: 0
                             }}
                         >
                             Slim Fit Cotton Chinos
                         </div>
 
                         {/* Size Badge & Price */}
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', margin: '4px 0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', margin: '4px 0', flexShrink: 0 }}>
                             <div 
                                 style={{ 
                                     fontSize: settings.sizeFontSize, 
@@ -582,7 +584,7 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                         </div>
 
                         {/* Barcode Area */}
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2px', flexShrink: 0 }}>
                             <canvas ref={canvasRef} style={{ maxWidth: '100%', height: 'auto', display: 'block' }}></canvas>
                             {settings.showProductId && !settings.showBarcodeValue && (
                                 <div 

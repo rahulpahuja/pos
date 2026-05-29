@@ -105,7 +105,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
     const printLabel = (item, sizesText) => {
         const settings = labelSettings || {
             width: '2.5in',
-            height: '1.25in',
+            height: '1.5in',
             padding: '10px',
             bg: '#ffffff',
             fontColor: '#000000',
@@ -179,6 +179,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                             white-space: nowrap;
                             overflow: hidden;
                             text-overflow: ellipsis;
+                            flex-shrink: 0;
                         } 
                         .product-name { 
                             font-size: ${settings.nameFontSize}; 
@@ -188,6 +189,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                             overflow: hidden; 
                             text-overflow: ellipsis;
                             width: 100%;
+                            flex-shrink: 0;
                         } 
                         .size-price-row {
                             display: flex;
@@ -195,6 +197,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                             align-items: center;
                             gap: 8px;
                             margin: 3px 0;
+                            flex-shrink: 0;
                         }
                         .size { 
                             font-size: ${settings.sizeFontSize}; 
@@ -211,6 +214,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                             max-width: 100%; 
                             display: block;
                             margin-top: 2px;
+                            flex-shrink: 0;
                         } 
                         .id-text { 
                             font-size: ${settings.idFontSize}; 
@@ -218,6 +222,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                             letter-spacing: ${settings.idLetterSpacing}; 
                             margin-top: 1px;
                             text-transform: uppercase;
+                            flex-shrink: 0;
                         }
                     </style>
                 </head>

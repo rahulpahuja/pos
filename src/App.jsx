@@ -121,7 +121,7 @@ const getInitialLabelSettings = () => {
     const saved = localStorage.getItem('M1x_LabelSettings');
     return saved ? JSON.parse(saved) : {
         width: '2.5in',
-        height: '1.25in',
+        height: '1.5in',
         padding: '10px',
         bg: '#ffffff',
         fontColor: '#000000',
