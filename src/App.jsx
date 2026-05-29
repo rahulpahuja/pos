@@ -17,6 +17,7 @@ import SalesLedger from './views/SalesLedger';
 import UserProfile from './views/UserProfile';
 import PartiesTab from './views/PartiesTab';
 import CashbookTab from './views/CashbookTab';
+import LabelDesigner from './views/LabelDesigner';
 
 const tabVariants = {
     initial: { opacity: 0, y: 10 },
@@ -116,6 +117,38 @@ const getInitialInvoiceSettings = () => {
     };
 };
 
+const getInitialLabelSettings = () => {
+    const saved = localStorage.getItem('M1x_LabelSettings');
+    return saved ? JSON.parse(saved) : {
+        width: '2.5in',
+        height: '1.25in',
+        padding: '10px',
+        bg: '#ffffff',
+        fontColor: '#000000',
+        borderColor: '#000000',
+        headerText: 'M1x COLLECTION',
+        headerFontSize: '16px',
+        headerFontWeight: 'bold',
+        headerFontFamily: 'serif',
+        nameFontSize: '12px',
+        nameFontWeight: 'bold',
+        showProductId: true,
+        idFontSize: '10px',
+        idLetterSpacing: '2px',
+        sizeFontSize: '14px',
+        sizeBorder: true,
+        priceFontSize: '16px',
+        priceFontWeight: 'bold',
+        showPrice: true,
+        pricePrefix: 'MRP: ₹',
+        barcodeWidth: 1.5,
+        barcodeHeight: 35,
+        barcodeColor: '#000000',
+        showBarcodeValue: false,
+        fontFamily: 'Arial, sans-serif'
+    };
+};
+
 export default function App() {
     // --- STATE DECLARATIONS ---
     const [userProfile, setUserProfile] = useState(getInitialProfile);
@@ -131,6 +164,7 @@ export default function App() {
     const [invoiceSettings, setInvoiceSettings] = useState(getInitialInvoiceSettings);
     const [parties, setParties] = useState(getInitialParties);
     const [expenses, setExpenses] = useState(getInitialExpenses);
+    const [labelSettings, setLabelSettings] = useState(getInitialLabelSettings);
 
     // Theme Effect
     useEffect(() => {
@@ -149,8 +183,9 @@ export default function App() {
             localStorage.setItem('M1x_InvoiceSettings', JSON.stringify(invoiceSettings));
             localStorage.setItem('M1x_Parties', JSON.stringify(parties));
             localStorage.setItem('M1x_Expenses', JSON.stringify(expenses));
+            localStorage.setItem('M1x_LabelSettings', JSON.stringify(labelSettings));
         } catch (e) { if (e.name === 'QuotaExceededError') alert("ERROR: Local storage full!"); }
-    }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings, parties, expenses]);
+    }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings, parties, expenses, labelSettings]);
 
     const confirmLogout = () => {
         if (window.confirm("Are you sure you want to log out?")) {
@@ -223,11 +258,12 @@ export default function App() {
             <AnimatePresence mode="wait">
                 <motion.div key={currentTab} variants={tabVariants} initial="initial" animate="animate" exit="exit">
                     {/* Routing Logic */}
-                    {currentTab === 'grid' && <ProductCatalog catalog={catalog} />}
+                    {currentTab === 'grid' && <ProductCatalog catalog={catalog} labelSettings={labelSettings} />}
                     {currentTab === 'pos' && <PointOfSale catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} setCustomers={setCustomers} referrers={referrers} userProfile={userProfile} invoiceSettings={invoiceSettings} parties={parties} setParties={setParties} />}
                     {currentTab === 'modifier' && <OrderModifier salesLedger={salesLedger} setSalesLedger={setSalesLedger} catalog={catalog} setCatalog={setCatalog} parties={parties} setParties={setParties} />}
                     {currentTab === 'admin' && <InventoryManager catalog={catalog} setCatalog={setCatalog} />}
                     {currentTab === 'designer' && <InvoiceDesigner invoiceSettings={invoiceSettings} setInvoiceSettings={setInvoiceSettings} userProfile={userProfile} />}
+                    {currentTab === 'labeldesigner' && <LabelDesigner labelSettings={labelSettings} setLabelSettings={setLabelSettings} />}
                     {currentTab === 'referrers' && <ReferrersTab referrers={referrers} setReferrers={setReferrers} />}
                     {currentTab === 'customers' && <CustomersTab customers={customers} setCustomers={setCustomers} />}
                     {currentTab === 'parties' && <PartiesTab parties={parties} setParties={setParties} salesLedger={salesLedger} />}

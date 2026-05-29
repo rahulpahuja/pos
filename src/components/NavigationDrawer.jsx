@@ -114,6 +114,10 @@ export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, curren
                             <span className="material-icons">receipt_long</span>
                             <span className="drawer-text">Invoice Designer</span>
                         </button>
+                        <button className={`drawer-btn ${currentTab === 'labeldesigner' ? 'active' : ''}`} onClick={() => handleNavClick('labeldesigner')} title="Label Designer">
+                            <span className="material-icons">label</span>
+                            <span className="drawer-text">Label Designer</span>
+                        </button>
                         <button className={`drawer-btn ${currentTab === 'profile' ? 'active' : ''}`} onClick={() => handleNavClick('profile')} title="Profile & Settings">
                             <span className="material-icons">settings</span>
                             <span className="drawer-text">Profile & Settings</span>
@@ -127,19 +131,19 @@ export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, curren
                         <div className="drawer-section-label">
                             AI Intelligence
                         </div>
-                        <button className="drawer-btn" disabled style={{ opacity: 0.6, cursor: 'not-allowed', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingRight: '12px' }} title="Smart Sales Forecaster (Soon)">
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button className="drawer-btn has-badge" disabled style={{ opacity: 0.6, cursor: 'not-allowed' }} title="Smart Sales Forecaster (Soon)">
+                            <span className="btn-content">
                                 <span className="material-icons">psychology</span>
                                 <span className="drawer-text">Smart Sales Forecaster</span>
                             </span>
-                            <span className="badge-soon" style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', backgroundColor: 'var(--secondary-container)', color: 'var(--on-secondary-container)', padding: '2px 6px', borderRadius: '4px' }}>Soon</span>
+                            <span className="badge-soon">Soon</span>
                         </button>
-                        <button className="drawer-btn" disabled style={{ opacity: 0.6, cursor: 'not-allowed', display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingRight: '12px' }} title="Customer Insights AI (Soon)">
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button className="drawer-btn has-badge" disabled style={{ opacity: 0.6, cursor: 'not-allowed' }} title="Customer Insights AI (Soon)">
+                            <span className="btn-content">
                                 <span className="material-icons">auto_awesome</span>
                                 <span className="drawer-text">Customer Insights AI</span>
                             </span>
-                            <span className="badge-soon" style={{ fontSize: '0.65rem', fontWeight: '700', textTransform: 'uppercase', backgroundColor: 'var(--secondary-container)', color: 'var(--on-secondary-container)', padding: '2px 6px', borderRadius: '4px' }}>Soon</span>
+                            <span className="badge-soon">Soon</span>
                         </button>
                     </div>
 

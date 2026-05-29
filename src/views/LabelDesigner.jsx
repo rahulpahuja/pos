@@ -29,7 +29,8 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
         barcodeWidth: 1.5,
         barcodeHeight: 35,
         barcodeColor: '#000000',
-        showBarcodeValue: false
+        showBarcodeValue: false,
+        fontFamily: 'Arial, sans-serif'
     };
 
     const initialSettings = { ...defaultSettings, ...labelSettings };
@@ -73,7 +74,8 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                     headerFontFamily: 'sans-serif',
                     headerFontSize: '14px',
                     barcodeColor: '#f1c40f',
-                    showBarcodeValue: true
+                    showBarcodeValue: true,
+                    fontFamily: "'Montserrat', sans-serif"
                 }
             }
         ];
@@ -94,7 +96,8 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                     lineColor: settings.barcodeColor,
                     displayValue: settings.showBarcodeValue,
                     fontSize: 10,
-                    margin: 0
+                    margin: 0,
+                    background: 'transparent'
                 });
             } catch (err) {
                 console.error("Barcode drawing error in designer: ", err);
@@ -149,11 +152,29 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
 
     // CSS Dimensions for Preview Box
     const convertDimensionToPx = (dim, isWidth = true) => {
-        if (!dim) return isWidth ? 250 : 125;
-        const val = parseFloat(dim);
-        if (dim.endsWith('in')) return val * 96; // 1 inch = 96px in CSS standard
-        if (dim.endsWith('mm')) return val * 3.779;
-        return val;
+        const fallback = isWidth ? 240 : 120; // Default to 2.5in x 1.25in
+        if (!dim) return fallback;
+        
+        const cleanDim = String(dim).trim().toLowerCase();
+        if (cleanDim === '') return fallback;
+        
+        const val = parseFloat(cleanDim);
+        if (isNaN(val)) return fallback;
+        
+        if (cleanDim.endsWith('in')) {
+            return val * 96;
+        } else if (cleanDim.endsWith('mm')) {
+            return val * 3.779;
+        } else if (cleanDim.endsWith('px')) {
+            return val;
+        } else {
+            // No unit specified, infer based on size
+            if (val <= 15) {
+                return val * 96; // Treat as inches
+            } else {
+                return val; // Treat as pixels
+            }
+        }
     };
 
     const previewWidth = convertDimensionToPx(settings.width, true);
@@ -255,6 +276,22 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                                         <h3 style={{ marginTop: 0, borderBottom: '2px solid var(--primary)', paddingBottom: '6px', display: 'inline-block', fontSize: '1rem' }}>Header & Typography</h3>
                                         
                                         <div className="form-group" style={{ marginTop: '16px' }}>
+                                            <label>Global Font Style</label>
+                                            <select name="fontFamily" value={settings.fontFamily || 'Arial, sans-serif'} onChange={handleChange}>
+                                                <option value="Arial, sans-serif">Sans-Serif (Arial/Clean)</option>
+                                                <option value="'Courier New', Courier, monospace">Monospace (Classic Courier)</option>
+                                                <option value="'Times New Roman', serif">Serif (Traditional)</option>
+                                                <option value="'Inter', sans-serif">Inter (Modern Premium)</option>
+                                                <option value="'Manrope', sans-serif">Manrope (Clean Display)</option>
+                                                <option value="'Outfit', sans-serif">Outfit (Geometric Elegance)</option>
+                                                <option value="'Poppins', sans-serif">Poppins (Friendly Rounded)</option>
+                                                <option value="'Montserrat', sans-serif">Montserrat (Sleek Geometric)</option>
+                                                <option value="'Open Sans', sans-serif">Open Sans (Highly Legible)</option>
+                                                <option value="'Roboto Mono', monospace">Roboto Mono (Developer Mono)</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
                                             <label>Header Line</label>
                                             <input type="text" name="headerText" value={settings.headerText} onChange={handleChange} />
                                         </div>
@@ -475,6 +512,7 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                             padding: settings.padding,
                             backgroundColor: settings.bg,
                             color: settings.fontColor,
+                            fontFamily: settings.fontFamily || 'Arial, sans-serif',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -485,7 +523,8 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                             borderRadius: '2px',
                             border: `1px solid ${settings.borderColor}`,
                             transition: 'all 0.2s ease',
-                            position: 'relative'
+                            position: 'relative',
+                            overflow: 'hidden'
                         }}
                     >
                         {/* Header text */}
@@ -499,7 +538,7 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
                                 marginBottom: '4px',
                                 width: '100%',
                                 overflow: 'hidden',
-                                white-space: 'nowrap',
+                                whiteSpace: 'nowrap',
                                 textOverflow: 'ellipsis'
                             }}
                         >
@@ -544,7 +583,7 @@ export default function LabelDesigner({ labelSettings, setLabelSettings }) {
 
                         {/* Barcode Area */}
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '2px' }}>
-                            <canvas ref={canvasRef} style={{ maxWidth: '100%', display: 'block' }}></canvas>
+                            <canvas ref={canvasRef} style={{ maxWidth: '100%', height: 'auto', display: 'block' }}></canvas>
                             {settings.showProductId && !settings.showBarcodeValue && (
                                 <div 
                                     style={{ 

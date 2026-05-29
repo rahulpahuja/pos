@@ -24,7 +24,7 @@ const ProductCardImage = ({ src, alt }) => {
 const cardContainerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const cardVariants = { hidden: { opacity: 0, y: 16, scale: 0.97 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.22 } } };
 
-export default function ProductCatalog({ catalog }) {
+export default function ProductCatalog({ catalog, labelSettings }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSizes, setSelectedSizes] = useState({});
     
@@ -103,15 +103,140 @@ export default function ProductCatalog({ catalog }) {
     };
 
     const printLabel = (item, sizesText) => {
+        const settings = labelSettings || {
+            width: '2.5in',
+            height: '1.25in',
+            padding: '10px',
+            bg: '#ffffff',
+            fontColor: '#000000',
+            borderColor: '#000000',
+            headerText: 'M1x COLLECTION',
+            headerFontSize: '16px',
+            headerFontWeight: 'bold',
+            headerFontFamily: 'serif',
+            nameFontSize: '12px',
+            nameFontWeight: 'bold',
+            showProductId: true,
+            idFontSize: '10px',
+            idLetterSpacing: '2px',
+            sizeFontSize: '14px',
+            sizeBorder: true,
+            priceFontSize: '16px',
+            priceFontWeight: 'bold',
+            showPrice: true,
+            pricePrefix: 'MRP: ₹',
+            barcodeWidth: 1.5,
+            barcodeHeight: 35,
+            barcodeColor: '#000000',
+            showBarcodeValue: false,
+            fontFamily: 'Arial, sans-serif'
+        };
+
         const canvas = document.createElement('canvas');
-        JsBarcode(canvas, item.id, { width: 1.5, height: 40, displayValue: false });
+        JsBarcode(canvas, item.id, { 
+            width: Number(settings.barcodeWidth) || 1.5, 
+            height: Number(settings.barcodeHeight) || 35, 
+            lineColor: settings.barcodeColor || '#000000',
+            displayValue: settings.showBarcodeValue || false,
+            fontSize: 10,
+            margin: 0,
+            background: 'transparent'
+        });
         const barcodeDataUrl = canvas.toDataURL('image/png');
-        const printWindow = window.open('', '_blank', 'width=400,height=400');
+        const printWindow = window.open('', '_blank', 'width=500,height=500');
         printWindow.document.write(`
             <html>
-                <head><title>Print Label - ${item.id}</title>
-                <style>@page { margin: 0; } body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; margin: 0; padding: 10px; width: 2.5in; } h2 { margin: 0; font-size: 18px; font-family: serif; font-weight: bold; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 5px;} .product-name { font-size: 14px; margin: 4px 0; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} .size { font-size: 16px; font-weight: bold; border: 1px solid #000; display: inline-block; padding: 2px 6px; margin: 5px 0;} .price { font-size: 18px; font-weight: bold; margin-bottom: 5px; } .barcode-img { max-width: 100%; height: 50px; margin-top: 5px; } .id-text { font-size: 12px; font-family: monospace; letter-spacing: 2px; }</style></head>
-                <body><h2>M1x COLLECTION</h2><div class="product-name">${item.name}</div><div class="size">SIZE: ${sizesText}</div><div class="price">MRP: ₹${item.sellPrice}</div><img class="barcode-img" src="${barcodeDataUrl}" /><div class="id-text">${item.id}</div><script>window.onload = function() { window.print(); }<\/script></body>
+                <head>
+                    <title>Print Label - ${item.id}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Manrope:wght@400;700&family=Outfit:wght@400;700&family=Poppins:wght@400;700&family=Montserrat:wght@400;700&family=Open+Sans:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+                    <style>
+                        @page { margin: 0; } 
+                        body { 
+                            font-family: ${settings.fontFamily || 'Arial, sans-serif'}; 
+                            text-align: center; 
+                            margin: 0; 
+                            padding: ${settings.padding}; 
+                            width: ${settings.width}; 
+                            height: ${settings.height};
+                            background-color: ${settings.bg};
+                            color: ${settings.fontColor};
+                            box-sizing: border-box;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            overflow: hidden;
+                        } 
+                        .header { 
+                            margin: 0; 
+                            font-size: ${settings.headerFontSize}; 
+                            font-family: ${settings.headerFontFamily}; 
+                            font-weight: ${settings.headerFontWeight}; 
+                            border-bottom: 1px solid ${settings.borderColor}; 
+                            padding-bottom: 2px; 
+                            margin-bottom: 4px;
+                            width: 100%;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        } 
+                        .product-name { 
+                            font-size: ${settings.nameFontSize}; 
+                            margin: 2px 0; 
+                            font-weight: ${settings.nameFontWeight}; 
+                            white-space: nowrap; 
+                            overflow: hidden; 
+                            text-overflow: ellipsis;
+                            width: 100%;
+                        } 
+                        .size-price-row {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            gap: 8px;
+                            margin: 3px 0;
+                        }
+                        .size { 
+                            font-size: ${settings.sizeFontSize}; 
+                            font-weight: bold; 
+                            border: ${settings.sizeBorder ? `1px solid ${settings.borderColor}` : 'none'}; 
+                            display: inline-block; 
+                            padding: 1px 5px;
+                        } 
+                        .price { 
+                            font-size: ${settings.priceFontSize}; 
+                            font-weight: ${settings.priceFontWeight}; 
+                        } 
+                        .barcode-img { 
+                            max-width: 100%; 
+                            display: block;
+                            margin-top: 2px;
+                        } 
+                        .id-text { 
+                            font-size: ${settings.idFontSize}; 
+                            font-family: monospace; 
+                            letter-spacing: ${settings.idLetterSpacing}; 
+                            margin-top: 1px;
+                            text-transform: uppercase;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">${settings.headerText}</div>
+                    <div class="product-name">${item.name}</div>
+                    <div class="size-price-row">
+                        <div class="size">SIZE: ${sizesText}</div>
+                        ${settings.showPrice ? `<div class="price">${settings.pricePrefix}${item.sellPrice}</div>` : ''}
+                    </div>
+                    <img class="barcode-img" src="${barcodeDataUrl}" />
+                    ${settings.showProductId && !settings.showBarcodeValue ? `<div class="id-text">${item.id}</div>` : ''}
+                    <script>
+                        window.onload = function() { 
+                            window.print(); 
+                            setTimeout(function() { window.close(); }, 500);
+                        }
+                    <\/script>
+                </body>
             </html>
         `);
         printWindow.document.close();
