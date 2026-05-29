@@ -7,7 +7,7 @@ const rowVariants = {
     exit: { opacity: 0, x: 12, transition: { duration: 0.12 } }
 };
 
-export default function PointOfSale({ catalog, setCatalog, salesLedger, setSalesLedger, customers, setCustomers, referrers, userProfile, invoiceSettings }) {
+export default function PointOfSale({ catalog, setCatalog, salesLedger, setSalesLedger, customers, setCustomers, referrers, userProfile, invoiceSettings, parties, setParties }) {
     const scannerInputRef = useRef(null);
     const [scanInput, setScanInput] = useState('');
     const [scanSuggestions, setScanSuggestions] = useState([]);
@@ -18,6 +18,8 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
     const [selectedReferrer, setSelectedReferrer] = useState('');
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
+    const [paymentType, setPaymentType] = useState('full'); // 'full' or 'partial'
+    const [amountPaid, setAmountPaid] = useState('');
 
     useEffect(() => { if (scannerInputRef.current) scannerInputRef.current.focus(); }, [invoiceItems]);
 
@@ -108,19 +110,86 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
     const discountAmount = subtotal * (Number(discountPercentage) / 100);
     const grandTotal = subtotal - discountAmount;
 
+    const amountPaidNum = paymentType === 'full' ? grandTotal : (Number(amountPaid) || 0);
+    const balanceDue = Math.max(0, grandTotal - amountPaidNum);
+
     const completeSaleAndPrint = () => {
         if (invoiceItems.length === 0) { alert("Add items to the invoice first."); return; }
         const invoiceDate = new Date().toISOString();
         const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
         
-        if (customerName.trim() && customerPhone.trim()) {
-            const existingCustomer = customers.find(c => c.phone === customerPhone.trim());
+        const customerNameTrimmed = customerName.trim();
+        const customerPhoneTrimmed = customerPhone.trim();
+
+        if (paymentType === 'partial') {
+            if (!customerNameTrimmed || !customerPhoneTrimmed) {
+                alert("Customer Name and Phone are required for partial/credit payments to track outstanding dues.");
+                return;
+            }
+            if (amountPaidNum < 0 || amountPaidNum > grandTotal) {
+                alert("For partial payment, amount paid must be 0 or more and less than the grand total.");
+                return;
+            }
+        }
+
+        if (customerNameTrimmed && customerPhoneTrimmed) {
+            const existingCustomer = customers.find(c => c.phone === customerPhoneTrimmed);
             if (!existingCustomer) {
-                setCustomers([...customers, { id: Date.now(), name: customerName.trim(), phone: customerPhone.trim(), joinDate: invoiceDate }]);
+                setCustomers([...customers, { id: Date.now(), name: customerNameTrimmed, phone: customerPhoneTrimmed, joinDate: invoiceDate }]);
+            }
+        }
+
+        if (paymentType === 'partial') {
+            const existingParty = parties.find(p => p.phone === customerPhoneTrimmed);
+            const newTxn = {
+                id: `TXN-SALE-${Date.now().toString().slice(-6)}`,
+                date: invoiceDate,
+                type: 'sale',
+                invoiceNo: invoiceNumber,
+                amount: grandTotal,
+                paid: amountPaidNum,
+                balanceDue: balanceDue,
+                description: `Purchased items on credit (Invoice: ${invoiceNumber})`
+            };
+
+            if (existingParty) {
+                setParties(prev => prev.map(p => p.id === existingParty.id ? {
+                    ...p,
+                    balance: p.balance + balanceDue,
+                    history: [newTxn, ...p.history]
+                } : p));
+            } else {
+                const newPartyObj = {
+                    id: `PRT-${Date.now().toString().slice(-6)}`,
+                    name: customerNameTrimmed,
+                    phone: customerPhoneTrimmed,
+                    email: '',
+                    address: '',
+                    gstin: '',
+                    notes: 'Created automatically during POS sale.',
+                    balance: balanceDue,
+                    history: [newTxn],
+                    createdDate: invoiceDate
+                };
+                setParties(prev => [...prev, newPartyObj]);
             }
         }
         
-        setSalesLedger([...salesLedger, { invoiceNo: invoiceNumber, date: invoiceDate, items: invoiceItems, subtotal, discountPercentage, discountAmount, grandTotal, referrer: selectedReferrer, customerName: customerName.trim(), customerPhone: customerPhone.trim() }]);
+        setSalesLedger([...salesLedger, { 
+            invoiceNo: invoiceNumber, 
+            date: invoiceDate, 
+            items: invoiceItems, 
+            subtotal, 
+            discountPercentage, 
+            discountAmount, 
+            grandTotal, 
+            referrer: selectedReferrer, 
+            customerName: customerNameTrimmed, 
+            customerPhone: customerPhoneTrimmed,
+            paymentType,
+            amountPaid: amountPaidNum,
+            balanceDue: balanceDue
+        }]);
 
         const updatedCatalog = catalog.map(catItem => {
             if (!catItem.variants) return catItem;
@@ -242,6 +311,10 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                     <tr><td>Subtotal</td><td style="text-align:right">&#8377;${subtotal.toFixed(2)}</td></tr>
                     ${discountPercentage > 0 ? `<tr><td>Discount (${discountPercentage}%)</td><td style="text-align:right;color:#c00;">-&#8377;${discountAmount.toFixed(2)}</td></tr>` : ''}
                     <tr class="grand-row"><td>GRAND TOTAL</td><td style="text-align:right">&#8377;${grandTotal.toFixed(2)}</td></tr>
+                    ${paymentType === 'partial' ? `
+                    <tr><td>Amount Paid</td><td style="text-align:right">&#8377;${amountPaidNum.toFixed(2)}</td></tr>
+                    <tr style="color:#c00;font-weight:bold;"><td>BALANCE DUE</td><td style="text-align:right">&#8377;${balanceDue.toFixed(2)}</td></tr>
+                    ` : ''}
                 </table>
                 <hr class="dash">
                 <div class="footer">${safeSettings.footerMessage}</div>
@@ -250,6 +323,7 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
         `);
         printWindow.document.close();
         setInvoiceItems([]); setDiscountPercentage(0); setSelectedReferrer(''); setCustomerName(''); setCustomerPhone('');
+        setPaymentType('full'); setAmountPaid('');
     };
 
     return (
@@ -324,6 +398,28 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                         <label style={{ fontSize: '0.875rem' }}>Customer Phone</label>
                         <input type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="Optional" style={{ marginTop: 'var(--spacing-4)' }} />
                     </div>
+
+                    <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
+                        <label style={{ fontSize: '0.875rem', fontWeight: '600' }}>Payment Mode</label>
+                        <select value={paymentType} onChange={(e) => { setPaymentType(e.target.value); if (e.target.value === 'full') setAmountPaid(''); }} style={{ marginTop: 'var(--spacing-4)' }}>
+                            <option value="full">Full Payment (Paid)</option>
+                            <option value="partial">Partial / Credit Payment</option>
+                        </select>
+                    </div>
+                    
+                    {paymentType === 'partial' && (
+                        <>
+                            <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
+                                <label style={{ fontSize: '0.875rem', color: 'var(--error)', fontWeight: '600' }}>Amount Paid (₹) *</label>
+                                <input type="number" min="0" max={grandTotal} value={amountPaid} onChange={(e) => setAmountPaid(e.target.value)} placeholder="Enter amount paid" style={{ textAlign: 'right', marginTop: 'var(--spacing-4)', border: '1px solid var(--error)' }} />
+                            </div>
+                            <div className="totals-row" style={{ color: 'var(--error)', fontWeight: '600', marginBottom: 'var(--spacing-16)' }}>
+                                <span>Outstanding Dues:</span>
+                                <span>₹{balanceDue.toFixed(2)}</span>
+                            </div>
+                        </>
+                    )}
+
                     <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
                         <label style={{ fontSize: '0.875rem' }}>Refer by</label>
                         <select value={selectedReferrer} onChange={(e) => setSelectedReferrer(e.target.value)} style={{ marginTop: 'var(--spacing-4)' }}>

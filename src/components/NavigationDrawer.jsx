@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, currentTab, setCurrentTab }) {
+export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, currentTab, setCurrentTab, confirmLogout }) {
     const handleNavClick = (tab) => {
         setCurrentTab(tab);
         setIsDrawerOpen(false);
@@ -28,9 +28,23 @@ export default function NavigationDrawer({ isDrawerOpen, setIsDrawerOpen, curren
                     
                     <button className={`drawer-btn ${currentTab === 'referrers' ? 'active' : ''}`} onClick={() => handleNavClick('referrers')}><span className="material-icons">people</span> Referrers</button>
                     <button className={`drawer-btn ${currentTab === 'customers' ? 'active' : ''}`} onClick={() => handleNavClick('customers')}><span className="material-icons">contacts</span> Customers</button>
+                    <button className={`drawer-btn ${currentTab === 'parties' ? 'active' : ''}`} onClick={() => handleNavClick('parties')}><span className="material-icons">handshake</span> Party Management</button>
                     <button className={`drawer-btn ${currentTab === 'invoices' ? 'active' : ''}`} onClick={() => handleNavClick('invoices')}><span className="material-icons">receipt</span> Invoices</button>
                     <button className={`drawer-btn ${currentTab === 'salesanalytics' ? 'active' : ''}`} onClick={() => handleNavClick('salesanalytics')}><span className="material-icons">trending_up</span> Sales Analytics</button>
                     <button className={`drawer-btn ${currentTab === 'ledger' ? 'active' : ''}`} onClick={() => handleNavClick('ledger')}><span className="material-icons">analytics</span> Sales Ledger</button>
+                </div>
+                
+                {/* Logout Button Pinned to Bottom of Drawer */}
+                <div style={{ padding: 'var(--spacing-16)', borderTop: '1px solid var(--outline-variant)', backgroundColor: 'var(--surface-container-low)' }}>
+                    <button 
+                        className="drawer-btn" 
+                        onClick={() => { setIsDrawerOpen(false); confirmLogout(); }}
+                        style={{ width: '100%', color: 'var(--error)', transition: 'all 0.2s ease', backgroundColor: 'transparent' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--error-container)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                    >
+                        <span className="material-icons" style={{ color: 'var(--error)' }}>power_settings_new</span> Logout
+                    </button>
                 </div>
             </div>
         </>

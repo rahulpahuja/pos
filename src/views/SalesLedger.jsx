@@ -103,7 +103,9 @@ export default function SalesLedger({ salesLedger }) {
                                 <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Invoice No.</th>
                                 <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Items Sold</th>
                                 <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Discount</th>
-                                <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Grand Total</th>
+                                <th style={{ padding: '12px', color: 'white', textAlign: 'right' }}>Grand Total</th>
+                                <th style={{ padding: '12px', color: 'white', textAlign: 'right' }}>Paid</th>
+                                <th style={{ padding: '12px', color: 'white', textAlign: 'right' }}>Due</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,7 +115,9 @@ export default function SalesLedger({ salesLedger }) {
                                     <td style={{ padding: '12px', fontFamily: 'monospace' }}>{sale.invoiceNo}</td>
                                     <td style={{ padding: '12px' }}>{sale.items.reduce((sum, item) => sum + item.qty, 0)} items</td>
                                     <td style={{ padding: '12px' }}>{sale.discountPercentage}%</td>
-                                    <td style={{ padding: '12px', fontWeight: '600', color: 'var(--primary)' }}>₹{sale.grandTotal.toFixed(2)}</td>
+                                    <td style={{ padding: '12px', fontWeight: '600', color: 'var(--primary)', textAlign: 'right' }}>₹{sale.grandTotal.toFixed(2)}</td>
+                                    <td style={{ padding: '12px', color: 'var(--on-surface)', textAlign: 'right' }}>₹{(sale.amountPaid !== undefined ? sale.amountPaid : sale.grandTotal).toFixed(2)}</td>
+                                    <td style={{ padding: '12px', color: (sale.balanceDue > 0 ? 'var(--error)' : 'var(--on-surface)'), fontWeight: sale.balanceDue > 0 ? '600' : 'normal', textAlign: 'right' }}>₹{(sale.balanceDue !== undefined ? sale.balanceDue : 0).toFixed(2)}</td>
                                 </tr>
                             ))}
                         </tbody>

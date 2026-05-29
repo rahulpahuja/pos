@@ -77,6 +77,9 @@ export default function InvoicesTab({ salesLedger }) {
                                 <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Subtotal (₹)</th>
                                 <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Discount</th>
                                 <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Grand Total (₹)</th>
+                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Paid (₹)</th>
+                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'right', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Due (₹)</th>
+                                <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Status</th>
                                 <th style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center', fontWeight: '600', color: 'var(--on-primary-container)', borderBottom: '1px solid var(--outline-variant)' }}>Items</th>
                             </tr>
                         </thead>
@@ -94,6 +97,19 @@ export default function InvoicesTab({ salesLedger }) {
                                         {invoice.discountPercentage > 0 ? `${invoice.discountPercentage}% (-₹${invoice.discountAmount.toFixed(2)})` : 'None'}
                                     </td>
                                     <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--primary)', fontWeight: 'bold', textAlign: 'right' }}>₹{invoice.grandTotal.toFixed(2)}</td>
+                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface)', textAlign: 'right' }}>
+                                        ₹{(invoice.amountPaid !== undefined ? invoice.amountPaid : invoice.grandTotal).toFixed(2)}
+                                    </td>
+                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: (invoice.balanceDue > 0 ? 'var(--error)' : 'var(--on-surface)'), fontWeight: invoice.balanceDue > 0 ? '600' : 'normal', textAlign: 'right' }}>
+                                        ₹{(invoice.balanceDue !== undefined ? invoice.balanceDue : 0).toFixed(2)}
+                                    </td>
+                                    <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', textAlign: 'center' }}>
+                                        {invoice.balanceDue > 0 ? (
+                                            <span style={{ color: 'var(--error)', backgroundColor: 'var(--error-container)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>DUE</span>
+                                        ) : (
+                                            <span style={{ color: 'var(--success)', backgroundColor: 'var(--success-container)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>PAID</span>
+                                        )}
+                                    </td>
                                     <td style={{ padding: 'var(--spacing-12) var(--spacing-16)', color: 'var(--on-surface-variant)', textAlign: 'center', fontSize: '0.875rem' }}>{invoice.items.length}</td>
                                 </tr>
                             ))}

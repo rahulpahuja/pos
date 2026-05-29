@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger }) {
+export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger, parties = [], setParties }) {
     const [dirHandle, setDirHandle] = useState(null);
 
     const handleProfileSubmit = (e) => {
@@ -40,6 +40,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                 const parsed = JSON.parse(event.target.result);
                 if (type === 'products') setCatalog(parsed);
                 if (type === 'sales') setSalesLedger(parsed);
+                if (type === 'parties') setParties(parsed);
                 alert(`${type.charAt(0).toUpperCase() + type.slice(1)} JSON loaded successfully!`);
             } catch (error) {
                 alert(`Error parsing ${type} JSON. Please ensure it is a valid file.`);
@@ -101,7 +102,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                     <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-12)' }}>Data Management (JSON Backup)</h4>
                     <p style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-16)' }}>Export your current data to keep a secure backup, or import a JSON file to restore your database.</p>
                     
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-16)' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-16)' }}>
                         <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
                             <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Products Database</h5>
                             
@@ -131,6 +132,15 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                             </button>
                             <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Sales JSON:</label>
                             <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'sales')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
+                        </div>
+
+                        <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
+                            <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Parties Database</h5>
+                            <button type="button" onClick={() => exportToJson(parties, 'm1x_parties.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>
+                                Download Parties (JSON)
+                            </button>
+                            <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Parties JSON:</label>
+                            <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'parties')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
                         </div>
                     </div>
                 </div>

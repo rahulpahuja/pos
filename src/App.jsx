@@ -15,6 +15,7 @@ import CustomersTab from './views/CustomersTab';
 import InvoicesTab from './views/InvoicesTab'; // Added Import
 import SalesLedger from './views/SalesLedger';
 import UserProfile from './views/UserProfile';
+import PartiesTab from './views/PartiesTab';
 
 const tabVariants = {
     initial: { opacity: 0, y: 10 },
@@ -51,6 +52,11 @@ const getInitialCustomers = () => {
     return saved ? JSON.parse(saved) : [];
 };
 
+const getInitialParties = () => {
+    const saved = localStorage.getItem('M1x_Parties');
+    return saved ? JSON.parse(saved) : [];
+};
+
 const getInitialReferrers = () => {
     const saved = localStorage.getItem('M1x_Referrers');
     return saved ? JSON.parse(saved) : [];
@@ -81,6 +87,7 @@ export default function App() {
     const [customers, setCustomers] = useState(getInitialCustomers);
     const [referrers, setReferrers] = useState(getInitialReferrers);
     const [invoiceSettings, setInvoiceSettings] = useState(getInitialInvoiceSettings);
+    const [parties, setParties] = useState(getInitialParties);
 
     // Theme Effect
     useEffect(() => {
@@ -97,8 +104,9 @@ export default function App() {
             localStorage.setItem('M1x_Referrers', JSON.stringify(referrers));
             localStorage.setItem('M1x_Customers', JSON.stringify(customers));
             localStorage.setItem('M1x_InvoiceSettings', JSON.stringify(invoiceSettings));
+            localStorage.setItem('M1x_Parties', JSON.stringify(parties));
         } catch (e) { if (e.name === 'QuotaExceededError') alert("ERROR: Local storage full!"); }
-    }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings]);
+    }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings, parties]);
 
     const confirmLogout = () => {
         if (window.confirm("Are you sure you want to log out?")) {
@@ -108,7 +116,7 @@ export default function App() {
     };
 
     if (!isAuthenticated) {
-        return <LoginScreen setIsAuthenticated={setIsAuthenticated} userProfile={userProfile} setCatalog={setCatalog} setSalesLedger={setSalesLedger} />;
+        return <LoginScreen setIsAuthenticated={setIsAuthenticated} userProfile={userProfile} setUserProfile={setUserProfile} setCatalog={setCatalog} setSalesLedger={setSalesLedger} />;
     }
 
     return (
@@ -118,6 +126,7 @@ export default function App() {
                 setIsDrawerOpen={setIsDrawerOpen} 
                 currentTab={currentTab} 
                 setCurrentTab={setCurrentTab} 
+                confirmLogout={confirmLogout}
             />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-32)' }}>
@@ -131,9 +140,28 @@ export default function App() {
                         <option value="peacock">Peacock & Gold</option>
                         <option value="dark">Dark Mode</option>
                         <option value="terracotta">Earthy Terracotta</option>
+                        <option value="sunset">Sunset Burgundy</option>
+                        <option value="sage">Forest Sage</option>
+                        <option value="orchid">Royal Orchid</option>
+                        <option value="cyberpunk">Cyberpunk Neon</option>
                     </select>
-                    <div className="profile-icon" onClick={() => setCurrentTab('profile')} title="User Profile">
-                        <span className="material-icons">account_circle</span>
+                    <div className="profile-icon" onClick={() => setCurrentTab('profile')} title={`User Profile: ${userProfile.name}`} style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-8)' }}>
+                        {userProfile.photoURL ? (
+                            <img 
+                                src={userProfile.photoURL} 
+                                alt="profile" 
+                                style={{ 
+                                    width: '32px', 
+                                    height: '32px', 
+                                    borderRadius: '50%', 
+                                    objectFit: 'cover',
+                                    border: '2px solid var(--primary)'
+                                }} 
+                            />
+                        ) : (
+                            <span className="material-icons" style={{ fontSize: '32px' }}>account_circle</span>
+                        )}
+                        <span style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--on-surface)' }}>{userProfile.name}</span>
                     </div>
                     <div className="power-icon" onClick={confirmLogout} title="Logout">
                         <span className="material-icons">power_settings_new</span>
@@ -145,16 +173,17 @@ export default function App() {
                 <motion.div key={currentTab} variants={tabVariants} initial="initial" animate="animate" exit="exit">
                     {/* Routing Logic */}
                     {currentTab === 'grid' && <ProductCatalog catalog={catalog} />}
-                    {currentTab === 'pos' && <PointOfSale catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} setCustomers={setCustomers} referrers={referrers} userProfile={userProfile} invoiceSettings={invoiceSettings} />}
+                    {currentTab === 'pos' && <PointOfSale catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} setCustomers={setCustomers} referrers={referrers} userProfile={userProfile} invoiceSettings={invoiceSettings} parties={parties} setParties={setParties} />}
                     {currentTab === 'modifier' && <OrderModifier salesLedger={salesLedger} setSalesLedger={setSalesLedger} catalog={catalog} setCatalog={setCatalog} />}
                     {currentTab === 'admin' && <InventoryManager catalog={catalog} setCatalog={setCatalog} />}
                     {currentTab === 'designer' && <InvoiceDesigner invoiceSettings={invoiceSettings} setInvoiceSettings={setInvoiceSettings} userProfile={userProfile} />}
                     {currentTab === 'referrers' && <ReferrersTab referrers={referrers} setReferrers={setReferrers} />}
                     {currentTab === 'customers' && <CustomersTab customers={customers} setCustomers={setCustomers} />}
+                    {currentTab === 'parties' && <PartiesTab parties={parties} setParties={setParties} salesLedger={salesLedger} />}
                     {currentTab === 'invoices' && <InvoicesTab salesLedger={salesLedger} />}
                     {currentTab === 'salesanalytics' && <SalesAnalytics salesLedger={salesLedger} />}
                     {currentTab === 'ledger' && <SalesLedger salesLedger={salesLedger} />}
-                    {currentTab === 'profile' && <UserProfile userProfile={userProfile} setUserProfile={setUserProfile} catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} />}
+                    {currentTab === 'profile' && <UserProfile userProfile={userProfile} setUserProfile={setUserProfile} catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} parties={parties} setParties={setParties} />}
                 </motion.div>
             </AnimatePresence>
         </div>

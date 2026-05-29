@@ -12,6 +12,26 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
     
+    <!-- Firebase SDK Configuration -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyAHPdlMC6RWpomckmTSApyS1QzZz-YOWoc",
+        authDomain: "m1xpos.firebaseapp.com",
+        projectId: "m1xpos",
+        storageBucket: "m1xpos.firebasestorage.app",
+        messagingSenderId: "936062028411",
+        appId: "1:936062028411:web:c6ffb86545124aaf95b0de",
+        measurementId: "G-KZZMCV488B"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -146,6 +146,111 @@
     --outline-variant: #bcaaa4;
 }
 
+/* 5. Sunset Burgundy */
+[data-theme="sunset"] {
+    --primary: #880e4f;
+    --primary-container: #bc477b;
+    --on-primary: #ffffff;
+    --on-primary-container: #fce4ec;
+
+    --secondary: #ad1457;
+    --secondary-container: #f8bbd0;
+    --secondary-fixed: #f8bbd0;
+    --on-secondary: #ffffff;
+    --on-secondary-container: #270014;
+    --on-secondary-fixed: #270014;
+
+    --surface: #fff8f8;
+    --surface-container-low: #ffebee;
+    --surface-container-lowest: #ffffff;
+    --surface-container-high: #f8bbd0;
+    --surface-container-highest: #f48fb1;
+    --surface-variant: #fce4ec;
+
+    --on-surface: #270014;
+    --on-surface-variant: #5c0032;
+    --outline-variant: #e892b5;
+}
+
+/* 6. Forest Sage */
+[data-theme="sage"] {
+    --primary: #2e4f3c;
+    --primary-container: #3f6a52;
+    --on-primary: #ffffff;
+    --on-primary-container: #e8f5e9;
+
+    --secondary: #4e735e;
+    --secondary-container: #c8e6c9;
+    --secondary-fixed: #c8e6c9;
+    --on-secondary: #ffffff;
+    --on-secondary-container: #0b2512;
+    --on-secondary-fixed: #0b2512;
+
+    --surface: #f7fcf8;
+    --surface-container-low: #eef7f0;
+    --surface-container-lowest: #ffffff;
+    --surface-container-high: #c8e6c9;
+    --surface-container-highest: #a5d6a7;
+    --surface-variant: #e8f5e9;
+
+    --on-surface: #0b2512;
+    --on-surface-variant: #1c4524;
+    --outline-variant: #81c784;
+}
+
+/* 7. Royal Orchid */
+[data-theme="orchid"] {
+    --primary: #4a148c;
+    --primary-container: #7b1fa2;
+    --on-primary: #ffffff;
+    --on-primary-container: #f3e5f5;
+
+    --secondary: #6a1b9a;
+    --secondary-container: #e1bee7;
+    --secondary-fixed: #e1bee7;
+    --on-secondary: #ffffff;
+    --on-secondary-container: #1a0033;
+    --on-secondary-fixed: #1a0033;
+
+    --surface: #fbf6ff;
+    --surface-container-low: #f3e5f5;
+    --surface-container-lowest: #ffffff;
+    --surface-container-high: #e1bee7;
+    --surface-container-highest: #d500f9;
+    --surface-variant: #f3e5f5;
+
+    --on-surface: #1a0033;
+    --on-surface-variant: #3c0068;
+    --outline-variant: #ba68c8;
+}
+
+/* 8. Neon Cyberpunk (Dark) */
+[data-theme="cyberpunk"] {
+    --primary: #00f0ff;
+    --primary-container: #001f3f;
+    --on-primary: #000000;
+    --on-primary-container: #00f0ff;
+
+    --secondary: #ff007f;
+    --secondary-container: #3d001e;
+    --secondary-fixed: #3d001e;
+    --on-secondary: #ffffff;
+    --on-secondary-container: #ff007f;
+    --on-secondary-fixed: #ff007f;
+
+    --surface: #0a0b10;
+    --surface-container-low: #12131a;
+    --surface-container-lowest: #050508;
+    --surface-container-high: #1a1c26;
+    --surface-container-highest: #242735;
+    --surface-variant: #ff007f;
+
+    --on-surface: #e0e6ed;
+    --on-surface-variant: #8892b0;
+    --outline-variant: #ff007f;
+}
+
+
 /* Global Styles */
 * {
     box-sizing: border-box;
