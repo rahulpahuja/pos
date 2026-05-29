@@ -238,15 +238,15 @@ export default function SalesLedger({ salesLedger }) {
                         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                             <thead style={{ backgroundColor: 'var(--primary-container)' }}>
                                 <tr>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Date</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Invoice No.</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Customer</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Referred By</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Items Sold</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'left' }}>Discount</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'right' }}>Grand Total</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'right' }}>Paid</th>
-                                    <th style={{ padding: '12px', color: 'white', textAlign: 'right' }}>Due</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'left' }}>Date</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'left' }}>Invoice No.</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'left' }}>Customer</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'left' }}>Referred By</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'left' }}>Items Sold</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'left' }}>Discount</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'right' }}>Grand Total</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'right' }}>Paid</th>
+                                    <th style={{ padding: '12px', color: 'var(--on-primary-container)', textAlign: 'right' }}>Due</th>
                                 </tr>
                             </thead>
                             <tbody>

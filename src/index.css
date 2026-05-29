@@ -266,9 +266,16 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+::selection {
+    background-color: var(--secondary-container);
+    color: var(--on-secondary-container);
+}
+
 .container {
-    max-width: 1200px;
+    max-width: 1800px;
     margin: 0 auto;
+    padding: 0 var(--spacing-24);
+    box-sizing: border-box;
 }
 
 /* Typography Hierarchy */
@@ -469,14 +476,14 @@ p {
 }
 
 .drawer-btn.active {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-container) 100%);
-    color: var(--on-primary);
+    background-color: var(--primary-container);
+    color: var(--on-primary-container);
     font-weight: 600;
     box-shadow: var(--shadow-sm);
 }
 
 .drawer-btn.active .material-icons {
-    color: var(--on-primary);
+    color: var(--on-primary-container);
 }
 
 /* Collapsed item state styles */

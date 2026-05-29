@@ -249,7 +249,10 @@ export default function ProductCatalog({ catalog, labelSettings }) {
 
     return (
         <div>
-            <div style={{ position: 'relative', width: '100%', marginBottom: 'var(--spacing-16)' }}>
+            <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-8)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="material-icons">search</span> Search Products
+            </h4>
+            <div style={{ position: 'relative', width: '100%', marginBottom: 'var(--spacing-24)' }}>
                 <input 
                     type="text" 
                     className="search-bar" 
@@ -270,6 +273,9 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                     marginBottom: 'var(--spacing-24)'
                 }}
             >
+                <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-16)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="material-icons">filter_list</span> Filters
+                </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-16)' }}>
                     {/* Category Filter */}
                     <div>
