@@ -207,7 +207,11 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
         // Failsafe: Use defaults if settings haven't been initialized yet
         const safeSettings = {
             paperSize: invoiceSettings?.paperSize || '80mm',
-            fontFamily: invoiceSettings?.fontFamily || 'monospace', // Add this line
+            fontFamily: invoiceSettings?.fontFamily || 'monospace',
+            fontColor: invoiceSettings?.fontColor || '#000000',
+            logo: invoiceSettings?.logo || null,
+            logoHeight: invoiceSettings?.logoHeight || 50,
+            logoAlign: invoiceSettings?.logoAlign || 'center',
             headerMessage: invoiceSettings?.headerMessage || 'Dealer Under Composition Scheme',
             footerMessage: invoiceSettings?.footerMessage || 'Thank you for shopping!',
             columns: invoiceSettings?.columns || { sno: true, item: true, variants: true, rate: true, qty: true, amount: true },
@@ -218,37 +222,75 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
         const printWindow = window.open('', '_blank', 'width=600,height=800');
         const storePhone = userProfile.phone || '';
         
-        const paperWidth = safeSettings.paperSize === '58mm' ? '220px' : safeSettings.paperSize === 'A4' ? '100%' : '320px';
-        const maxWidth = safeSettings.paperSize === 'A4' ? '800px' : 'none';
-        const marginStyle = safeSettings.paperSize === 'A4' ? '0 auto' : '0';
+        let paperWidth = '320px';
+        let maxWidth = 'none';
+        let marginStyle = '0';
+        
+        switch (safeSettings.paperSize) {
+            case '58mm':
+                paperWidth = '220px';
+                maxWidth = '220px';
+                marginStyle = '0';
+                break;
+            case '80mm':
+                paperWidth = '320px';
+                maxWidth = '320px';
+                marginStyle = '0';
+                break;
+            case '100mm':
+                paperWidth = '400px';
+                maxWidth = '400px';
+                marginStyle = '0';
+                break;
+            case 'A5':
+                paperWidth = '100%';
+                maxWidth = '540px';
+                marginStyle = '0 auto';
+                break;
+            case 'A4':
+                paperWidth = '100%';
+                maxWidth = '800px';
+                marginStyle = '0 auto';
+                break;
+            case 'Letter':
+            case 'Legal':
+                paperWidth = '100%';
+                maxWidth = '820px';
+                marginStyle = '0 auto';
+                break;
+            default:
+                paperWidth = '320px';
+                maxWidth = 'none';
+                marginStyle = '0';
+        }
 
         // Build Custom Fields HTML
         let customFieldsHTML = '';
         if (safeSettings.customFields && safeSettings.customFields.length > 0) {
-            customFieldsHTML = `<div style="margin-bottom: 10px; border-bottom: 1px dashed #ccc; padding-bottom: 10px;">` + 
+            customFieldsHTML = `<div style="margin-bottom: 10px; border-bottom: 1px dashed ${safeSettings.fontColor}; padding-bottom: 10px;">` + 
                 safeSettings.customFields.map(f => `<div style="display: flex; justify-content: space-between; font-size: ${safeSettings.tableStyle.fontSize}px; margin: 2px 0;"><span>${f.label}:</span><span style="font-weight: bold;">${f.value}</span></div>`).join('') + 
             `</div>`;
         }
 
         // Build Dynamic Headers
         let thHTML = '';
-        if (safeSettings.columns.sno) thHTML += `<th style="text-align:center; width: 20px; border-top: ${safeSettings.tableStyle.borderWidth}px solid #000; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid #000; padding: ${safeSettings.tableStyle.padding}px 3px;">#</th>`;
-        thHTML += `<th style="text-align:left; border-top: ${safeSettings.tableStyle.borderWidth}px solid #000; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid #000; padding: ${safeSettings.tableStyle.padding}px 3px;">Item</th>`;
-        if (safeSettings.columns.qty) thHTML += `<th style="text-align:center; border-top: ${safeSettings.tableStyle.borderWidth}px solid #000; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid #000; padding: ${safeSettings.tableStyle.padding}px 3px;">Qty</th>`;
-        if (safeSettings.columns.rate) thHTML += `<th style="text-align:right; border-top: ${safeSettings.tableStyle.borderWidth}px solid #000; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid #000; padding: ${safeSettings.tableStyle.padding}px 3px;">Rate</th>`;
-        thHTML += `<th style="text-align:right; border-top: ${safeSettings.tableStyle.borderWidth}px solid #000; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid #000; padding: ${safeSettings.tableStyle.padding}px 3px;">Amount</th>`;
+        if (safeSettings.columns.sno) thHTML += `<th style="text-align:center; width: 20px; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">#</th>`;
+        thHTML += `<th style="text-align:left; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">Item</th>`;
+        if (safeSettings.columns.qty) thHTML += `<th style="text-align:center; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">Qty</th>`;
+        if (safeSettings.columns.rate) thHTML += `<th style="text-align:right; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">Rate</th>`;
+        thHTML += `<th style="text-align:right; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">Amount</th>`;
 
         // Build Dynamic Rows
         const itemRowsHTML = invoiceItems.map((item, i) => {
             let row = '<tr>';
-            const tdStyle = `border-bottom: ${safeSettings.tableStyle.borderWidth}px solid #000; padding: ${safeSettings.tableStyle.padding}px 3px;`;
+            const tdStyle = `border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;`;
             
             if (safeSettings.columns.sno) row += `<td style="text-align:center; ${tdStyle}">${i + 1}</td>`;
             
             // Item + Variants logic
             let itemText = item.name;
             if (safeSettings.columns.variants && (item.colorName || item.size)) {
-                itemText += `<br><span style="font-size:0.85em;color:#555;">${item.colorName || ''} ${item.size ? '/ ' + item.size : ''}</span>`;
+                itemText += `<br><span style="font-size:0.85em;opacity:0.7;">${item.colorName || ''} ${item.size ? '/ ' + item.size : ''}</span>`;
             }
             row += `<td style="${tdStyle}">${itemText}</td>`;
             
@@ -262,26 +304,28 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
 
         printWindow.document.write(`
             <html><head><title>Invoice ${invoiceNumber}</title>
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@200..800&family=Montserrat:wght@100..900&family=Open+Sans:wght@300..800&family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:wght@100..900&family=Roboto+Mono:wght@100..700&family=Lora:ital,wght@0,400..700;1,400..700&family=Ubuntu:wght@300..700&display=swap" rel="stylesheet">
             <style>
                 @page { margin: 6mm; }
                 body { 
-                    font-family: ${safeSettings.fontFamily}; /* Update this line */
+                    font-family: ${safeSettings.fontFamily};
                     margin: ${marginStyle};
                     padding: 10px; 
                     width: ${paperWidth}; 
                     max-width: ${maxWidth};
-                    color: #000; 
+                    color: ${safeSettings.fontColor}; 
                     font-size: ${safeSettings.tableStyle.fontSize}px; 
                 }
                 .top-bar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; font-weight: bold; }
                 .store-name { text-align: center; font-size: 22px; font-weight: bold; margin: 2px 0 3px; }
-                hr.dash { border: none; border-top: 1px dashed #000; margin: 7px 0; }
+                hr.dash { border: none; border-top: 1px dashed ${safeSettings.fontColor}; margin: 7px 0; }
                 table.items { width: 100%; border-collapse: collapse; margin-top: 4px; }
                 table.totals { width: 100%; border-collapse: collapse; margin-top: 4px; }
-                .grand-row td { font-size: 1.2em; font-weight: bold; border-top: 2px solid #000; padding-top: 5px; }
-                .footer { text-align: center; margin-top: 14px; color: #555; white-space: pre-line; }
+                .grand-row td { font-size: 1.2em; font-weight: bold; border-top: 2px solid ${safeSettings.fontColor}; padding-top: 5px; }
+                .footer { text-align: center; margin-top: 14px; color: ${safeSettings.fontColor}; opacity: 0.8; white-space: pre-line; }
             </style></head>
             <body>
+                ${safeSettings.logo ? `<div style="text-align: ${safeSettings.logoAlign || 'center'}; margin-bottom: 10px;"><img src="${safeSettings.logo}" style="height: ${safeSettings.logoHeight || 50}px; object-fit: contain;" /></div>` : ''}
                 <div class="top-bar">
                     <div>${userProfile.gstNumber ? 'GSTIN: ' + userProfile.gstNumber : ''}</div>
                     <div>Bill No: ${invoiceNumber}</div>

@@ -8,6 +8,10 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
         ...invoiceSettings,
         paperSize: invoiceSettings?.paperSize || '80mm',
         fontFamily: invoiceSettings?.fontFamily || 'monospace',
+        fontColor: invoiceSettings?.fontColor || '#000000',
+        logo: invoiceSettings?.logo || null,
+        logoHeight: invoiceSettings?.logoHeight || 50,
+        logoAlign: invoiceSettings?.logoAlign || 'center',
         headerMessage: invoiceSettings?.headerMessage || 'Dealer Under Composition Scheme',
         footerMessage: invoiceSettings?.footerMessage || 'Thank you for shopping!',
         columns: invoiceSettings?.columns || { sno: true, item: true, variants: true, rate: true, qty: true, amount: true },
@@ -36,6 +40,28 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
     const handleChange = (e) => {
         const { name, value } = e.target;
         setSettings(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleLogoUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 300;
+                const scaleSize = img.width > MAX_WIDTH ? (MAX_WIDTH / img.width) : 1;
+                canvas.width = img.width * scaleSize;
+                canvas.height = img.height * scaleSize;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                setSettings(prev => ({ ...prev, logo: canvas.toDataURL('image/png') }));
+            };
+        };
     };
 
     const handleColumnToggle = (name) => {
@@ -96,7 +122,7 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
         { id: 'templates', icon: 'auto_awesome_mosaic', label: 'Templates' }
     ];
 
-    const tableBorderStyle = `${settings.tableStyle.borderWidth}px solid #000`;
+    const tableBorderStyle = `${settings.tableStyle.borderWidth}px solid ${settings.fontColor || '#000000'}`;
     const tablePaddingStyle = `${settings.tableStyle.padding}px 3px`;
 
     return (
@@ -152,7 +178,11 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                             <select name="paperSize" value={settings.paperSize} onChange={handleChange}>
                                                 <option value="80mm">Thermal 80mm (Standard POS)</option>
                                                 <option value="58mm">Thermal 58mm (Small POS)</option>
-                                                <option value="A4">A4 Size (Wholesale/Large)</option>
+                                                <option value="100mm">Thermal 100mm (Wide POS/Labels)</option>
+                                                <option value="A5">A5 Size (Medium Book Invoice)</option>
+                                                <option value="A4">A4 Size (Standard Wholesale)</option>
+                                                <option value="Letter">Letter Size (US Standard)</option>
+                                                <option value="Legal">Legal Size (Tall Document)</option>
                                             </select>
                                         </div>
                                         <div className="form-group">
@@ -161,7 +191,72 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                                 <option value="'Courier New', Courier, monospace">Monospace (Classic Receipt)</option>
                                                 <option value="Arial, sans-serif">Sans-Serif (Modern Clean)</option>
                                                 <option value="'Times New Roman', serif">Serif (Traditional)</option>
+                                                <option value="'Inter', sans-serif">Inter (Modern Premium UI)</option>
+                                                <option value="'Manrope', sans-serif">Manrope (Clean Display)</option>
+                                                <option value="'Outfit', sans-serif">Outfit (Geometric Elegance)</option>
+                                                <option value="'Poppins', sans-serif">Poppins (Friendly Rounded)</option>
+                                                <option value="'Montserrat', sans-serif">Montserrat (Sleek Geometric)</option>
+                                                <option value="'Open Sans', sans-serif">Open Sans (Highly Legible)</option>
+                                                <option value="'Roboto Mono', monospace">Roboto Mono (Modern Monospace)</option>
+                                                <option value="'Playfair Display', serif">Playfair Display (Premium Editorial)</option>
+                                                <option value="'Lora', serif">Lora (Classic Elegant Serif)</option>
+                                                <option value="'Ubuntu', sans-serif">Ubuntu (Distinct Modern)</option>
+                                                <option value="'Georgia', serif">Georgia (Editorial Serif)</option>
+                                                <option value="'Trebuchet MS', sans-serif">Trebuchet MS (Geometric)</option>
+                                                <option value="Verdana, sans-serif">Verdana (Wide Sans-Serif)</option>
+                                                <option value="Garamond, serif">Garamond (Elegant Classical)</option>
                                             </select>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label>Invoice Font Color</label>
+                                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                <input 
+                                                    type="color" 
+                                                    name="fontColor" 
+                                                    value={settings.fontColor || '#000000'} 
+                                                    onChange={handleChange} 
+                                                    style={{ width: '50px', height: '40px', padding: '2px', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', cursor: 'pointer' }} 
+                                                />
+                                                <input 
+                                                    type="text" 
+                                                    name="fontColor" 
+                                                    value={settings.fontColor || '#000000'} 
+                                                    onChange={handleChange} 
+                                                    placeholder="#000000" 
+                                                    style={{ flex: 1, fontFamily: 'monospace' }} 
+                                                />
+                                            </div>
+                                            
+                                            {/* Color Presets */}
+                                            <div style={{ display: 'flex', gap: '8px', marginTop: 'var(--spacing-8)', flexWrap: 'wrap' }}>
+                                                {[
+                                                    { name: 'Classic Black', hex: '#000000' },
+                                                    { name: 'Stone Grey', hex: '#27272a' },
+                                                    { name: 'Slate Blue', hex: '#334155' },
+                                                    { name: 'Navy Blue', hex: '#1e3a8a' },
+                                                    { name: 'Deep Blue', hex: '#0f172a' },
+                                                    { name: 'Teal Blue', hex: '#0369a1' },
+                                                    { name: 'Dark Teal', hex: '#0f766e' },
+                                                    { name: 'Burgundy Red', hex: '#5c1800' },
+                                                    { name: 'Crimson Red', hex: '#991b1b' },
+                                                    { name: 'Earthy Rust', hex: '#b45309' },
+                                                    { name: 'Dark Purple', hex: '#581c87' },
+                                                    { name: 'Forest Green', hex: '#14532d' },
+                                                    { name: 'Classic Olive', hex: '#3f6212' },
+                                                    { name: 'Sage Green', hex: '#15803d' }
+                                                ].map(preset => (
+                                                    <button
+                                                        key={preset.hex}
+                                                        type="button"
+                                                        onClick={() => setSettings(prev => ({ ...prev, fontColor: preset.hex }))}
+                                                        style={{
+                                                            width: '24px', height: '24px', borderRadius: '50%', backgroundColor: preset.hex, border: settings.fontColor === preset.hex ? '2px solid var(--primary)' : '1px solid var(--outline-variant)', cursor: 'pointer', outlineOffset: '2px'
+                                                        }}
+                                                        title={preset.name}
+                                                    />
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -174,7 +269,76 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                             <label>Top Tagline / Subtitle</label>
                                             <input type="text" name="headerMessage" value={settings.headerMessage} onChange={handleChange} placeholder="e.g. Dealer Under Composition Scheme" />
                                         </div>
-                                        <div style={{ padding: '12px', backgroundColor: 'var(--surface-container-high)', borderRadius: 'var(--radius-md)', fontSize: '0.85rem', color: 'var(--on-surface-variant)' }}>
+
+                                        <h4 style={{ marginTop: '24px', marginBottom: '12px' }}>Store Logo</h4>
+                                        <div className="form-group" style={{ border: '1px dashed var(--outline-variant)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--surface-container-low)', textAlign: 'center' }}>
+                                            {settings.logo ? (
+                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                                                    <div style={{ padding: '8px', backgroundColor: 'white', borderRadius: 'var(--radius-sm)', border: '1px solid var(--outline-variant)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <img src={settings.logo} alt="Store Logo Preview" style={{ height: '60px', maxWidth: '200px', objectFit: 'contain' }} />
+                                                    </div>
+                                                    <button type="button" className="btn-sm btn-delete" onClick={() => setSettings(prev => ({ ...prev, logo: null }))} style={{ margin: 0, padding: '6px 12px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                        <span className="material-icons" style={{ fontSize: '1rem' }}>delete</span> Remove Logo
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                                                    <span className="material-icons" style={{ fontSize: '2.5rem', color: 'var(--on-surface-variant)', opacity: 0.5 }}>image</span>
+                                                    <label className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', cursor: 'pointer', margin: 0, padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                                        <span className="material-icons" style={{ fontSize: '1.1rem' }}>cloud_upload</span> Choose Logo...
+                                                        <input 
+                                                            type="file" 
+                                                            accept="image/*" 
+                                                            onChange={handleLogoUpload} 
+                                                            style={{ display: 'none' }} 
+                                                        />
+                                                    </label>
+                                                    <span style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)' }}>Supports PNG, JPG, WEBP, SVG</span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {settings.logo && (
+                                            <>
+                                                <div className="form-group" style={{ marginTop: '16px' }}>
+                                                    <label style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>Logo Size (Height) <span>{settings.logoHeight || 50}px</span></label>
+                                                    <input 
+                                                        type="range" 
+                                                        min="20" 
+                                                        max="120" 
+                                                        value={settings.logoHeight || 50} 
+                                                        onChange={(e) => setSettings(prev => ({ ...prev, logoHeight: Number(e.target.value) }))} 
+                                                        style={{ width: '100%', cursor: 'pointer' }} 
+                                                    />
+                                                </div>
+                                                <div className="form-group">
+                                                    <label style={{ fontWeight: 600 }}>Logo Alignment</label>
+                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginTop: '4px' }}>
+                                                        {['left', 'center', 'right'].map(align => (
+                                                            <button
+                                                                key={align}
+                                                                type="button"
+                                                                onClick={() => setSettings(prev => ({ ...prev, logoAlign: align }))}
+                                                                style={{
+                                                                    padding: '8px',
+                                                                    borderRadius: 'var(--radius-md)',
+                                                                    border: '1px solid var(--outline-variant)',
+                                                                    backgroundColor: (settings.logoAlign || 'center') === align ? 'var(--primary)' : 'var(--surface-container-high)',
+                                                                    color: (settings.logoAlign || 'center') === align ? 'white' : 'var(--on-surface)',
+                                                                    cursor: 'pointer',
+                                                                    fontWeight: 500,
+                                                                    textTransform: 'capitalize'
+                                                                }}
+                                                            >
+                                                                {align}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+
+                                        <div style={{ padding: '12px', backgroundColor: 'var(--surface-container-high)', borderRadius: 'var(--radius-md)', fontSize: '0.85rem', color: 'var(--on-surface-variant)', marginTop: '20px' }}>
                                             <span className="material-icons" style={{ fontSize: '1rem', verticalAlign: 'middle', marginRight: '4px' }}>info</span>
                                             Store Name, Address, Phone, and GSTIN are automatically pulled from your User Profile settings.
                                         </div>
@@ -306,18 +470,29 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                         layout
                         style={{ 
                             backgroundColor: '#fff', 
-                            width: settings.paperSize === '58mm' ? '220px' : settings.paperSize === 'A4' ? '100%' : '320px',
-                            maxWidth: settings.paperSize === 'A4' ? '700px' : 'none',
-                            padding: settings.paperSize === 'A4' ? '40px' : '20px', 
+                            width: 
+                                ['A4', 'A5', 'Letter', 'Legal'].includes(settings.paperSize) ? '100%' : 
+                                settings.paperSize === '58mm' ? '220px' : 
+                                settings.paperSize === '100mm' ? '400px' : '320px',
+                            maxWidth: 
+                                settings.paperSize === 'A4' ? '700px' : 
+                                settings.paperSize === 'A5' ? '480px' : 
+                                ['Letter', 'Legal'].includes(settings.paperSize) ? '720px' : 'none',
+                            padding: ['A4', 'A5', 'Letter', 'Legal'].includes(settings.paperSize) ? '40px' : '20px', 
                             boxShadow: '0 10px 25px rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.1)',
                             fontFamily: settings.fontFamily,
-                            color: '#000',
+                            color: settings.fontColor || '#000000',
                             height: 'fit-content',
                             transition: 'width 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
                             borderRadius: '2px'
                         }}
                     >
-                        <div style={{ textAlign: 'center', borderBottom: '1px dashed #000', paddingBottom: '10px', marginBottom: '15px' }}>
+                        <div style={{ textAlign: 'center', borderBottom: `1px dashed ${settings.fontColor || '#000000'}`, paddingBottom: '10px', marginBottom: '15px' }}>
+                            {settings.logo && (
+                                <div style={{ textAlign: settings.logoAlign || 'center', marginBottom: '10px' }}>
+                                    <img src={settings.logo} alt="Store Logo" style={{ height: `${settings.logoHeight || 50}px`, objectFit: 'contain' }} />
+                                </div>
+                            )}
                             {userProfile.gstNumber && <div style={{ fontSize: '10px', textAlign: 'left' }}>GSTIN: {userProfile.gstNumber}</div>}
                             <div style={{ fontSize: '12px', fontWeight: 'bold' }}>{settings.headerMessage || ' '}</div>
                             <h2 style={{ margin: '8px 0', fontSize: '22px' }}>{userProfile.name || 'STORE NAME'}</h2>
@@ -327,7 +502,7 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
 
                         {/* Render Custom Fields */}
                         {settings.customFields.length > 0 && (
-                            <div style={{ marginBottom: '15px', borderBottom: '1px dashed #ccc', paddingBottom: '10px' }}>
+                            <div style={{ marginBottom: '15px', borderBottom: `1px dashed ${settings.fontColor || '#000000'}`, paddingBottom: '10px' }}>
                                 {settings.customFields.map(field => (
                                     <div key={field.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: `${settings.tableStyle.fontSize}px`, margin: '4px 0' }}>
                                         <span>{field.label || 'Label'}:</span>
@@ -353,7 +528,7 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                     {settings.columns.sno && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>1</td>}
                                     <td style={{ padding: tablePaddingStyle, borderBottom: tableBorderStyle }}>
                                         Premium Shirt
-                                        {settings.columns.variants && <><br/><span style={{ fontSize: '0.85em', color: '#555' }}>Navy Blue / XL</span></>}
+                                        {settings.columns.variants && <><br/><span style={{ fontSize: '0.85em', opacity: 0.7 }}>Navy Blue / XL</span></>}
                                     </td>
                                     {settings.columns.qty && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>2</td>}
                                     {settings.columns.rate && <td style={{ padding: tablePaddingStyle, textAlign: 'right', borderBottom: tableBorderStyle }}>₹800</td>}
@@ -363,7 +538,7 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                     {settings.columns.sno && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>2</td>}
                                     <td style={{ padding: tablePaddingStyle, borderBottom: tableBorderStyle }}>
                                         Denim Jeans
-                                        {settings.columns.variants && <><br/><span style={{ fontSize: '0.85em', color: '#555' }}>Black / 32</span></>}
+                                        {settings.columns.variants && <><br/><span style={{ fontSize: '0.85em', opacity: 0.7 }}>Black / 32</span></>}
                                     </td>
                                     {settings.columns.qty && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>1</td>}
                                     {settings.columns.rate && <td style={{ padding: tablePaddingStyle, textAlign: 'right', borderBottom: tableBorderStyle }}>₹1200</td>}

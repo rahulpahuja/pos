@@ -16,6 +16,7 @@ import InvoicesTab from './views/InvoicesTab'; // Added Import
 import SalesLedger from './views/SalesLedger';
 import UserProfile from './views/UserProfile';
 import PartiesTab from './views/PartiesTab';
+import CashbookTab from './views/CashbookTab';
 
 const tabVariants = {
     initial: { opacity: 0, y: 10 },
@@ -57,6 +58,11 @@ const getInitialParties = () => {
     return saved ? JSON.parse(saved) : [];
 };
 
+const getInitialExpenses = () => {
+    const saved = localStorage.getItem('M1x_Expenses');
+    return saved ? JSON.parse(saved) : [];
+};
+
 const getInitialReferrers = () => {
     const saved = localStorage.getItem('M1x_Referrers');
     return saved ? JSON.parse(saved) : [];
@@ -66,6 +72,11 @@ const getInitialInvoiceSettings = () => {
     const saved = localStorage.getItem('M1x_InvoiceSettings');
     return saved ? JSON.parse(saved) : {
         paperSize: '80mm',
+        fontFamily: 'monospace',
+        fontColor: '#000000',
+        logo: null,
+        logoHeight: 50,
+        logoAlign: 'center',
         headerMessage: 'Dealer Under Composition Scheme',
         footerMessage: 'Thank you for shopping with us!\nNo Exchange • No Refund',
         columns: { sno: true, item: true, variants: true, rate: true, qty: true, amount: true },
@@ -88,6 +99,7 @@ export default function App() {
     const [referrers, setReferrers] = useState(getInitialReferrers);
     const [invoiceSettings, setInvoiceSettings] = useState(getInitialInvoiceSettings);
     const [parties, setParties] = useState(getInitialParties);
+    const [expenses, setExpenses] = useState(getInitialExpenses);
 
     // Theme Effect
     useEffect(() => {
@@ -105,8 +117,9 @@ export default function App() {
             localStorage.setItem('M1x_Customers', JSON.stringify(customers));
             localStorage.setItem('M1x_InvoiceSettings', JSON.stringify(invoiceSettings));
             localStorage.setItem('M1x_Parties', JSON.stringify(parties));
+            localStorage.setItem('M1x_Expenses', JSON.stringify(expenses));
         } catch (e) { if (e.name === 'QuotaExceededError') alert("ERROR: Local storage full!"); }
-    }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings, parties]);
+    }, [catalog, salesLedger, userProfile, referrers, customers, invoiceSettings, parties, expenses]);
 
     const confirmLogout = () => {
         if (window.confirm("Are you sure you want to log out?")) {
@@ -180,6 +193,7 @@ export default function App() {
                     {currentTab === 'referrers' && <ReferrersTab referrers={referrers} setReferrers={setReferrers} />}
                     {currentTab === 'customers' && <CustomersTab customers={customers} setCustomers={setCustomers} />}
                     {currentTab === 'parties' && <PartiesTab parties={parties} setParties={setParties} salesLedger={salesLedger} />}
+                    {currentTab === 'cashbook' && <CashbookTab expenses={expenses} setExpenses={setExpenses} salesLedger={salesLedger} parties={parties} />}
                     {currentTab === 'invoices' && <InvoicesTab salesLedger={salesLedger} />}
                     {currentTab === 'salesanalytics' && <SalesAnalytics salesLedger={salesLedger} />}
                     {currentTab === 'ledger' && <SalesLedger salesLedger={salesLedger} />}

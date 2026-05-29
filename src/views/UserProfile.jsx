@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger, parties = [], setParties }) {
+export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger, parties = [], setParties, expenses = [], setExpenses }) {
     const [dirHandle, setDirHandle] = useState(null);
 
     const handleProfileSubmit = (e) => {
@@ -41,6 +41,7 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                 if (type === 'products') setCatalog(parsed);
                 if (type === 'sales') setSalesLedger(parsed);
                 if (type === 'parties') setParties(parsed);
+                if (type === 'expenses') setExpenses(parsed);
                 alert(`${type.charAt(0).toUpperCase() + type.slice(1)} JSON loaded successfully!`);
             } catch (error) {
                 alert(`Error parsing ${type} JSON. Please ensure it is a valid file.`);
@@ -141,6 +142,15 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                             </button>
                             <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Parties JSON:</label>
                             <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'parties')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
+                        </div>
+
+                        <div style={{ padding: 'var(--spacing-12)', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)' }}>
+                            <h5 style={{ margin: '0 0 var(--spacing-8) 0', color: 'var(--on-surface)' }}>Expenses Database</h5>
+                            <button type="button" onClick={() => exportToJson(expenses, 'm1x_expenses.json')} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', marginBottom: '12px', width: '100%', padding: 'var(--spacing-8)' }}>
+                                Download Expenses (JSON)
+                            </button>
+                            <label style={{ fontSize: '0.75rem', color: 'var(--on-surface-variant)', display: 'block', marginBottom: '4px' }}>Import Expenses JSON:</label>
+                            <input type="file" accept=".json" onChange={(e) => handleFileUpload(e, 'expenses')} style={{ fontSize: '0.75rem', padding: 'var(--spacing-4)', backgroundColor: 'transparent', border: 'none' }} />
                         </div>
                     </div>
                 </div>
