@@ -278,7 +278,7 @@ export default function App() {
             <AnimatePresence mode="wait">
                 <motion.div key={currentTab} variants={tabVariants} initial="initial" animate="animate" exit="exit">
                     {/* Routing Logic */}
-                    {currentTab === 'grid' && <ProductCatalog catalog={catalog} labelSettings={labelSettings} />}
+                    {currentTab === 'grid' && <ProductCatalog catalog={catalog} labelSettings={labelSettings} setCurrentTab={setCurrentTab} />}
                     {currentTab === 'pos' && <PointOfSale catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} setCustomers={setCustomers} referrers={referrers} userProfile={userProfile} invoiceSettings={invoiceSettings} parties={parties} setParties={setParties} />}
                     {currentTab === 'modifier' && <OrderModifier salesLedger={salesLedger} setSalesLedger={setSalesLedger} catalog={catalog} setCatalog={setCatalog} parties={parties} setParties={setParties} />}
                     {currentTab === 'admin' && <InventoryManager catalog={catalog} setCatalog={setCatalog} userProfile={userProfile} parties={parties} />}

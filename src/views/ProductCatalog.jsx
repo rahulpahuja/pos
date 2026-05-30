@@ -24,7 +24,7 @@ const ProductCardImage = ({ src, alt }) => {
 const cardContainerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.05 } } };
 const cardVariants = { hidden: { opacity: 0, y: 16, scale: 0.97 }, visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.22 } } };
 
-export default function ProductCatalog({ catalog, labelSettings }) {
+export default function ProductCatalog({ catalog, labelSettings, setCurrentTab }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSizes, setSelectedSizes] = useState({});
     const [catalogViewMode, setCatalogViewMode] = useState('grid');
@@ -250,6 +250,20 @@ export default function ProductCatalog({ catalog, labelSettings }) {
 
     return (
         <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--spacing-24)', flexWrap: 'wrap', gap: 'var(--spacing-12)' }}>
+                <h2 style={{ margin: 0, color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="material-icons">inventory</span> Product Catalog
+                </h2>
+                {setCurrentTab && (
+                    <button 
+                        onClick={() => setCurrentTab('admin')} 
+                        className="action-btn" 
+                        style={{ margin: 0, width: 'auto', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px var(--spacing-20)' }}
+                    >
+                        <span className="material-icons">add</span> Add Product
+                    </button>
+                )}
+            </div>
             <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-8)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="material-icons">search</span> Search Products
             </h4>
