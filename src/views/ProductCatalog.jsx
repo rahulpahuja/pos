@@ -27,6 +27,7 @@ const cardVariants = { hidden: { opacity: 0, y: 16, scale: 0.97 }, visible: { op
 export default function ProductCatalog({ catalog, labelSettings }) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedSizes, setSelectedSizes] = useState({});
+    const [catalogViewMode, setCatalogViewMode] = useState('grid');
     
     // Filtering States
     const [categoryFilter, setCategoryFilter] = useState('All');
@@ -55,7 +56,7 @@ export default function ProductCatalog({ catalog, labelSettings }) {
         // 1. Search Query Filter
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            const matchesRoot = p.id.toLowerCase().includes(query) || p.name.toLowerCase().includes(query);
+            const matchesRoot = p.id.toLowerCase().includes(query) || p.name.toLowerCase().includes(query) || (p.hsnCode && p.hsnCode.toLowerCase().includes(query)) || (p.brand && p.brand.toLowerCase().includes(query)) || (p.supplierName && p.supplierName.toLowerCase().includes(query));
             const matchesVariant = p.variants && p.variants.some(v => 
                 (v.colorName && v.colorName.toLowerCase().includes(query)) ||
                 (v.barcode && v.barcode.toLowerCase().includes(query))
@@ -252,16 +253,55 @@ export default function ProductCatalog({ catalog, labelSettings }) {
             <h4 style={{ color: 'var(--secondary)', marginTop: 0, marginBottom: 'var(--spacing-8)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span className="material-icons">search</span> Search Products
             </h4>
-            <div style={{ position: 'relative', width: '100%', marginBottom: 'var(--spacing-24)' }}>
-                <input 
-                    type="text" 
-                    className="search-bar" 
-                    placeholder="Search by Product Name, ID, or Color..." 
-                    value={searchQuery} 
-                    onChange={(e) => setSearchQuery(e.target.value)} 
-                    style={{ margin: 0, paddingLeft: '48px' }}
-                />
-                <span className="material-icons" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)', pointerEvents: 'none' }}>search</span>
+            <div style={{ display: 'flex', gap: 'var(--spacing-16)', alignItems: 'center', marginBottom: 'var(--spacing-24)', flexWrap: 'wrap' }}>
+                <div style={{ position: 'relative', flex: 1, minWidth: '250px' }}>
+                    <input 
+                        type="text" 
+                        className="search-bar" 
+                        placeholder="Search by Product Name, ID, HSN or Color..." 
+                        value={searchQuery} 
+                        onChange={(e) => setSearchQuery(e.target.value)} 
+                        style={{ margin: 0, paddingLeft: '48px' }}
+                    />
+                    <span className="material-icons" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--on-surface-variant)', pointerEvents: 'none' }}>search</span>
+                </div>
+                
+                <div style={{ display: 'flex', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', overflow: 'hidden', height: '48px' }}>
+                    <button 
+                        onClick={() => setCatalogViewMode('grid')}
+                        style={{ 
+                            padding: '0 var(--spacing-16)', 
+                            backgroundColor: catalogViewMode === 'grid' ? 'var(--primary)' : 'var(--surface-container-low)', 
+                            color: catalogViewMode === 'grid' ? 'white' : 'var(--on-surface)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            fontWeight: '600',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        <span className="material-icons" style={{ fontSize: '18px' }}>grid_view</span> Grid
+                    </button>
+                    <button 
+                        onClick={() => setCatalogViewMode('table')}
+                        style={{ 
+                            padding: '0 var(--spacing-16)', 
+                            backgroundColor: catalogViewMode === 'table' ? 'var(--primary)' : 'var(--surface-container-low)', 
+                            color: catalogViewMode === 'table' ? 'white' : 'var(--on-surface)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            fontWeight: '600',
+                            transition: 'all 0.2s'
+                        }}
+                    >
+                        <span className="material-icons" style={{ fontSize: '18px' }}>view_list</span> Table
+                    </button>
+                </div>
             </div>
 
             <div 
@@ -428,112 +468,260 @@ export default function ProductCatalog({ catalog, labelSettings }) {
                     <div key={category} className="category-section">
                         <h2 className="category-title">{category}</h2>
                         
-                        <motion.div className="grid-container" variants={cardContainerVariants} initial="hidden" animate="visible">
-                            {groupedCatalog[category].map(item => {
-                                const hasVariants = item.variants && item.variants.length > 0;
-                                const uniqueSizesArray = hasVariants ? [...new Set(item.variants.map(v => v.size))] : (item.size ? [item.size] : []);
-                                
-                                // Determine the currently active size for this specific product card (Defaults to 'All')
-                                const currentSelectedSize = selectedSizes[item.id] || 'All';
-                                
-                                // Calculate Dynamic Stock based on selection
-                                let displayStock = 0;
-                                if (!hasVariants) {
-                                    displayStock = Number(item.stockQty) || 0;
-                                } else if (currentSelectedSize === 'All') {
-                                    displayStock = item.variants.reduce((sum, v) => sum + (Number(v.stockQty) || 0), 0);
-                                } else {
-                                    displayStock = item.variants
-                                        .filter(v => v.size === currentSelectedSize)
-                                        .reduce((sum, v) => sum + (Number(v.stockQty) || 0), 0);
-                                }
+                        {catalogViewMode === 'grid' ? (
+                            <motion.div className="grid-container" variants={cardContainerVariants} initial="hidden" animate="visible">
+                                {groupedCatalog[category].map(item => {
+                                    const hasVariants = item.variants && item.variants.length > 0;
+                                    const uniqueSizesArray = hasVariants ? [...new Set(item.variants.map(v => v.size))] : (item.size ? [item.size] : []);
+                                    
+                                    // Determine the currently active size for this specific product card (Defaults to 'All')
+                                    const currentSelectedSize = selectedSizes[item.id] || 'All';
+                                    
+                                    // Calculate Dynamic Stock based on selection
+                                    let displayStock = 0;
+                                    if (!hasVariants) {
+                                        displayStock = Number(item.stockQty) || 0;
+                                    } else if (currentSelectedSize === 'All') {
+                                        displayStock = item.variants.reduce((sum, v) => sum + (Number(v.stockQty) || 0), 0);
+                                    } else {
+                                        displayStock = item.variants
+                                            .filter(v => v.size === currentSelectedSize)
+                                            .reduce((sum, v) => sum + (Number(v.stockQty) || 0), 0);
+                                    }
 
-                                // Calculate Dynamic Colors based on selection
-                                let displayColors = '';
-                                if (!hasVariants) {
-                                    displayColors = item.colorName || 'N/A';
-                                } else if (currentSelectedSize === 'All') {
-                                    displayColors = [...new Set(item.variants.map(v => v.colorName))].join(', ');
-                                } else {
-                                    displayColors = [...new Set(item.variants.filter(v => v.size === currentSelectedSize).map(v => v.colorName))].join(', ');
-                                }
-                                if (!displayColors) displayColors = 'None';
+                                    // Calculate Dynamic Colors based on selection
+                                    let displayColors = '';
+                                    if (!hasVariants) {
+                                        displayColors = item.colorName || 'N/A';
+                                    } else if (currentSelectedSize === 'All') {
+                                        displayColors = [...new Set(item.variants.map(v => v.colorName))].join(', ');
+                                    } else {
+                                        displayColors = [...new Set(item.variants.filter(v => v.size === currentSelectedSize).map(v => v.colorName))].join(', ');
+                                    }
+                                    if (!displayColors) displayColors = 'None';
 
-                                const sizesTextForPrint = currentSelectedSize === 'All' ? uniqueSizesArray.join(', ') : currentSelectedSize;
+                                    const sizesTextForPrint = currentSelectedSize === 'All' ? uniqueSizesArray.join(', ') : currentSelectedSize;
 
-                                return (
-                                    <motion.div key={item.id} className="product-card" variants={cardVariants} whileTap={{ scale: 0.98 }}>
-                                        <div>
-                                            <ProductCardImage src={item.images && item.images[0]} alt={item.name} />
-                                            <h4>{item.name}</h4>
-                                            <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-8)' }}>{item.id}</div>
-                                            
-                                            {/* Interactive Size Badges */}
-                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '8px' }}>
-                                                {uniqueSizesArray.length > 0 ? (
-                                                    <>
-                                                        <span 
-                                                            onClick={() => handleSizeClick(item.id, 'All')}
-                                                            className="size-badge" 
-                                                            style={{ 
-                                                                cursor: 'pointer', 
-                                                                backgroundColor: currentSelectedSize === 'All' ? 'var(--primary)' : 'var(--secondary-container)',
-                                                                color: currentSelectedSize === 'All' ? 'white' : 'var(--on-secondary-container)'
-                                                            }}
-                                                        >
-                                                            All
-                                                        </span>
-                                                        {uniqueSizesArray.map(s => (
+                                    return (
+                                        <motion.div key={item.id} className="product-card" variants={cardVariants} whileTap={{ scale: 0.98 }}>
+                                            <div>
+                                                <ProductCardImage src={item.images && item.images[0]} alt={item.name} />
+                                                 <div style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px', display: 'flex', justifyContent: 'space-between' }}>
+                                                     <span>{item.brand || 'Generic'}</span>
+                                                     <span style={{ color: 'var(--on-surface-variant)', textTransform: 'none', fontWeight: '500', fontSize: '0.7rem' }}>Supplier: {item.supplierName || 'Generic'}</span>
+                                                 </div>
+                                                <h4>{item.name}</h4>
+                                                <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-8)' }}>{item.id}{item.hsnCode ? ` | HSN: ${item.hsnCode}` : ''}</div>
+                                                
+                                                {/* Interactive Size Badges */}
+                                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '8px' }}>
+                                                    {uniqueSizesArray.length > 0 ? (
+                                                        <>
                                                             <span 
-                                                                key={s} 
-                                                                onClick={() => handleSizeClick(item.id, s)}
-                                                                className="size-badge"
+                                                                onClick={() => handleSizeClick(item.id, 'All')}
+                                                                className="size-badge" 
                                                                 style={{ 
                                                                     cursor: 'pointer', 
-                                                                    backgroundColor: currentSelectedSize === s ? 'var(--primary)' : 'var(--secondary-container)',
-                                                                    color: currentSelectedSize === s ? 'white' : 'var(--on-secondary-container)'
+                                                                    backgroundColor: currentSelectedSize === 'All' ? 'var(--primary)' : 'var(--secondary-container)',
+                                                                    color: currentSelectedSize === 'All' ? 'white' : 'var(--on-secondary-container)'
                                                                 }}
                                                             >
-                                                                {s}
+                                                                All
                                                             </span>
-                                                        ))}
-                                                    </>
-                                                ) : (
-                                                    <span className="size-badge">N/A</span>
-                                                )}
+                                                            {uniqueSizesArray.map(s => (
+                                                                <span 
+                                                                    key={s} 
+                                                                    onClick={() => handleSizeClick(item.id, s)}
+                                                                    className="size-badge"
+                                                                    style={{ 
+                                                                        cursor: 'pointer', 
+                                                                        backgroundColor: currentSelectedSize === s ? 'var(--primary)' : 'var(--secondary-container)',
+                                                                        color: currentSelectedSize === s ? 'white' : 'var(--on-secondary-container)'
+                                                                    }}
+                                                                >
+                                                                    {s}
+                                                                </span>
+                                                            ))}
+                                                        </>
+                                                    ) : (
+                                                        <span className="size-badge">N/A</span>
+                                                    )}
+                                                </div>
+                                                
+                                                <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)' }}>
+                                                    Colors: <span style={{ fontWeight: 500 }}>{displayColors}</span>
+                                                </div>
+                                                <div style={{ fontSize: '0.825rem', color: 'var(--on-surface-variant)', marginTop: '4px' }}>
+                                                    Type: <span style={{ fontWeight: 500 }}>{item.itemType || 'Goods'}</span> | Subcat: <span style={{ fontWeight: 500 }}>{item.subCategory || 'Other'}{item.subCategoryPattern && item.subCategoryPattern !== 'default' ? ` (${item.subCategoryPattern})` : ''}</span>
+                                                </div>
+                                                <div style={{ fontSize: '0.825rem', color: 'var(--on-surface-variant)', marginTop: '4px' }}>
+                                                    Tax: <span style={{ fontWeight: 500, color: item.gstType === 'GST' ? 'var(--primary)' : 'var(--on-surface-variant)' }}>{item.gstType === 'GST' ? `GST @ ${item.gstRate || 0}% (CGST ${(item.gstRate || 0)/2}%, SGST ${(item.gstRate || 0)/2}%)` : 'Non-GST'}</span>
+                                                </div>
+                                                
+                                                {/* Dynamic Stock Display */}
+                                                <div style={{ 
+                                                    fontSize: '0.875rem', 
+                                                    color: displayStock <= 2 ? 'var(--error)' : 'var(--success)', 
+                                                    fontWeight: '600', 
+                                                    marginTop: 'var(--spacing-8)', 
+                                                    display: 'inline-block', 
+                                                    backgroundColor: displayStock <= 2 ? 'var(--error-container)' : 'var(--success-container)', 
+                                                    padding: 'var(--spacing-4) var(--spacing-8)', 
+                                                    borderRadius: 'var(--radius-full)' 
+                                                }}>
+                                                    {currentSelectedSize === 'All' ? 'Total Stock: ' : `${currentSelectedSize} Stock: `} {displayStock}
+                                                </div>
                                             </div>
+                                            <div>
+                                                <div className="prices">
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <span style={{ color: 'var(--on-surface-variant)', textDecoration: 'line-through' }}>Cost: ₹{item.costPrice}</span>
+                                                        <strong style={{ color: 'var(--primary)' }}>MRP: ₹{item.sellPrice}</strong>
+                                                    </div>
+                                                    <div style={{ fontSize: '0.8rem', color: 'var(--success)', fontWeight: 'bold', marginTop: '4px', textAlign: 'center' }}>
+                                                        Profit Margin: {item.profitMargin ? `${item.profitMargin}%` : `${item.costPrice ? Math.round(((item.sellPrice - item.costPrice) / item.costPrice) * 100) : 0}%`}
+                                                    </div>
+                                                </div>
+                                                <button onClick={() => printLabel(item, sizesTextForPrint)} className="action-btn" style={{ backgroundColor: 'var(--success)', color: 'white' }}>
+                                                    <span className="material-icons">print</span> Print Label
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </motion.div>
+                        ) : (
+                            <div style={{ overflowX: 'auto', marginTop: 'var(--spacing-16)' }}>
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product ID</th>
+                                             <th>Brand</th>
+                                             <th>Supplier</th>
+                                             <th>Name</th>
+                                            <th>Subcategory</th>
+                                            <th>Item Type</th>
+                                            <th>HSN Code</th>
+                                            <th>GST Rate</th>
+                                            <th>Gender</th>
+                                            <th>Cost Price</th>
+                                            <th>Sell Price</th>
+                                            <th>Profit Margin</th>
+                                            <th>Size Selector</th>
+                                            <th>Stock Count</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {groupedCatalog[category].map(item => {
+                                            const hasVariants = item.variants && item.variants.length > 0;
+                                            const uniqueSizesArray = hasVariants ? [...new Set(item.variants.map(v => v.size))] : (item.size ? [item.size] : []);
+                                            const currentSelectedSize = selectedSizes[item.id] || 'All';
                                             
-                                            <div style={{ fontSize: '0.875rem', color: 'var(--on-surface-variant)' }}>
-                                                Colors: <span style={{ fontWeight: 500 }}>{displayColors}</span>
-                                            </div>
-                                            
-                                            {/* Dynamic Stock Display */}
-                                            <div style={{ 
-                                                fontSize: '0.875rem', 
-                                                color: displayStock <= 2 ? 'var(--error)' : 'var(--success)', 
-                                                fontWeight: '600', 
-                                                marginTop: 'var(--spacing-8)', 
-                                                display: 'inline-block', 
-                                                backgroundColor: displayStock <= 2 ? 'var(--error-container)' : 'var(--success-container)', 
-                                                padding: 'var(--spacing-4) var(--spacing-8)', 
-                                                borderRadius: 'var(--radius-full)' 
-                                            }}>
-                                                {currentSelectedSize === 'All' ? 'Total Stock: ' : `${currentSelectedSize} Stock: `} {displayStock}
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="prices">
-                                                <span style={{ color: 'var(--on-surface-variant)', textDecoration: 'line-through', marginRight: 'var(--spacing-8)' }}>Cost: ₹{item.costPrice}</span>
-                                                <strong style={{ color: 'var(--primary)' }}>MRP: ₹{item.sellPrice}</strong>
-                                            </div>
-                                            <button onClick={() => printLabel(item, sizesTextForPrint)} className="action-btn" style={{ backgroundColor: 'var(--success)', color: 'white' }}>
-                                                <span className="material-icons">print</span> Print Label
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
-                        </motion.div>
+                                            let displayStock = 0;
+                                            if (!hasVariants) {
+                                                displayStock = Number(item.stockQty) || 0;
+                                            } else if (currentSelectedSize === 'All') {
+                                                displayStock = item.variants.reduce((sum, v) => sum + (Number(v.stockQty) || 0), 0);
+                                            } else {
+                                                displayStock = item.variants
+                                                    .filter(v => v.size === currentSelectedSize)
+                                                    .reduce((sum, v) => sum + (Number(v.stockQty) || 0), 0);
+                                            }
+
+                                            const sizesTextForPrint = currentSelectedSize === 'All' ? uniqueSizesArray.join(', ') : currentSelectedSize;
+
+                                            return (
+                                                <tr key={item.id} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
+                                                    <td style={{ fontWeight: 'bold', fontFamily: 'monospace' }}>{item.id}</td>
+                                                     <td style={{ fontWeight: '600' }}>{item.brand || 'Generic'}</td>
+                                                     <td>{item.supplierName || 'Generic'}</td>
+                                                     <td>{item.name}</td>
+                                                    <td>{item.subCategory || '-'}{item.subCategoryPattern && item.subCategoryPattern !== 'default' ? ` (${item.subCategoryPattern})` : ''}</td>
+                                                    <td>{item.itemType || '-'}</td>
+                                                    <td>{item.hsnCode || '-'}</td>
+                                                    <td>{item.gstType === 'GST' ? `${item.gstRate}% (CGST ${item.cgstRate}%, SGST ${item.sgstRate}%)` : 'Non-GST'}</td>
+                                                    <td>{item.gender || 'Unisex'}</td>
+                                                    <td>₹{item.costPrice}</td>
+                                                    <td style={{ fontWeight: 'bold' }}>₹{item.sellPrice}</td>
+                                                    <td style={{ color: 'var(--success)', fontWeight: 'bold' }}>
+                                                        {item.profitMargin ? `${item.profitMargin}%` : `${item.costPrice ? Math.round(((item.sellPrice - item.costPrice) / item.costPrice) * 100) : 0}%`}
+                                                    </td>
+                                                    <td>
+                                                        <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                                                            {uniqueSizesArray.length > 0 ? (
+                                                                <>
+                                                                    <span 
+                                                                        onClick={() => handleSizeClick(item.id, 'All')}
+                                                                        className="size-badge" 
+                                                                        style={{ 
+                                                                            cursor: 'pointer', 
+                                                                            backgroundColor: currentSelectedSize === 'All' ? 'var(--primary)' : 'var(--secondary-container)',
+                                                                            color: currentSelectedSize === 'All' ? 'white' : 'var(--on-secondary-container)',
+                                                                            padding: '4px 8px',
+                                                                            fontSize: '0.75rem',
+                                                                            borderRadius: '4px'
+                                                                        }}
+                                                                    >
+                                                                        All
+                                                                    </span>
+                                                                    {uniqueSizesArray.map(s => (
+                                                                        <span 
+                                                                            key={s} 
+                                                                            onClick={() => handleSizeClick(item.id, s)}
+                                                                            className="size-badge"
+                                                                            style={{ 
+                                                                                cursor: 'pointer', 
+                                                                                backgroundColor: currentSelectedSize === s ? 'var(--primary)' : 'var(--secondary-container)',
+                                                                                color: currentSelectedSize === s ? 'white' : 'var(--on-secondary-container)',
+                                                                                padding: '4px 8px',
+                                                                                fontSize: '0.75rem',
+                                                                                borderRadius: '4px'
+                                                                            }}
+                                                                        >
+                                                                            {s}
+                                                                        </span>
+                                                                    ))}
+                                                                </>
+                                                            ) : (
+                                                                <span className="size-badge" style={{ padding: '4px 8px', fontSize: '0.75rem', borderRadius: '4px' }}>N/A</span>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ fontWeight: '600', color: displayStock <= 2 ? 'var(--error)' : 'var(--success)' }}>
+                                                        {displayStock}
+                                                    </td>
+                                                    <td>
+                                                        <button 
+                                                            onClick={() => printLabel(item, sizesTextForPrint)} 
+                                                            className="action-btn" 
+                                                            title="Print Label"
+                                                            style={{ 
+                                                                backgroundColor: 'var(--success)', 
+                                                                color: 'white',
+                                                                height: '32px',
+                                                                padding: '0 12px',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                gap: '4px',
+                                                                borderRadius: 'var(--radius-md)',
+                                                                border: 'none',
+                                                                cursor: 'pointer',
+                                                                margin: 0,
+                                                                fontSize: '0.85rem'
+                                                            }}
+                                                        >
+                                                            <span className="material-icons" style={{ fontSize: '16px' }}>print</span> Print
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
                 ))
             )}

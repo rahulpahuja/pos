@@ -84,6 +84,14 @@ export const getRahulDummyData = () => {
         { name: 'Felt Desk Organizer Mat', category: 'Home & Living', costPrice: 450, sellPrice: 990, img: 'photo-1585776245991-cf89dd7fc73a', gender: 'Unisex' }
     ];
 
+    const hsnCodes = {
+        'Apparel': '6109',
+        'Footwear': '6403',
+        'Accessories': '4202',
+        'Electronics': '8518',
+        'Home & Living': '6911'
+    };
+
     // Generate rich variants programmatically
     const catalogData = productTemplates.map((tmpl, idx) => {
         const prodIndex = idx + 1; // 1-indexed for barcodes
@@ -122,6 +130,26 @@ export const getRahulDummyData = () => {
             });
         });
 
+        const profitMargin = tmpl.costPrice > 0 ? Math.round(((tmpl.sellPrice - tmpl.costPrice) / tmpl.costPrice) * 10000) / 100 : 0;
+        
+        let subCategoryVal = 'Utilities';
+        if (tmpl.category === 'Apparel') subCategoryVal = 'Shirts';
+        else if (tmpl.category === 'Footwear') subCategoryVal = 'Shoes';
+        else if (tmpl.category === 'Electronics') subCategoryVal = 'Electronics';
+        else if (tmpl.category === 'Accessories') subCategoryVal = 'Jeans'; // Maps apparel/accessories to Jeans for seeding
+
+        const brands = {
+            'Apparel': 'M1x Apparel',
+            'Footwear': 'AeroWalk',
+            'Accessories': 'Apex Leather',
+            'Electronics': 'GizmoPro',
+            'Home & Living': 'CasaDecor'
+        };
+
+        const isTaxable = tmpl.category === 'Apparel' || tmpl.category === 'Electronics';
+        const gstType = isTaxable ? 'GST' : 'Non-GST';
+        const gstRate = isTaxable ? 18 : 0;
+
         return {
             id: `M1X-${tmpl.category.slice(0,3).toUpperCase()}-${100 + prodIndex}`,
             name: tmpl.name,
@@ -130,7 +158,18 @@ export const getRahulDummyData = () => {
             costPrice: tmpl.costPrice,
             sellPrice: tmpl.sellPrice,
             images: [`https://images.unsplash.com/${tmpl.img}?auto=format&fit=crop&w=300&q=80`],
-            variants
+            variants,
+            hsnCode: hsnCodes[tmpl.category] || '9900',
+            profitMargin,
+            itemType: 'Goods',
+            subCategory: subCategoryVal,
+            brand: brands[tmpl.category] || 'Generic',
+            subCategoryPattern: 'default',
+            supplierName: 'Generic',
+            gstType,
+            gstRate,
+            cgstRate: gstRate / 2,
+            sgstRate: gstRate / 2
         };
     });
 
@@ -158,7 +197,7 @@ export const getRahulDummyData = () => {
             invoiceNo: 'INV-500101',
             date: threeDaysAgo,
             items: [
-                { id: 'M1X-APP-102', name: 'Oversized Vintage Hoodie', barcode: '10021', size: 'M', colorName: 'Navy Blue', qty: 1, sellPrice: 1800 }
+                { id: 'M1X-APP-102', name: 'Oversized Vintage Hoodie', barcode: '10021', size: 'M', colorName: 'Navy Blue', qty: 1, sellPrice: 1800, hsnCode: '6109' }
             ],
             subtotal: 1800,
             discountPercentage: 10,
@@ -175,8 +214,8 @@ export const getRahulDummyData = () => {
             invoiceNo: 'INV-500102',
             date: twoDaysAgo,
             items: [
-                { id: 'M1X-FOO-116', name: 'Runner Pro Sneakers', barcode: '10162', size: '9', colorName: 'Carbon Black', qty: 1, sellPrice: 2400 },
-                { id: 'M1X-APP-101', name: 'Slim Fit Cotton Chinos', barcode: '10012', size: '32', colorName: 'Olive Green', qty: 1, sellPrice: 1200 }
+                { id: 'M1X-FOO-116', name: 'Runner Pro Sneakers', barcode: '10162', size: '9', colorName: 'Carbon Black', qty: 1, sellPrice: 2400, hsnCode: '6403' },
+                { id: 'M1X-APP-101', name: 'Slim Fit Cotton Chinos', barcode: '10012', size: '32', colorName: 'Olive Green', qty: 1, sellPrice: 1200, hsnCode: '6109' }
             ],
             subtotal: 3600,
             discountPercentage: 0,
@@ -193,7 +232,7 @@ export const getRahulDummyData = () => {
             invoiceNo: 'INV-500103',
             date: yesterday,
             items: [
-                { id: 'M1X-ELE-136', name: 'Wireless ANC Earbuds', barcode: '10361', size: 'Standard', colorName: 'Matte Black', qty: 1, sellPrice: 3500 }
+                { id: 'M1X-ELE-136', name: 'Wireless ANC Earbuds', barcode: '10361', size: 'Standard', colorName: 'Matte Black', qty: 1, sellPrice: 3500, hsnCode: '8518' }
             ],
             subtotal: 3500,
             discountPercentage: 0,
@@ -210,8 +249,8 @@ export const getRahulDummyData = () => {
             invoiceNo: 'INV-500104',
             date: todayMorning,
             items: [
-                { id: 'M1X-APP-102', name: 'Oversized Vintage Hoodie', barcode: '10023', size: 'XL', colorName: 'Navy Blue', qty: 1, sellPrice: 1800 },
-                { id: 'M1X-APP-101', name: 'Slim Fit Cotton Chinos', barcode: '10011', size: '30', colorName: 'Olive Green', qty: 1, sellPrice: 1200 }
+                { id: 'M1X-APP-102', name: 'Oversized Vintage Hoodie', barcode: '10023', size: 'XL', colorName: 'Navy Blue', qty: 1, sellPrice: 1800, hsnCode: '6109' },
+                { id: 'M1X-APP-101', name: 'Slim Fit Cotton Chinos', barcode: '10011', size: '30', colorName: 'Olive Green', qty: 1, sellPrice: 1200, hsnCode: '6109' }
             ],
             subtotal: 3000,
             discountPercentage: 5,
@@ -228,7 +267,7 @@ export const getRahulDummyData = () => {
             invoiceNo: 'INV-500105',
             date: todayNow,
             items: [
-                { id: 'M1X-APP-101', name: 'Slim Fit Cotton Chinos', barcode: '10011', size: '30', colorName: 'Olive Green', qty: 2, sellPrice: 1200 }
+                { id: 'M1X-APP-101', name: 'Slim Fit Cotton Chinos', barcode: '10011', size: '30', colorName: 'Olive Green', qty: 2, sellPrice: 1200, hsnCode: '6109' }
             ],
             subtotal: 2400,
             discountPercentage: 0,

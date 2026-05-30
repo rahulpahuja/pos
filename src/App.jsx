@@ -29,7 +29,10 @@ const tabVariants = {
 // --- SAFE DATA INITIALIZERS ---
 const getInitialProfile = () => {
     const saved = localStorage.getItem('M1x_UserProfile');
-    return saved ? JSON.parse(saved) : { userId: 'admin', password: 'admin', name: 'Administrator', email: '', phone: '+91-9644444661', address: '111, B.K Sindhi Colony, Main Square, Bhawarlia Main Road, Indore, Madhya Pradesh', gstNumber: '' };
+    const profile = saved ? JSON.parse(saved) : { userId: 'admin', password: 'admin', name: 'Administrator', email: '', phone: '+91-9644444661', address: '111, B.K Sindhi Colony, Main Square, Bhawarlia Main Road, Indore, Madhya Pradesh', gstNumber: '' };
+    if (!profile.itemTypes) profile.itemTypes = ['Goods', 'Service'];
+    if (!profile.subcategories) profile.subcategories = ['T-Shirts', 'Shirts', 'Jeans', 'Shoes', 'Electronics', 'Utilities'];
+    return profile;
 };
 
 const getInitialTheme = () => localStorage.getItem('M1x_Theme') || 'default';
@@ -43,18 +46,17 @@ const fixBrokenCatalogImages = (catalogList) => {
         'photo-1627124118304-4f273b3c373c': 'photo-1559563458-527698bf5295',
         'photo-1624222247344-550fb8ec8bd6': 'photo-1607522370275-f14206abe5d3',
         'photo-1576871337622-98d48d4aa53e': 'photo-1509551388413-e18d0ac5d495',
-        'photo-1520903781411-0e20eebd71d5': 'photo-1584917865442-de89df76afd3',
-        'photo-1609592424109-dd825b68233f': 'photo-1609081219090-a6d81d3085bf',
-        'photo-1622445262465-2481c4574875': 'photo-1616410011236-7a42121dd981'
+        'photo-1611930022073-b7a4ba5fcccd': 'photo-1590658268037-6bf12165a8df',
+        'photo-1542496658-e33a6d0d50f6': 'photo-1523275335684-37898b6baf30',
+        'photo-1505740420928-5e560c06d30e': 'photo-1590658268037-6bf12165a8df'
     };
-
     return catalogList.map(item => {
         if (item.images && item.images.length > 0) {
-            const updatedImages = item.images.map(imgUrl => {
-                let newUrl = imgUrl;
-                Object.entries(replacements).forEach(([oldId, newId]) => {
-                    if (imgUrl.includes(oldId)) {
-                        newUrl = imgUrl.replace(oldId, newId);
+            const updatedImages = item.images.map(img => {
+                let newUrl = img;
+                Object.keys(replacements).forEach(broken => {
+                    if (img.includes(broken)) {
+                        newUrl = img.replace(broken, replacements[broken]);
                     }
                 });
                 return newUrl;
@@ -69,7 +71,24 @@ const getInitialCatalog = () => {
     const saved = localStorage.getItem('M1x_Database');
     let parsed = saved ? JSON.parse(saved) : [];
     const fixed = fixBrokenCatalogImages(parsed);
-    return fixed.map(item => ({ ...item, stockQty: Number(item.stockQty) || 0, costPrice: Number(item.costPrice) || 0, sellPrice: Number(item.sellPrice) || 0 }));
+    return fixed.map(item => {
+        const cost = Number(item.costPrice) || 0;
+        const sell = Number(item.sellPrice) || 0;
+        const margin = cost > 0 ? Math.round(((sell - cost) / cost) * 10000) / 100 : 0;
+        return { 
+            ...item, 
+            stockQty: Number(item.stockQty) || 0, 
+            costPrice: cost, 
+            sellPrice: sell, 
+            hsnCode: item.hsnCode || '',
+            profitMargin: item.profitMargin !== undefined ? Number(item.profitMargin) : margin,
+            itemType: item.itemType || 'Goods',
+            subCategory: item.subCategory || 'Other',
+            brand: item.brand || 'Generic',
+            subCategoryPattern: item.subCategoryPattern || 'default',
+            supplierName: item.supplierName || 'Generic'
+        };
+    });
 };
 
 const getInitialSales = () => {
@@ -262,7 +281,7 @@ export default function App() {
                     {currentTab === 'grid' && <ProductCatalog catalog={catalog} labelSettings={labelSettings} />}
                     {currentTab === 'pos' && <PointOfSale catalog={catalog} setCatalog={setCatalog} salesLedger={salesLedger} setSalesLedger={setSalesLedger} customers={customers} setCustomers={setCustomers} referrers={referrers} userProfile={userProfile} invoiceSettings={invoiceSettings} parties={parties} setParties={setParties} />}
                     {currentTab === 'modifier' && <OrderModifier salesLedger={salesLedger} setSalesLedger={setSalesLedger} catalog={catalog} setCatalog={setCatalog} parties={parties} setParties={setParties} />}
-                    {currentTab === 'admin' && <InventoryManager catalog={catalog} setCatalog={setCatalog} />}
+                    {currentTab === 'admin' && <InventoryManager catalog={catalog} setCatalog={setCatalog} userProfile={userProfile} parties={parties} />}
                     {currentTab === 'designer' && <InvoiceDesigner invoiceSettings={invoiceSettings} setInvoiceSettings={setInvoiceSettings} userProfile={userProfile} />}
                     {currentTab === 'labeldesigner' && <LabelDesigner labelSettings={labelSettings} setLabelSettings={setLabelSettings} />}
                     {currentTab === 'referrers' && <ReferrersTab referrers={referrers} setReferrers={setReferrers} />}

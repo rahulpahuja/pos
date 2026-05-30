@@ -407,7 +407,7 @@ export default function OrderModifier({ salesLedger, setSalesLedger, catalog, se
                                             return (
                                                 <tr key={idx} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
                                                     <td style={{ padding: '10px 8px' }}>
-                                                        <div style={{ fontWeight: 600 }}>{item.name}</div>
+                                                        <div style={{ fontWeight: 600 }}>{item.name}{item.hsnCode ? ` [HSN: ${item.hsnCode}]` : ''}</div>
                                                         {isReturned && (
                                                             <span style={{ fontSize: '0.75rem', color: 'var(--error)', backgroundColor: 'var(--error-container)', padding: '2px 6px', borderRadius: '4px', display: 'inline-block', marginTop: '2px' }}>
                                                                 {returnInfo.qty} Returned
@@ -493,7 +493,7 @@ export default function OrderModifier({ salesLedger, setSalesLedger, catalog, se
                                             return (
                                                 <tr key={idx} style={{ borderBottom: '1px solid var(--outline-variant)' }}>
                                                     <td style={{ padding: '12px 8px' }}>
-                                                        <div style={{ fontWeight: 600 }}>{item.name}</div>
+                                                        <div style={{ fontWeight: 600 }}>{item.name}{item.hsnCode ? ` [HSN: ${item.hsnCode}]` : ''}</div>
                                                         <span style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)' }}>
                                                             {item.colorName || 'N/A'} {item.size ? '/ ' + item.size : ''}
                                                         </span>

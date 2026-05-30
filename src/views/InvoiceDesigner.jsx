@@ -527,7 +527,7 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                 <tr>
                                     {settings.columns.sno && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>1</td>}
                                     <td style={{ padding: tablePaddingStyle, borderBottom: tableBorderStyle }}>
-                                        Premium Shirt
+                                        [GizmoPro] Premium Shirt <span style={{ fontSize: '0.85em', opacity: 0.8 }}>[HSN: 6205]</span>
                                         {settings.columns.variants && <><br/><span style={{ fontSize: '0.85em', opacity: 0.7 }}>Navy Blue / XL</span></>}
                                     </td>
                                     {settings.columns.qty && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>2</td>}
@@ -537,7 +537,7 @@ export default function InvoiceDesigner({ invoiceSettings, setInvoiceSettings, u
                                 <tr>
                                     {settings.columns.sno && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>2</td>}
                                     <td style={{ padding: tablePaddingStyle, borderBottom: tableBorderStyle }}>
-                                        Denim Jeans
+                                        [M1x Apparel] Denim Jeans <span style={{ fontSize: '0.85em', opacity: 0.8 }}>[HSN: 6203]</span>
                                         {settings.columns.variants && <><br/><span style={{ fontSize: '0.85em', opacity: 0.7 }}>Black / 32</span></>}
                                     </td>
                                     {settings.columns.qty && <td style={{ padding: tablePaddingStyle, textAlign: 'center', borderBottom: tableBorderStyle }}>1</td>}

@@ -5,9 +5,9 @@ import JsBarcode from 'jsbarcode';
 const generateNewId = () => `M1x-${Date.now().toString().slice(-6)}`;
 const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', 'XXXXXL', 'XXXXXXL', 'XXXXXXXL'];
 
-export default function InventoryManager({ catalog, setCatalog }) {
+export default function InventoryManager({ catalog, setCatalog, userProfile, parties }) {
     const [isEditing, setIsEditing] = useState(false);
-    const emptyProduct = { id: generateNewId(), name: '', category: '', gender: 'Unisex', costPrice: '', sellPrice: '', images: [], entryDate: '', variants: [] };
+    const emptyProduct = { id: generateNewId(), name: '', category: '', gender: 'Unisex', costPrice: '', sellPrice: '', images: [], entryDate: '', variants: [], hsnCode: '', profitMargin: '', itemType: 'Goods', subCategory: '', brand: '', subCategoryPattern: 'default', supplierName: 'Generic', gstType: 'Non-GST', gstRate: '0', cgstRate: '0', sgstRate: '0' };
     const [product, setProduct] = useState(emptyProduct);
     const [variantInput, setVariantInput] = useState({ colorName: '', colorCode: '', size: 'M', stockQty: '', barcode: '' });
     const [colorNamesList, setColorNamesList] = useState([]);
@@ -33,7 +33,53 @@ export default function InventoryManager({ catalog, setCatalog }) {
         }
     }, [product.variants]);
 
-    const handleInputChange = (e) => setProduct(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setProduct(prev => {
+            const updated = { ...prev, [name]: value };
+            
+            // Sync calculations
+            if (name === 'costPrice') {
+                const cost = Number(value) || 0;
+                const margin = Number(prev.profitMargin) || 0;
+                if (cost > 0 && prev.profitMargin !== '') {
+                    updated.sellPrice = String(Math.round(cost * (1 + margin / 100)));
+                } else if (cost > 0 && prev.sellPrice) {
+                    const sell = Number(prev.sellPrice) || 0;
+                    updated.profitMargin = String(Math.round(((sell - cost) / cost) * 10000) / 100);
+                }
+            } else if (name === 'profitMargin') {
+                const margin = Number(value) || 0;
+                const cost = Number(prev.costPrice) || 0;
+                if (cost > 0) {
+                    updated.sellPrice = String(Math.round(cost * (1 + margin / 100)));
+                }
+            } else if (name === 'sellPrice') {
+                const sell = Number(value) || 0;
+                const cost = Number(prev.costPrice) || 0;
+                if (cost > 0) {
+                    updated.profitMargin = String(Math.round(((sell - cost) / cost) * 10000) / 100);
+                }
+            } else if (name === 'gstType') {
+                if (value === 'Non-GST') {
+                    updated.gstRate = '0';
+                    updated.cgstRate = '0';
+                    updated.sgstRate = '0';
+                } else {
+                    if (!Number(prev.gstRate)) {
+                        updated.gstRate = '18';
+                        updated.cgstRate = '9';
+                        updated.sgstRate = '9';
+                    }
+                }
+            } else if (name === 'gstRate') {
+                const totalGst = Number(value) || 0;
+                updated.cgstRate = String(totalGst / 2);
+                updated.sgstRate = String(totalGst / 2);
+            }
+            return updated;
+        });
+    };
     const handleVariantInputChange = (e) => setVariantInput(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
     const compressImage = (file) => {
@@ -90,9 +136,32 @@ export default function InventoryManager({ catalog, setCatalog }) {
 
     const removeVariant = (barcode) => setProduct(prev => ({ ...prev, variants: prev.variants.filter(v => v.barcode !== barcode) }));
 
+    const duplicateVariant = (v) => {
+        setVariantInput({
+            colorName: v.colorName || '',
+            colorCode: v.colorCode || '',
+            size: v.size,
+            stockQty: v.stockQty !== undefined ? String(v.stockQty) : '',
+            barcode: ''
+        });
+        const variantSection = document.getElementById('variant-input-section');
+        if (variantSection) {
+            variantSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        const productToSave = { ...product, costPrice: Number(product.costPrice) || 0, sellPrice: Number(product.sellPrice) || 0 };
+        const finalSupplierName = (product.supplierName || '').trim() || 'Generic';
+        const productToSave = { 
+            ...product, 
+            costPrice: Number(product.costPrice) || 0, 
+            sellPrice: Number(product.sellPrice) || 0,
+            gstRate: Number(product.gstRate) || 0,
+            cgstRate: Number(product.cgstRate) || 0,
+            sgstRate: Number(product.sgstRate) || 0,
+            supplierName: finalSupplierName
+        };
         if (!productToSave.variants || productToSave.variants.length === 0) { alert('Add at least one color/size variant.'); return; }
         
         if (isEditing) { setCatalog(catalog.map(item => item.id === product.id ? productToSave : item)); setIsEditing(false); }
@@ -112,10 +181,94 @@ export default function InventoryManager({ catalog, setCatalog }) {
                 <div className="row-group">
                     <div><label>Category</label><input type="text" name="category" list="categoryOptions" value={product.category} onChange={handleInputChange} placeholder="Select or type..." required /><datalist id="categoryOptions">{uniqueCategories.map((cat, i) => <option key={i} value={cat} />)}</datalist></div>
                     <div><label>Gender</label><select name="gender" value={product.gender} onChange={handleInputChange}><option value="Male">Male</option><option value="Female">Female</option><option value="Unisex">Unisex</option></select></div>
+                    <div><label>HSN Code</label><input type="text" name="hsnCode" value={product.hsnCode || ''} onChange={handleInputChange} placeholder="e.g. 6109" /></div>
+                </div>
+                <div className="row-group" style={{ marginTop: '15px' }}>
+                    <div>
+                        <label>Item Type</label>
+                        <select name="itemType" value={product.itemType || 'Goods'} onChange={handleInputChange}>
+                            {(userProfile?.itemTypes || ['Goods', 'Service']).map(t => <option key={t} value={t}>{t}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Subcategory</label>
+                        <select name="subCategory" value={product.subCategory || ''} onChange={handleInputChange} required>
+                            <option value="">Select Subcategory...</option>
+                            {(userProfile?.subcategories || ['T-Shirts', 'Shirts', 'Jeans', 'Shoes', 'Electronics', 'Utilities']).map(s => <option key={s} value={s}>{s}</option>)}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Brand</label>
+                        <input type="text" name="brand" value={product.brand || ''} onChange={handleInputChange} placeholder="e.g. AeroWalk" />
+                    </div>
                 </div>
                 <div className="row-group" style={{ marginTop: '15px' }}>
                     <div><label>Cost Price</label><div className="input-wrapper"><span className="currency-symbol">₹</span><input type="number" name="costPrice" value={product.costPrice} onChange={handleInputChange} min="0" required /></div></div>
+                    <div><label>Profit Margin (%)</label><input type="number" name="profitMargin" value={product.profitMargin || ''} onChange={handleInputChange} placeholder="e.g. 20" step="0.01" /></div>
                     <div><label>Sell Price (MRP)</label><div className="input-wrapper"><span className="currency-symbol">₹</span><input type="number" name="sellPrice" value={product.sellPrice} onChange={handleInputChange} min="0" required /></div></div>
+                </div>
+                <div className="row-group" style={{ marginTop: '15px' }}>
+                    <div>
+                        <label>Subcategory Pattern (Optional)</label>
+                        <input 
+                            type="text" 
+                            name="subCategoryPattern" 
+                            value={product.subCategoryPattern} 
+                            onChange={handleInputChange} 
+                            placeholder="e.g. Solid, Checked, Stripes (default: 'default')" 
+                        />
+                    </div>
+                    <div>
+                        <label>Supplier / Party Name</label>
+                        <input 
+                            type="text" 
+                            name="supplierName" 
+                            list="partyOptions"
+                            value={product.supplierName || ''} 
+                            onChange={handleInputChange} 
+                            placeholder="e.g. Acme Corp (default: 'Generic')" 
+                        />
+                        <datalist id="partyOptions">
+                            {(parties || []).map((p, idx) => (
+                                <option key={idx} value={p.name} />
+                            ))}
+                        </datalist>
+                    </div>
+                </div>
+                <div className="row-group" style={{ marginTop: '15px' }}>
+                    <div>
+                        <label>Tax Type</label>
+                        <select name="gstType" value={product.gstType || 'Non-GST'} onChange={handleInputChange}>
+                            <option value="Non-GST">Non-GST</option>
+                            <option value="GST">GST</option>
+                        </select>
+                    </div>
+                    {product.gstType === 'GST' && (
+                        <>
+                            <div>
+                                <label>GST Total Rate (%)</label>
+                                <input 
+                                    type="number" 
+                                    name="gstRate" 
+                                    min="0" 
+                                    max="100" 
+                                    step="0.01" 
+                                    value={product.gstRate} 
+                                    onChange={handleInputChange} 
+                                    placeholder="e.g. 18" 
+                                    required 
+                                />
+                            </div>
+                            <div>
+                                <label>Split Rates (Auto-calculated)</label>
+                                <div style={{ display: 'flex', gap: '10px', height: '100%', alignItems: 'center', fontSize: '0.9rem', color: 'var(--on-surface-variant)', fontWeight: '500', paddingLeft: '5px' }}>
+                                    <span>CGST: {product.cgstRate || 0}%</span>
+                                    <span>|</span>
+                                    <span>SGST: {product.sgstRate || 0}%</span>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </div>
                 <div className="form-group" style={{ marginTop: '15px' }}>
                     <label>Images (Max 5)</label><input id="imageInput" type="file" multiple accept="image/*" onChange={handleImageUpload} />
@@ -123,7 +276,7 @@ export default function InventoryManager({ catalog, setCatalog }) {
                 </div>
                 
                 {/* Variants Section */}
-                <div className="form-group" style={{ marginTop: '15px', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', padding: '15px', backgroundColor: 'var(--surface-container-low)' }}>
+                <div id="variant-input-section" className="form-group" style={{ marginTop: '15px', border: '1px solid var(--outline-variant)', borderRadius: 'var(--radius-md)', padding: '15px', backgroundColor: 'var(--surface-container-low)' }}>
                     <label style={{ fontWeight: 700, display: 'block', marginBottom: '12px' }}>{variantInput.colorName ? 'Modify Variant' : 'Add Color/Size/Stock Variant'}</label>
                     <div className="row-group" style={{ gap: '12px' }}>
                         <div><label>Color Name</label><input type="text" name="colorName" value={variantInput.colorName} onChange={handleVariantInputChange} /></div>
@@ -148,7 +301,14 @@ export default function InventoryManager({ catalog, setCatalog }) {
                                             <div className="barcode-container"><svg id={`barcode-variant-${i}`}></svg></div>
                                         </div>
                                     </div>
-                                    <button type="button" className="btn-sm btn-delete" onClick={() => removeVariant(v.barcode)}><span className="material-icons">delete</span></button>
+                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', justifyContent: 'center' }}>
+                                         <button type="button" className="btn-sm btn-edit" title="Duplicate Size" onClick={() => duplicateVariant(v)} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', height: 'auto' }}>
+                                             <span className="material-icons" style={{ fontSize: '16px' }}>content_copy</span> Duplicate Size
+                                         </button>
+                                         <button type="button" className="btn-sm btn-delete" onClick={() => removeVariant(v.barcode)} style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px', height: 'auto' }}>
+                                             <span className="material-icons" style={{ fontSize: '16px' }}>delete</span> Delete
+                                         </button>
+                                     </div>
                                 </div>
                             ))}
                         </div>
@@ -165,7 +325,7 @@ export default function InventoryManager({ catalog, setCatalog }) {
                         <div>
                             <strong>{item.name}</strong>
                             {item.variants && item.variants.map(v => <span key={v.barcode} className="size-badge" style={{ marginLeft: '8px' }}>{v.colorName}/{v.size}/Stk:{v.stockQty}</span>)}
-                            <br /><small>{item.id} | MRP: ₹{item.sellPrice}</small>
+                            <br /><small>{item.id} {item.hsnCode ? `| HSN: ${item.hsnCode}` : ''} | Brand: {item.brand || 'Generic'} | Supplier: {item.supplierName || 'Generic'} | Type: {item.itemType || 'Goods'} | Subcat: {item.subCategory || 'Other'}{item.subCategoryPattern && item.subCategoryPattern !== 'default' ? ` (${item.subCategoryPattern})` : ''} | Tax: {item.gstType === 'GST' ? `GST ${item.gstRate}% (CGST ${item.cgstRate}%, SGST ${item.sgstRate}%)` : 'Non-GST'} | MRP: ₹{item.sellPrice} {item.profitMargin ? `| Margin: ${item.profitMargin}%` : ''}</small>
                         </div>
                         <div>
                             <button onClick={() => { setProduct(item); setIsEditing(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="btn-sm btn-edit"><span className="material-icons">edit</span></button>

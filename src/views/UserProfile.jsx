@@ -2,6 +2,50 @@ import React, { useState } from 'react';
 
 export default function UserProfile({ userProfile, setUserProfile, catalog, setCatalog, salesLedger, setSalesLedger, parties = [], setParties, expenses = [], setExpenses, currentTheme, setCurrentTheme }) {
     const [dirHandle, setDirHandle] = useState(null);
+    const [newItemType, setNewItemType] = useState('');
+    const [newSubcategory, setNewSubcategory] = useState('');
+
+    const addItemType = () => {
+        const value = newItemType.trim();
+        if (!value) return;
+        if (userProfile.itemTypes?.includes(value)) {
+            alert('Item type already exists!');
+            return;
+        }
+        setUserProfile(prev => ({
+            ...prev,
+            itemTypes: [...(prev.itemTypes || ['Goods', 'Service']), value]
+        }));
+        setNewItemType('');
+    };
+
+    const deleteItemType = (typeToDelete) => {
+        setUserProfile(prev => ({
+            ...prev,
+            itemTypes: (prev.itemTypes || ['Goods', 'Service']).filter(t => t !== typeToDelete)
+        }));
+    };
+
+    const addSubcategory = () => {
+        const value = newSubcategory.trim();
+        if (!value) return;
+        if (userProfile.subcategories?.includes(value)) {
+            alert('Subcategory already exists!');
+            return;
+        }
+        setUserProfile(prev => ({
+            ...prev,
+            subcategories: [...(prev.subcategories || ['T-Shirts', 'Shirts', 'Jeans', 'Shoes', 'Electronics', 'Utilities']), value]
+        }));
+        setNewSubcategory('');
+    };
+
+    const deleteSubcategory = (subToToDelete) => {
+        setUserProfile(prev => ({
+            ...prev,
+            subcategories: (prev.subcategories || ['T-Shirts', 'Shirts', 'Jeans', 'Shoes', 'Electronics', 'Utilities']).filter(s => s !== subToToDelete)
+        }));
+    };
 
     const handleProfileSubmit = (e) => {
         e.preventDefault();
@@ -132,6 +176,64 @@ export default function UserProfile({ userProfile, setUserProfile, catalog, setC
                             <option value="orchid">Royal Orchid</option>
                             <option value="cyberpunk">Cyberpunk Neon</option>
                         </select>
+                    </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-20)', marginTop: 'var(--spacing-20)' }}>
+                    {/* Item Types Setup */}
+                    <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)' }}>
+                        <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-8)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="material-icons">category</span> Configure Item Types
+                        </h4>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-12)' }}>Manage item types selectable in product creation (e.g. Goods, Service).</p>
+                        
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: 'var(--spacing-12)' }}>
+                            <input 
+                                type="text" 
+                                placeholder="Add new item type..." 
+                                value={newItemType} 
+                                onChange={(e) => setNewItemType(e.target.value)}
+                                style={{ flex: 1, padding: 'var(--spacing-8)' }}
+                            />
+                            <button type="button" onClick={addItemType} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', padding: '0 var(--spacing-16)', borderRadius: 'var(--radius-md)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Add</button>
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            {(userProfile.itemTypes || ['Goods', 'Service']).map(t => (
+                                <span key={t} className="size-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 10px', backgroundColor: 'var(--surface-container-low)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderRadius: '4px', fontSize: '0.85rem' }}>
+                                    {t}
+                                    <span className="material-icons" style={{ fontSize: '14px', cursor: 'pointer', color: 'var(--error)' }} onClick={() => deleteItemType(t)}>close</span>
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Subcategories Setup */}
+                    <div style={{ backgroundColor: 'var(--surface-container-highest)', padding: 'var(--spacing-16)', borderRadius: 'var(--radius-md)' }}>
+                        <h4 style={{ color: 'var(--primary)', marginTop: 0, marginBottom: 'var(--spacing-8)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="material-icons">list</span> Configure Subcategories
+                        </h4>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--on-surface-variant)', marginBottom: 'var(--spacing-12)' }}>Manage subcategories for product organization.</p>
+                        
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: 'var(--spacing-12)' }}>
+                            <input 
+                                type="text" 
+                                placeholder="Add new subcategory..." 
+                                value={newSubcategory} 
+                                onChange={(e) => setNewSubcategory(e.target.value)}
+                                style={{ flex: 1, padding: 'var(--spacing-8)' }}
+                            />
+                            <button type="button" onClick={addSubcategory} className="btn-sm" style={{ backgroundColor: 'var(--primary)', color: 'white', padding: '0 var(--spacing-16)', borderRadius: 'var(--radius-md)', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>Add</button>
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            {(userProfile.subcategories || ['T-Shirts', 'Shirts', 'Jeans', 'Shoes', 'Electronics', 'Utilities']).map(s => (
+                                <span key={s} className="size-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 10px', backgroundColor: 'var(--surface-container-low)', color: 'var(--on-surface)', border: '1px solid var(--outline-variant)', borderRadius: '4px', fontSize: '0.85rem' }}>
+                                    {s}
+                                    <span className="material-icons" style={{ fontSize: '14px', cursor: 'pointer', color: 'var(--error)' }} onClick={() => deleteSubcategory(s)}>close</span>
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
 

@@ -62,8 +62,8 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
         catalog.forEach(product => {
             if (product.variants) {
                 product.variants.forEach(variant => {
-                    if (variant.barcode.toLowerCase().includes(query) || (product.name && product.name.toLowerCase().includes(query)) || (variant.colorName && variant.colorName.toLowerCase().includes(query))) {
-                        matches.push({ ...variant, productName: product.name, productId: product.id, productImage: product.images && product.images.length > 0 ? product.images[0] : null, sellPrice: product.sellPrice });
+                    if (variant.barcode.toLowerCase().includes(query) || (product.name && product.name.toLowerCase().includes(query)) || (variant.colorName && variant.colorName.toLowerCase().includes(query)) || (product.hsnCode && product.hsnCode.toLowerCase().includes(query)) || (product.brand && product.brand.toLowerCase().includes(query))) {
+                        matches.push({ ...variant, productName: product.name, productId: product.id, productImage: product.images && product.images.length > 0 ? product.images[0] : null, sellPrice: product.sellPrice, hsnCode: product.hsnCode, brand: product.brand, gstType: product.gstType, gstRate: product.gstRate, cgstRate: product.cgstRate, sgstRate: product.sgstRate });
                     }
                 });
             }
@@ -109,6 +109,34 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
     const subtotal = invoiceItems.reduce((sum, item) => sum + (Number(item.sellPrice) * item.qty), 0);
     const discountAmount = subtotal * (Number(discountPercentage) / 100);
     const grandTotal = subtotal - discountAmount;
+
+    // Compute GST breakdowns
+    let totalTaxableValue = 0;
+    let totalGstAmount = 0;
+    let totalCgstAmount = 0;
+    let totalSgstAmount = 0;
+    let hasGstItems = false;
+
+    invoiceItems.forEach(item => {
+        const qty = Number(item.qty) || 0;
+        const sellPrice = Number(item.sellPrice) || 0;
+        const itemSubtotal = sellPrice * qty;
+        const itemDiscount = itemSubtotal * (Number(discountPercentage) / 100);
+        const itemGrandTotal = itemSubtotal - itemDiscount;
+
+        if (item.gstType === 'GST' && Number(item.gstRate) > 0) {
+            hasGstItems = true;
+            const rate = Number(item.gstRate);
+            const taxable = itemGrandTotal / (1 + rate / 100);
+            const tax = itemGrandTotal - taxable;
+            totalTaxableValue += taxable;
+            totalGstAmount += tax;
+            totalCgstAmount += tax / 2;
+            totalSgstAmount += tax / 2;
+        } else {
+            totalTaxableValue += itemGrandTotal;
+        }
+    });
 
     const amountPaidNum = paymentType === 'full' ? grandTotal : (Number(amountPaid) || 0);
     const balanceDue = Math.max(0, grandTotal - amountPaidNum);
@@ -288,7 +316,13 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
             if (safeSettings.columns.sno) row += `<td style="text-align:center; ${tdStyle}">${i + 1}</td>`;
             
             // Item + Variants logic
-            let itemText = item.name;
+            let itemText = item.brand ? `[${item.brand}] ${item.name}` : item.name;
+            if (item.hsnCode) {
+                itemText += ` <span style="font-size:0.85em;opacity:0.8;">[HSN: ${item.hsnCode}]</span>`;
+            }
+            if (item.gstType === 'GST' && Number(item.gstRate) > 0) {
+                itemText += ` <span style="font-size:0.8em;opacity:0.8;">[GST: ${item.gstRate}%]</span>`;
+            }
             if (safeSettings.columns.variants && (item.colorName || item.size)) {
                 itemText += `<br><span style="font-size:0.85em;opacity:0.7;">${item.colorName || ''} ${item.size ? '/ ' + item.size : ''}</span>`;
             }
@@ -354,6 +388,11 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                 <table class="totals">
                     <tr><td>Subtotal</td><td style="text-align:right">&#8377;${subtotal.toFixed(2)}</td></tr>
                     ${discountPercentage > 0 ? `<tr><td>Discount (${discountPercentage}%)</td><td style="text-align:right;color:#c00;">-&#8377;${discountAmount.toFixed(2)}</td></tr>` : ''}
+                    ${hasGstItems ? `
+                    <tr><td>Taxable Value</td><td style="text-align:right">&#8377;${totalTaxableValue.toFixed(2)}</td></tr>
+                    <tr><td>CGST</td><td style="text-align:right">&#8377;${totalCgstAmount.toFixed(2)}</td></tr>
+                    <tr><td>SGST</td><td style="text-align:right">&#8377;${totalSgstAmount.toFixed(2)}</td></tr>
+                    ` : ''}
                     <tr class="grand-row"><td>GRAND TOTAL</td><td style="text-align:right">&#8377;${grandTotal.toFixed(2)}</td></tr>
                     ${paymentType === 'partial' ? `
                     <tr><td>Amount Paid</td><td style="text-align:right">&#8377;${amountPaidNum.toFixed(2)}</td></tr>
@@ -393,7 +432,7 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                                             />
                                         ) : (<div style={{ width: '48px', height: '48px', background: '#f3f3f3', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Image</div>)}
                                         <div style={{ flex: 1 }}>
-                                            <div style={{ fontWeight: 600 }}>{s.productName}</div>
+                                            <div style={{ fontWeight: 600 }}>{s.brand ? `[${s.brand}] ` : ''}{s.productName}</div>
                                             <div style={{ fontSize: '0.95em', color: '#888' }}>Color: {s.colorName} | Size: {s.size}</div>
                                         </div>
                                         <div style={{ fontWeight: 700, color: 'var(--primary)' }}>₹{s.sellPrice}</div>
@@ -417,7 +456,7 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                                         const stockLeft = variant ? variant.stockQty - item.qty : 0;
                                         return (
                                             <motion.tr key={item.barcode} variants={rowVariants} initial="hidden" animate="visible" exit="exit">
-                                                <td style={{ fontWeight: '600' }}>{item.name}<br /><small style={{ color: 'var(--on-surface-variant)' }}>{item.id}</small></td>
+                                                <td style={{ fontWeight: '600' }}>{item.brand ? `[${item.brand}] ` : ''}{item.name}<br /><small style={{ color: 'var(--on-surface-variant)' }}>{item.id}{item.hsnCode ? ` | HSN: ${item.hsnCode}` : ''}</small></td>
                                                 <td>{item.colorName}</td>
                                                 <td><span className="size-badge">{item.size}</span></td>
                                                 <td style={{ color: stockLeft <= 2 ? 'var(--error)' : 'var(--on-surface-variant)' }}>{stockLeft}</td>
@@ -444,6 +483,13 @@ export default function PointOfSale({ catalog, setCatalog, salesLedger, setSales
                         <input type="number" min="0" max="100" value={discountPercentage} onChange={(e) => setDiscountPercentage(e.target.value)} style={{ textAlign: 'right', marginTop: 'var(--spacing-4)' }} />
                     </div>
                     {discountPercentage > 0 && (<div className="totals-row" style={{ color: 'var(--success)' }}><span>Discount Amount:</span><span>-₹{discountAmount.toFixed(2)}</span></div>)}
+                    {hasGstItems && (
+                        <>
+                            <div className="totals-row" style={{ opacity: 0.8, fontSize: '0.9rem' }}><span>Taxable Value:</span><span>₹{totalTaxableValue.toFixed(2)}</span></div>
+                            <div className="totals-row" style={{ opacity: 0.8, fontSize: '0.9rem' }}><span>CGST:</span><span>₹{totalCgstAmount.toFixed(2)}</span></div>
+                            <div className="totals-row" style={{ opacity: 0.8, fontSize: '0.9rem' }}><span>SGST:</span><span>₹{totalSgstAmount.toFixed(2)}</span></div>
+                        </>
+                    )}
                     <div style={{ marginTop: 'var(--spacing-16)', marginBottom: 'var(--spacing-16)' }}>
                         <label style={{ fontSize: '0.875rem' }}>Customer Name</label>
                         <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Optional" style={{ marginTop: 'var(--spacing-4)' }} />

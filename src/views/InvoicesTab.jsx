@@ -76,6 +76,34 @@ export default function InvoicesTab({ salesLedger, invoiceSettings, userProfile 
         if (safeSettings.columns.rate) thHTML += `<th style="text-align:right; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">Rate</th>`;
         thHTML += `<th style="text-align:right; border-top: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; border-bottom: ${safeSettings.tableStyle.borderWidth}px solid ${safeSettings.fontColor}; padding: ${safeSettings.tableStyle.padding}px 3px;">Amount</th>`;
 
+        // Compute GST breakdowns
+        let totalTaxableValue = 0;
+        let totalGstAmount = 0;
+        let totalCgstAmount = 0;
+        let totalSgstAmount = 0;
+        let hasGstItems = false;
+
+        invoice.items.forEach(item => {
+            const qty = Number(item.qty) || 0;
+            const sellPrice = Number(item.sellPrice) || 0;
+            const itemSubtotal = sellPrice * qty;
+            const itemDiscount = itemSubtotal * (Number(invoice.discountPercentage) / 100);
+            const itemGrandTotal = itemSubtotal - itemDiscount;
+
+            if (item.gstType === 'GST' && Number(item.gstRate) > 0) {
+                hasGstItems = true;
+                const rate = Number(item.gstRate);
+                const taxable = itemGrandTotal / (1 + rate / 100);
+                const tax = itemGrandTotal - taxable;
+                totalTaxableValue += taxable;
+                totalGstAmount += tax;
+                totalCgstAmount += tax / 2;
+                totalSgstAmount += tax / 2;
+            } else {
+                totalTaxableValue += itemGrandTotal;
+            }
+        });
+
         // Build Dynamic Rows
         const itemRowsHTML = invoice.items.map((item, i) => {
             let row = '<tr>';
@@ -83,7 +111,13 @@ export default function InvoicesTab({ salesLedger, invoiceSettings, userProfile 
             
             if (safeSettings.columns.sno) row += `<td style="text-align:center; ${tdStyle}">${i + 1}</td>`;
             
-            let itemText = item.name;
+            let itemText = item.brand ? `[${item.brand}] ${item.name}` : item.name;
+            if (item.hsnCode) {
+                itemText += ` <span style="font-size:0.85em;opacity:0.8;">[HSN: ${item.hsnCode}]</span>`;
+            }
+            if (item.gstType === 'GST' && Number(item.gstRate) > 0) {
+                itemText += ` <span style="font-size:0.8em;opacity:0.8;">[GST: ${item.gstRate}%]</span>`;
+            }
             if (safeSettings.columns.variants && (item.colorName || item.size)) {
                 itemText += `<br><span style="font-size:0.85em;opacity:0.7;">${item.colorName || ''} ${item.size ? '/ ' + item.size : ''}</span>`;
             }
@@ -149,6 +183,11 @@ export default function InvoicesTab({ salesLedger, invoiceSettings, userProfile 
                 <table class="totals">
                     <tr><td>Subtotal</td><td style="text-align:right">&#8377;\${invoice.subtotal.toFixed(2)}</td></tr>
                     \${invoice.discountPercentage > 0 ? \`<tr><td>Discount (\${invoice.discountPercentage}%)</td><td style="text-align:right;color:#c00;">-&#8377;\${invoice.discountAmount.toFixed(2)}</td></tr>\` : ''}
+                    \${hasGstItems ? \`
+                    <tr><td>Taxable Value</td><td style="text-align:right">&#8377;\${totalTaxableValue.toFixed(2)}</td></tr>
+                    <tr><td>CGST</td><td style="text-align:right">&#8377;\${totalCgstAmount.toFixed(2)}</td></tr>
+                    <tr><td>SGST</td><td style="text-align:right">&#8377;\${totalSgstAmount.toFixed(2)}</td></tr>
+                    \` : ''}
                     <tr class="grand-row"><td>GRAND TOTAL</td><td style="text-align:right">&#8377;\${invoice.grandTotal.toFixed(2)}</td></tr>
                     \${invoice.paymentType === 'partial' ? \`
                     <tr><td>Amount Paid</td><td style="text-align:right">&#8377;\${invoice.amountPaid.toFixed(2)}</td></tr>
